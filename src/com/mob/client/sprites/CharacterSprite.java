@@ -35,6 +35,7 @@ public class CharacterSprite extends MovingSprite implements ISprite, IConstants
 	protected int mHelmetGrhIndex;
 	
 	protected float mAnimationTime;
+	protected float mDeltaTime;
 	
 	protected int mHeadOffsetX;
 	protected int mHeadOffsetY;
@@ -48,6 +49,8 @@ public class CharacterSprite extends MovingSprite implements ISprite, IConstants
 		super(_game, x , y);
 		
 		this.mHeading = mHeading;
+		
+		this.mDeltaTime = 0.0f;
 		this.mAnimationTime = 0.0f;
 		
 		if(helmetIndex == 0) helmetIndex = 2;
@@ -74,41 +77,51 @@ public class CharacterSprite extends MovingSprite implements ISprite, IConstants
 	public void update(float dt) {
 		
 		// Update animations
-		this.mAnimationTime = this.mBodySkin[this.mHeading].getAnimationTime() + dt;
+		this.mDeltaTime = dt;
+		this.mAnimationTime = this.mBodySkin[this.mHeading].getAnimationTime() + this.mDeltaTime;
 		this.mBodySkin[this.mHeading].setAnimationTime(this.mAnimationTime);
 		
 		// Init spritebatch
 		this._game.spriteBatch.begin(); 
 		if(this.mHeadGrhIndex != 0) {
-			if(!this._visible) {
+			if(this._visible) {
 				if(this.mBodyGrhIndex != 0) 
 					this._game.spriteBatch.draw(this.getBody(), this._x, this._y);
 						
 				if(this.mHeadGrhIndex != 0) {
-					this._game.spriteBatch.draw(this.mHeadSkin[this.mHeading].getTextureRegion(), this._x + this.mHeadOffsetX + 4, this._y - this.mHeadOffsetY);
+					this._game.spriteBatch.draw(this.getHead(), this._x + this.mHeadOffsetX + 4, this._y + (this.mHeadOffsetY * 2));
 				
 					if(this.mHelmetGrhIndex != 0)
-						this._game.spriteBatch.draw(this.mHelmetSkin[this.mHeading].getTextureRegion(), this._x + this.mHeadOffsetX + 4, this._y - this.mHeadOffsetY + OFFSET_HEAD);
+						this._game.spriteBatch.draw(this.getHelmet(), this._x + this.mHeadOffsetX + 4, this._y + (this.mHeadOffsetY * 2) + OFFSET_HEAD);
 				}
 			}
-		} else { // Draw body
+		} else { // Draw only body
 			if(this.mBodyGrhIndex != 0) 
 					this._game.spriteBatch.draw(this.getBody(), this._x, this._y);
 		}
 		this._game.spriteBatch.end();
+		
+		// Update sprite Position
+		this.place();
 	}
 	
 	// ===========================================================
 	// Getter & Setter
 	// ===========================================================
-	
 	public TextureRegion getBody() {
 		if(this.mMoving)
-			return this.mBodySkin[this.mHeading].getAnimation().getKeyFrame(this.mAnimationTime);
+			return this.mBodySkin[this.mHeading].getAnimation().getKeyFrame(this.mAnimationTime, true);
 		else
 			return this.mBodySkin[this.mHeading].getFrames()[0];
 	}
 	
+	public TextureRegion getHead() {
+		return this.mHeadSkin[this.mHeading].getTextureRegion();
+	}
+	
+	public TextureRegion getHelmet() {
+		return this.mHelmetSkin[this.mHeading].getTextureRegion();
+	}
 	
 	// ===========================================================
 	// Methods

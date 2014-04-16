@@ -24,6 +24,8 @@ public interface IConstants {
     
     public static final int TILE_PIXEL_WIDTH = 32;
     public static final int TILE_PIXEL_HEIGHT = 32;
+    public static final int TILE_MAP_WIDTH = 100;
+    public static final int TILE_MAP_HEIGHT = 100;
     
     public static final int OFFSET_HEAD = -34;
     

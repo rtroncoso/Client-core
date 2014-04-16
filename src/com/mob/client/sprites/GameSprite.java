@@ -49,8 +49,12 @@ public class GameSprite extends Sprite implements ISprite {
 	// ===========================================================
 	public void reset() {}
 	public void update(float dt) {}
-	public void show() {}
-	public void hide() {}
+	public void show() {
+		this._visible = true;
+	}
+	public void hide() {
+		this._visible = false;
+	}
 	public void draw() {}
 	
 	// ===========================================================
@@ -90,6 +94,35 @@ public class GameSprite extends Sprite implements ISprite {
 	public void setHeight(int mHeight) {
 		this._height = mHeight;
 	}
+	
+	/**
+	 * @return the _x
+	 */
+	public float getX() {
+		return _x;
+	}
+
+	/**
+	 * @param _x the _x to set
+	 */
+	public void setX(float _x) {
+		this._x = _x;
+	}
+
+	/**
+	 * @return the _y
+	 */
+	public float getY() {
+		return _y;
+	}
+
+	/**
+	 * @param _y the _y to set
+	 */
+	public void setY(int _y) {
+		this._y = _y;
+	}
+
 	// ===========================================================
 	// Methods
 	// ===========================================================

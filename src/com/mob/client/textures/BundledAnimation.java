@@ -42,7 +42,7 @@ public class BundledAnimation {
 			GrhData frame = this._game.getGrhData().get(grh.getFrames()[i]);
 			Texture texture = this._game.getSurfaceHandler().get(String.valueOf(frame.getFileNum()));
 			frames[i] = new TextureRegion(texture, frame.getX(), frame.getY(), frame.getPixelWidth(), frame.getPixelHeight());
-			//frames[i].flip(false, true);
+			frames[i].flip(false, true);
 		}
 		
 		this.setFrames(frames);

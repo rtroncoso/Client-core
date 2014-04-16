@@ -54,7 +54,6 @@ public class MobClient extends Game implements IConstants {
         // Iniciamos engine de Texturas
         this.setSurfaceHandler(new SurfaceHandler(this));
         this.getSurfaceHandler().setGraphicsPath(GAME_GRAPHICS_PATH);
-        this.getSurfaceHandler().loadAllTextures();
           
         this.gameData = new GameData(this);  
         this.spriteBatch = new SpriteBatch();  

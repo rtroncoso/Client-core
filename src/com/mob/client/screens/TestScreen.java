@@ -39,15 +39,11 @@ public class TestScreen extends Screen implements IConstants {
 	// ===========================================================
 	@Override
 	public void createScreen() {
-		this.mTest = new Character(_game, 1, 1, WALK_SOUTH, 1, 4, 0);
+		this.mTest = new Character(_game, 0, 1, WALK_SOUTH, 1, 4, 0);
 	}
 
 	@Override
 	public void update(float dt) {
-		// Input detection
-		if(Gdx.input.justTouched()) {
-			this.mTest.setMoving(!this.mTest.isMoving());
-		}
 		if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
 			this.mTest.moveLeft();
 		}
@@ -66,11 +62,13 @@ public class TestScreen extends Screen implements IConstants {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
         // Update our Camera
-		_game.getCamera().update();
+		//this.mTest.focusCamera();
+		this._game.getCamera().update();
 		
 		// Draw each component of the scene
 		Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+		this._game.spriteBatch.setProjectionMatrix(this._game.getCamera().combined);
         this.mTest.update(dt);
 		
 	}

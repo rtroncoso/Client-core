@@ -1,5 +1,5 @@
 /**
- * Character holder. All foreground actions of a character should go here (name, dead, etc).
+ * Character holder. All foreground actions of a character should go here (name, dead, move, etc).
  * @author Rodrigo Troncoso
  * @version 0.1
  * @since 2014-04-10
@@ -25,20 +25,19 @@ public class Character extends CharacterSprite {
 	
 	private int mUserPosX;
 	private int mUserPosY;
-	
 
 	// ===========================================================
 	// Constructors
 	// ===========================================================
 	public Character(Game _game, int x, int y, byte mHeading, int bodyIndex, int headIndex, int helmetIndex) {
-		super(_game, x * TILE_PIXEL_WIDTH, y * TILE_PIXEL_HEIGHT, mHeading, bodyIndex, headIndex, helmetIndex);
+		super(_game, x, y, mHeading, bodyIndex, headIndex, helmetIndex);
 		
 		this.mDead = false;
 		this.mInvisible = false;
 		this.mNombre = "";
 		
-		this.mUserPosX = x;
-		this.mUserPosY = y;
+		this.setUserPosX(x);
+		this.setUserPosY(y);
 	}
 
 	// ===========================================================
@@ -48,7 +47,6 @@ public class Character extends CharacterSprite {
 	public void draw() {
 		
 	}
-
 
 	// ===========================================================
 	// Getter & Setter
@@ -106,6 +104,7 @@ public class Character extends CharacterSprite {
 	 * @param mUserPosX the mUserPosX to set
 	 */
 	public void setUserPosX(int mUserPosX) {
+		this._x = mUserPosX * TILE_PIXEL_WIDTH;
 		this.mUserPosX = mUserPosX;
 	}
 
@@ -120,48 +119,96 @@ public class Character extends CharacterSprite {
 	 * @param mUserPosY the mUserPosY to set
 	 */
 	public void setUserPosY(int mUserPosY) {
+		this._y = mUserPosY * TILE_PIXEL_HEIGHT;// * (TILE_MAP_HEIGHT * TILE_PIXEL_HEIGHT); // Adapt position to Ydown
 		this.mUserPosY = mUserPosY;
 	}
 
 	// ===========================================================
 	// Methods
 	// ===========================================================
+	public void focusCamera() {
+		this._game.getCamera().position.set(this._x, this._y, 0);
+		this._game.getCamera().update();
+	}
+	
 	@Override
 	public void move(byte pHeading) {
+		if(this.mMoving) return; // Check if we are already moving
+		
+		// Set moving
 		this.mHeading = pHeading;
+		this.mMoving = true;
+		
+		// Set up NextY (let place() handle)
 		switch(this.mHeading) {
 			case(WALK_NORTH):
-				return;
-			case(WALK_SOUTH):
-				return;
+				this.mNextY = -1;
+				break;
 			case(WALK_EAST):
-				return;
+				this.mNextX = 1;
+				break;
+			case(WALK_SOUTH):
+				this.mNextY = 1;
+				break;
 			case(WALK_WEST):
-				return;
+				this.mNextX = -1;
+				break;
+		}
+		
+		// Update our position
+		this.mUserPosX += this.mNextX;
+		this.mUserPosY += this.mNextY;
+	}
+	
+	@Override
+	public void place() {
+		float offsetCounterX = 0.0f, offsetCounterY = 0.0f;
+		
+		if(this.mNextX != 0) {
+			offsetCounterX += this.mNextX * this.mSpeed * this.mDeltaTime; 
+			this._x += offsetCounterX;
+			if(this.mNextX == 1) {
+				if(this._x >= (this.mUserPosX) * TILE_PIXEL_HEIGHT) {
+					this.mNextX = 0;
+					this.mMoving = false;
+				}
+			} else if(this.mNextX == -1) {
+				if(this._x <= (this.mUserPosX) * TILE_PIXEL_HEIGHT) {
+					this.mNextX = 0;
+					this.mMoving = false;
+				}
+			}
+		}
+		if(this.mNextY != 0) {
+			offsetCounterY += this.mNextY * this.mSpeed * this.mDeltaTime; 
+			this._y += offsetCounterY;
+			if(this.mNextY == 1) {
+				if(this._y >= (this.mUserPosY) * TILE_PIXEL_HEIGHT) {
+					this.mNextY = 0;
+					this.mMoving = false;
+				}
+			} else if(this.mNextY == -1) {
+				if(this._y <= (this.mUserPosY) * TILE_PIXEL_HEIGHT) {
+					this.mNextY = 0;
+					this.mMoving = false;
+				}
+			}
 		}
 	}
 	
 	public void moveUp() {
-		//if(this._moving) return;
-		this.mBodySkin[WALK_NORTH].setAnimationTime(0);
 		this.move(WALK_NORTH);
 	}
 	
 	public void moveDown() {
-		//if(this._moving) return;
-		this.mBodySkin[WALK_SOUTH].setAnimationTime(0);
 		this.move(WALK_SOUTH);
 	}
 	
 	public void moveLeft() {
-		//if(this._moving) return;
-		this.mBodySkin[WALK_WEST].setAnimationTime(0);
 		this.move(WALK_WEST);
 	}
 	
 	public void moveRight() {
-		//if(this._moving) return;
-		this.mBodySkin[WALK_EAST].setAnimationTime(0);
 		this.move(WALK_EAST);
 	}
 

@@ -20,10 +20,13 @@ public class MovingSprite extends GameSprite {
 	protected int _scrollDirectionX;
 	protected int _scrollDirectionY;
 	
-	protected float mMoveOffsetX;
-	protected float mMoveOffsetY;
-	protected int mAddToUserPosX;
-	protected int mAddToUserPosY;
+	protected int mOffsetCounterX;
+	protected int mOffsetCounterY;
+	
+	protected int mLastX;
+	protected int mLastY;
+	protected int mNextX;
+	protected int mNextY;
 	
 	protected boolean mMoving;
 	protected float mSpeed;
@@ -38,13 +41,16 @@ public class MovingSprite extends GameSprite {
 		this._scrollDirectionX = 0;
 		this._scrollDirectionY = 0;
 		
-		this.mMoveOffsetX = 0;
-		this.mMoveOffsetY = 0;
-		this.mAddToUserPosX = 0;
-		this.mAddToUserPosY = 0;
+		this.mOffsetCounterX = 0;
+		this.mOffsetCounterY = 0;
+		
+		this.mNextX = 0;
+		this.mNextY = 0;
+		this.mLastX = 0;
+		this.mLastY = 0;
 		
 		this.mMoving = false;
-		this.mSpeed = 1.0f;
+		this.mSpeed = 150.0f;
 	}
 
 	// ===========================================================
