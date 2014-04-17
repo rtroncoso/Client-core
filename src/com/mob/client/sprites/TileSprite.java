@@ -9,7 +9,6 @@ package com.mob.client.sprites;
 import com.mob.client.Game;
 import com.mob.client.interfaces.IConstants;
 import com.mob.client.textures.BundledAnimation;
-import com.mob.client.textures.BundledTexture;
 
 public class TileSprite extends GameSprite implements IConstants {
 
@@ -21,7 +20,7 @@ public class TileSprite extends GameSprite implements IConstants {
 	// ===========================================================
 	// Fields
 	// ===========================================================
-	protected BundledTexture[] mGraphic;
+	protected BundledAnimation[] mGraphic;
 	protected float mDeltaTime;
 
 	// ===========================================================
@@ -30,10 +29,13 @@ public class TileSprite extends GameSprite implements IConstants {
 	public TileSprite(Game _game, int x, int y, int[] pGraphic) {
 		super(_game, x, y);
 		
-		this.mGraphic = new BundledTexture[4];
+		this.mGraphic = new BundledAnimation[4];
 		
 		for(int i = 0; i < 4; i++) {
-			this.mGraphic[i] = new BundledTexture(_game, pGraphic[i]);
+			if(_game.getGrhData().get(pGraphic[i]).getSpeed() != 0) 
+				this.mGraphic[i] = new BundledAnimation(_game, pGraphic[i]);
+			else
+				this.mGraphic[i] = new BundledAnimation(_game, pGraphic[i], false);
 			
 			// Correctly plot graphic position
 			this.mGraphic[i].setX((x * TILE_PIXEL_WIDTH) - (this.mGraphic[i].getGraphic().getRegionWidth() / 2));
@@ -52,18 +54,18 @@ public class TileSprite extends GameSprite implements IConstants {
 	/**
 	 * @return the mGraphic
 	 */
-	public BundledTexture[] getGraphicArray() {
+	public BundledAnimation[] getGraphicArray() {
 		return mGraphic;
 	}
 
 	/**
 	 * @param mGraphic the mGraphic to set
 	 */
-	public void setGraphicArray(BundledTexture[] mGraphic) {
+	public void setGraphicArray(BundledAnimation[] mGraphic) {
 		this.mGraphic = mGraphic;
 	}
 	
-	public BundledTexture getGraphic(int pIndex) {
+	public BundledAnimation getGraphic(int pIndex) {
 		return this.mGraphic[pIndex];
 	}
 

@@ -60,20 +60,20 @@ public class InitLoader implements IConstants {
 	public Vector<GrhData> loadGrhData(String initFileName) {
 		Vector<GrhData> inits = new Vector<GrhData>();
 		this.fileHandle = Gdx.files.internal("data/init/" + initFileName);
-		int numGrhs = 0, grh = 0, fileNum = 0, sX = 0, sY = 0, numFrames = 0, pixelWidth = 0, pixelHeight = 0, frames[] = new int[1];
-		double speed = 0.0d, tileWidth = 0.0d, tileHeight = 0.0d;
 		
 		try {
 			DataInputStream file = new DataInputStream(fileHandle.read());
 			file.skipBytes(4);
-			numGrhs = Util.leShort(file.readShort());
+			int numGrhs = Util.leShort(file.readShort());
 			inits.setSize(numGrhs + 1);
-			inits.setElementAt(new GrhData(sX, sY, fileNum, pixelWidth, pixelHeight, tileWidth, tileHeight, frames, speed), grh);
+			inits.setElementAt(new GrhData(0, 0, 0, 0, 0, 0, 0, new int[0], 0), 0);
 			file.skipBytes(2);
-			grh = Util.leShort(file.readShort());
+			int grh = Util.leShort(file.readShort());
 			file.skipBytes(2); // no es negro si nadie lo ve
 			
 			while(grh > 0) {
+				int fileNum = 0, sX = 0, sY = 0, numFrames = 0, pixelWidth = 0, pixelHeight = 0, frames[] = new int[0];
+				double speed = 0.0d, tileWidth = 0.0d, tileHeight = 0.0d;
 				numFrames = Util.leShort(file.readShort());
 				
 				if(numFrames > 1) {
@@ -103,9 +103,7 @@ public class InitLoader implements IConstants {
 					// Read normal GRH
 					fileNum = Util.leShort(file.readShort());
 					file.skipBytes(2);
-					if(fileNum == 12052) {
-						// debugueame
-					}
+					
 					if(fileNum <= 0) throw new IOException("fileNum");
 					
 					sX = Util.leShort(file.readShort());
@@ -122,8 +120,6 @@ public class InitLoader implements IConstants {
 
 					tileWidth = (double) pixelWidth / TILE_PIXEL_WIDTH;
 					tileHeight = (double) pixelHeight / TILE_PIXEL_HEIGHT;
-					
-					frames[0] = grh;
 				}
 				inits.setElementAt(new GrhData(sX, sY, fileNum, pixelWidth, pixelHeight, tileWidth, tileHeight, frames, speed), grh);
 				grh = Util.leShort(file.readShort());

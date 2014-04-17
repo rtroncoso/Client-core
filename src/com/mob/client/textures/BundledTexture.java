@@ -30,8 +30,7 @@ public class BundledTexture implements IConstants {
 	public BundledTexture(Game _game, int grhIndex) {
 		GrhData grh = _game.getGrhData().get(grhIndex);
 		
-		this.mTextureRegion = new TextureRegion(_game.getSurfaceHandler().get(
-										String.valueOf(grh.getFileNum())), grh.getX(), grh.getY(), grh.getPixelWidth(), grh.getPixelHeight());
+		this.mTextureRegion = new TextureRegion(_game.getSurfaceHandler().get(String.valueOf(grh.getFileNum())), grh.getX(), grh.getY(), grh.getPixelWidth(), grh.getPixelHeight());
 		this.mTextureRegion.flip(false, true);
 	}
 

@@ -6,7 +6,6 @@
  */
 package com.mob.client.textures;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.mob.client.Game;
@@ -24,7 +23,7 @@ public class BundledAnimation {
 	// ===========================================================
 	private Animation mAnimation;
 	private float mAnimationTime;
-	private TextureRegion[] mFrames;
+	private BundledTexture[] mFrames;
 	private float mX;
 	private float mY;
 
@@ -32,26 +31,27 @@ public class BundledAnimation {
 	// Constructors
 	// ===========================================================
 	public BundledAnimation (Game _game, int grhIndex) {
+		this(_game, grhIndex, true);
+	}
+	
+	public BundledAnimation (Game _game, int grhIndex, boolean pAnimated) {
 		this.mAnimationTime = 0.0f;
 		
-		GrhData grh = _game.getGrhData().get(grhIndex);
-		int numFrames = grh.getFrames().length;
-		TextureRegion[] frames = new TextureRegion[numFrames];
-		
-		if(numFrames == 1) {
-			Texture texture = _game.getSurfaceHandler().get(String.valueOf(grh.getFileNum()));
-			frames[0] = new TextureRegion(texture, grh.getX(), grh.getY(), grh.getPixelWidth(), grh.getPixelHeight());
+		if(!pAnimated) {
+			this.mFrames = new BundledTexture[1];
+			this.mFrames[0] = new BundledTexture(_game, grhIndex);
 		} else {
+			GrhData grh = _game.getGrhData().get(grhIndex);
+			int numFrames = grh.getFrames().length;
+			
+			this.mFrames = new BundledTexture[numFrames];
+			TextureRegion tmpFrames[] = new TextureRegion[numFrames];
 			for(int i = 0; i < numFrames; i++) {
-				GrhData frame = _game.getGrhData().get(grh.getFrames()[i]);
-				Texture texture = _game.getSurfaceHandler().get(String.valueOf(frame.getFileNum()));
-				frames[i] = new TextureRegion(texture, frame.getX(), frame.getY(), frame.getPixelWidth(), frame.getPixelHeight());
-				frames[i].flip(false, true);
+				this.mFrames[i] = new BundledTexture(_game, grh.getFrame(i));
+				tmpFrames[i] = this.mFrames[i].getGraphic();
 			}
-			this.mAnimation = new Animation((float) grh.getSpeed() / 1000, frames);
+			this.mAnimation = new Animation((float) grh.getSpeed() / 1000, tmpFrames);
 		}
-		
-		this.setFrames(frames);
 	}
 
 	// ===========================================================
@@ -92,19 +92,24 @@ public class BundledAnimation {
 	/**
 	 * @return the mFrames
 	 */
-	public TextureRegion[] getFrames() {
+	public BundledTexture[] getFrames() {
 		return mFrames;
 	}
 
 	/**
 	 * @param mFrames the mFrames to set
 	 */
-	public void setFrames(TextureRegion[] mFrames) {
+	public void setFrames(BundledTexture[] mFrames) {
 		this.mFrames = mFrames;
 	}
 	
+	public TextureRegion getGraphic() {
+		return this.getGraphic(0);
+	}
+
+	
 	public TextureRegion getGraphic(int pIndex) {
-		return this.mFrames[pIndex];
+		return this.mFrames[pIndex].getGraphic();
 	}
 
 	/**

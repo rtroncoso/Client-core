@@ -34,6 +34,9 @@ public class CharacterSprite extends MovingSprite implements ISprite, IConstants
 	protected BundledTexture[] mHelmetSkin;
 	protected int mHelmetGrhIndex;
 	
+	protected int mUserPosX;
+	protected int mUserPosY;
+	
 	protected float mDeltaTime;
 	
 	protected int mHeadOffsetX;
@@ -44,7 +47,7 @@ public class CharacterSprite extends MovingSprite implements ISprite, IConstants
 	// ===========================================================
 	// Constructors
 	// ===========================================================
-	public CharacterSprite(Game _game, float x, float y, byte mHeading, int bodyIndex, int headIndex, int helmetIndex) {
+	public CharacterSprite(Game _game, int x, int y, byte mHeading, int bodyIndex, int headIndex, int helmetIndex) {
 		super(_game, x , y);
 		
 		this.mHeading = mHeading;
@@ -59,6 +62,10 @@ public class CharacterSprite extends MovingSprite implements ISprite, IConstants
 		
 		this.mHeadOffsetX = this.mGame.getBodyData().get(bodyIndex).getHeadOffsetX();
 		this.mHeadOffsetY = this.mGame.getBodyData().get(bodyIndex).getHeadOffsetY();
+		
+		// Update user pos
+		this.setUserPosX(x);
+		this.setUserPosY(y);
 	}
 	
 	// ===========================================================
@@ -116,7 +123,7 @@ public class CharacterSprite extends MovingSprite implements ISprite, IConstants
 		if(this.mMoving)
 			return this.mBodySkin[this.mHeading].getAnimation().getKeyFrame(this.mBodySkin[this.mHeading].getAnimationTime(), true);
 		else
-			return this.mBodySkin[this.mHeading].getFrames()[0];
+			return this.mBodySkin[this.mHeading].getGraphic();
 	}
 	
 	public TextureRegion getHead() {
@@ -125,6 +132,36 @@ public class CharacterSprite extends MovingSprite implements ISprite, IConstants
 	
 	public TextureRegion getHelmet() {
 		return this.mHelmetSkin[this.mHeading].getGraphic();
+	}
+
+	/**
+	 * @return the mUserPosX
+	 */
+	public int getUserPosX() {
+		return mUserPosX;
+	}
+
+	/**
+	 * @param mUserPosX the mUserPosX to set
+	 */
+	public void setUserPosX(int mUserPosX) {
+		this.mX = (mUserPosX * TILE_PIXEL_WIDTH);
+		this.mUserPosX = mUserPosX;
+	}
+
+	/**
+	 * @return the mUserPosY
+	 */
+	public int getUserPosY() {
+		return mUserPosY;
+	}
+
+	/**
+	 * @param mUserPosY the mUserPosY to set
+	 */
+	public void setUserPosY(int mUserPosY) {
+		this.mY = (mUserPosY * TILE_PIXEL_HEIGHT);
+		this.mUserPosY = mUserPosY;
 	}
 	
 	// ===========================================================

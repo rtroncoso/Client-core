@@ -39,8 +39,8 @@ public class TestScreen extends Screen implements IConstants {
 	// ===========================================================
 	@Override
 	public void createScreen() {
-		this.mMap = new Map(this._game, 1);
-		this.mTest = new Character(_game, 1, 1, WALK_SOUTH, 1, 4, 1);
+		this.mMap = new Map(this._game, 34);
+		this.mTest = new Character(_game, 50, 50, WALK_SOUTH, 1, 4, 1);
 	}
 
 	@Override

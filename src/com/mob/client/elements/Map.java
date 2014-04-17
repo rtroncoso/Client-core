@@ -23,7 +23,7 @@ public class Map implements IConstants {
 	// ===========================================================
 	private Tile[][] mTiles;
 	private int mMapNumber;
-	private float mDeltaTime;
+	//private float mDeltaTime;
 	private Game mGame;
 
 	// ===========================================================
@@ -47,14 +47,20 @@ public class Map implements IConstants {
 	public void update(float dt) {
 		
 		// Vars
+		int screenMinX, screenMaxX, screenMinY, screenMaxY, minAreaX, minAreaY, maxAreaX, maxAreaY;
 		MapData mapData = this.mGame.getMapHandler().get(this.mMapNumber);
-		int screenMinX, screenMaxX, screenMinY, screenMaxY;
+		int tileBufferSize = 9; // TODO : hardcoded
 		
 		// Calculate visible part of the map
-		int minAreaX = ((int) (this.mGame.getCamera().position.x - ((this.mGame.getCamera().position.x + this.mGame.getCamera().viewportWidth) / 2)) / TILE_PIXEL_WIDTH) - 1;
-		int maxAreaX = ((int) (this.mGame.getCamera().position.x + this.mGame.getCamera().viewportWidth) / TILE_PIXEL_WIDTH) + 1;
-		int minAreaY = ((int) (this.mGame.getCamera().position.y - ((this.mGame.getCamera().position.y + this.mGame.getCamera().viewportHeight) / 2)) / TILE_PIXEL_WIDTH) - 1;
-		int maxAreaY = ((int) (this.mGame.getCamera().position.y + this.mGame.getCamera().viewportHeight) / TILE_PIXEL_HEIGHT) + 1;
+		screenMinX = ((int) (this.mGame.getCamera().position.x - ((this.mGame.getCamera().position.x + this.mGame.getCamera().viewportWidth) / 2)) / TILE_PIXEL_WIDTH) - 1;
+		screenMaxX = ((int) (this.mGame.getCamera().position.x + this.mGame.getCamera().viewportWidth) / TILE_PIXEL_WIDTH) + 1;
+		screenMinY = ((int) (this.mGame.getCamera().position.y - ((this.mGame.getCamera().position.y + this.mGame.getCamera().viewportHeight) / 2)) / TILE_PIXEL_WIDTH) - 1;
+		screenMaxY = ((int) (this.mGame.getCamera().position.y + this.mGame.getCamera().viewportHeight) / TILE_PIXEL_HEIGHT) + 1;
+		
+		minAreaX = screenMinX - tileBufferSize;
+		maxAreaX = screenMaxX + tileBufferSize;
+		minAreaY = screenMinY - tileBufferSize;
+		maxAreaY = screenMaxY - tileBufferSize;
 		
 		// Make sure it is between map bounds
 		if(minAreaX < MIN_MAP_SIZE_WIDTH) minAreaX = MIN_MAP_SIZE_WIDTH;
@@ -62,17 +68,23 @@ public class Map implements IConstants {
 		if(minAreaY < MIN_MAP_SIZE_HEIGHT) minAreaY = MIN_MAP_SIZE_HEIGHT;
 		if(maxAreaY > MAX_MAP_SIZE_HEIGHT) maxAreaY = MAX_MAP_SIZE_HEIGHT;
 		
+		if(screenMinX < MIN_MAP_SIZE_WIDTH) screenMinX = MIN_MAP_SIZE_WIDTH;
+		if(screenMaxX > MAX_MAP_SIZE_WIDTH) screenMaxX = MAX_MAP_SIZE_WIDTH;
+		if(screenMinY < MIN_MAP_SIZE_HEIGHT) screenMinY = MIN_MAP_SIZE_HEIGHT;
+		if(screenMaxY > MAX_MAP_SIZE_HEIGHT) screenMaxY = MAX_MAP_SIZE_HEIGHT;
+		
 		// Start map render
 		/******************************************
 		 * Layer 1
 		 ******************************************/
-		for(int y = minAreaY; y <= maxAreaY; y++) {
-			for(int x = minAreaX; x <= maxAreaX; x++) {
+		for(int y = screenMinY; y <= screenMaxY; y++) {
+			for(int x = screenMinX; x <= screenMaxX; x++) {
 				
 				Tile tile = this.getTile(x, y);
 
 				this.mGame.getSpriteBatch().begin();
 				//tile.getGraphic(0).setAnimationTime(tile.getGraphic(0).getAnimationTime() + dt);
+				//this.mGame.getSpriteBatch().draw(tile.getGraphic(0).getAnimation().getKeyFrame(tile.getGraphic(0).getAnimationTime()), tile.getGraphic(0).getX(), tile.getGraphic(0).getY());
 				this.mGame.getSpriteBatch().draw(tile.getGraphic(0).getGraphic(), tile.getGraphic(0).getX(), tile.getGraphic(0).getY());
 				this.mGame.getSpriteBatch().end();
 			}

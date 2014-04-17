@@ -156,6 +156,10 @@ public class GrhData {
 	public int[] getFrames() {
 		return frames;
 	}
+	
+	public int getFrame(int pIndex) {
+		return frames[pIndex];
+	}
 
 	/**
 	 * @param frames the frames to set

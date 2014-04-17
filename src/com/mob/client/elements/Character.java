@@ -22,9 +22,6 @@ public class Character extends CharacterSprite {
 	private boolean mDead;
 	private boolean mInvisible;
 	private String mNombre;
-	
-	private int mUserPosX;
-	private int mUserPosY;
 
 	// ===========================================================
 	// Constructors
@@ -35,9 +32,6 @@ public class Character extends CharacterSprite {
 		this.mDead = false;
 		this.mInvisible = false;
 		this.mNombre = "";
-		
-		this.setUserPosX(x);
-		this.setUserPosY(y);
 	}
 
 	// ===========================================================
@@ -46,89 +40,6 @@ public class Character extends CharacterSprite {
 	@Override
 	public void draw() {
 		
-	}
-
-	// ===========================================================
-	// Getter & Setter
-	// ===========================================================
-	/**
-	 * @return the mNombre
-	 */
-	public String getNombre() {
-		return mNombre;
-	}
-	
-	/**
-	 * @param mNombre the mNombre to set
-	 */
-	public void setNombre(String mNombre) {
-		this.mNombre = mNombre;
-	}
-
-	/**
-	 * @return the mInvisible
-	 */
-	public boolean isInvisible() {
-		return mInvisible;
-	}
-
-	/**
-	 * @param mInvisible the mInvisible to set
-	 */
-	public void setInvisible(boolean mInvisible) {
-		this.mInvisible = mInvisible;
-	}
-
-	/**
-	 * @return the mDead
-	 */
-	public boolean isDead() {
-		return mDead;
-	}
-
-	/**
-	 * @param mDead the mDead to set
-	 */
-	public void setDead(boolean mDead) {
-		this.mDead = mDead;
-	}
-
-	/**
-	 * @return the mUserPosX
-	 */
-	public int getUserPosX() {
-		return mUserPosX;
-	}
-
-	/**
-	 * @param mUserPosX the mUserPosX to set
-	 */
-	public void setUserPosX(int mUserPosX) {
-		this.mX = (mUserPosX * TILE_PIXEL_WIDTH) - (this.getBody().getRegionWidth() / 2);
-		this.mUserPosX = mUserPosX;
-	}
-
-	/**
-	 * @return the mUserPosY
-	 */
-	public int getUserPosY() {
-		return mUserPosY;
-	}
-
-	/**
-	 * @param mUserPosY the mUserPosY to set
-	 */
-	public void setUserPosY(int mUserPosY) {
-		this.mY = (mUserPosY * TILE_PIXEL_HEIGHT) - (this.getBody().getRegionHeight());
-		this.mUserPosY = mUserPosY;
-	}
-
-	// ===========================================================
-	// Methods
-	// ===========================================================
-	public void focusCamera() {
-		this.mGame.getCamera().position.set(this.mX, this.mY, 0);
-		this.mGame.getCamera().update();
 	}
 	
 	@Override
@@ -179,6 +90,7 @@ public class Character extends CharacterSprite {
 				}
 			}
 		}
+		
 		if(this.mNextY != 0) {
 			offsetCounterY += this.mNextY * this.mSpeed * this.mDeltaTime; 
 			this.mY += offsetCounterY;
@@ -194,6 +106,59 @@ public class Character extends CharacterSprite {
 				}
 			}
 		}
+	}
+
+	// ===========================================================
+	// Getter & Setter
+	// ===========================================================
+	/**
+	 * @return the mNombre
+	 */
+	public String getNombre() {
+		return mNombre;
+	}
+	
+	/**
+	 * @param mNombre the mNombre to set
+	 */
+	public void setNombre(String mNombre) {
+		this.mNombre = mNombre;
+	}
+
+	/**
+	 * @return the mInvisible
+	 */
+	public boolean isInvisible() {
+		return mInvisible;
+	}
+
+	/**
+	 * @param mInvisible the mInvisible to set
+	 */
+	public void setInvisible(boolean mInvisible) {
+		this.mInvisible = mInvisible;
+	}
+
+	/**
+	 * @return the mDead
+	 */
+	public boolean isDead() {
+		return mDead;
+	}
+
+	/**
+	 * @param mDead the mDead to set
+	 */
+	public void setDead(boolean mDead) {
+		this.mDead = mDead;
+	}
+
+	// ===========================================================
+	// Methods
+	// ===========================================================
+	public void focusCamera() {
+		this.mGame.getCamera().position.set(this.mX, this.mY, 0);
+		this.mGame.getCamera().update();
 	}
 	
 	public void moveUp() {
