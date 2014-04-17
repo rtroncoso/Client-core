@@ -21,6 +21,8 @@ public class Tile extends TileSprite {
 	// Fields
 	// ===========================================================
 	private Character mCharacter;
+	private int mCharIndex;
+	private boolean mBlocked;
 
 	// ===========================================================
 	// Constructors
@@ -28,10 +30,12 @@ public class Tile extends TileSprite {
 
 	public Tile(Game _game, int x, int y, int[] pGraphic, Character pCharacter) {
 		super(_game, x, y, pGraphic);
+		this.setCharacter(pCharacter);
 	}
 	
 	public Tile(Game _game, int x, int y, int[] pGraphic) {
 		super(_game, x, y, pGraphic);
+		this.setCharacter(null);
 	}
 
 	// ===========================================================
@@ -54,12 +58,49 @@ public class Tile extends TileSprite {
 	 */
 	public void setCharacter(Character mCharacter) {
 		this.mCharacter = mCharacter;
+		if(this.mCharacter != null) 
+			this.mCharIndex = this.mCharacter.getCharIndex();
+		else
+			this.mCharIndex = 0;
+	}
+
+	/**
+	 * @return the mCharIndex
+	 */
+	public int getCharIndex() {
+		return mCharIndex;
+	}
+
+	/**
+	 * @param mCharIndex the mCharIndex to set
+	 */
+	public void setCharIndex(int mCharIndex) {
+		this.mCharIndex = mCharIndex;
+	}
+
+	/**
+	 * @return the mBlocked
+	 */
+	public boolean isBlocked() {
+		return mBlocked;
+	}
+
+	/**
+	 * @param mBlocked the mBlocked to set
+	 */
+	public void setBlocked(boolean mBlocked) {
+		this.mBlocked = mBlocked;
 	}
 
 	// ===========================================================
 	// Methods
 	// ===========================================================
-
+	public boolean isLegalPos() {
+		if(this.mBlocked) return false;
+		if(this.mCharIndex > 0) return false;
+		// checkear hayagua
+		return true;
+	}
 
 	// ===========================================================
 	// Inner and Anonymous Classes

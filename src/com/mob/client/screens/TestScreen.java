@@ -26,8 +26,8 @@ public class TestScreen extends Screen implements IConstants {
 	// ===========================================================
 	// Fields
 	// ===========================================================
-	private Character mTest;
-
+	private int map;
+	
 	// ===========================================================
 	// Constructors
 	// ===========================================================
@@ -40,52 +40,56 @@ public class TestScreen extends Screen implements IConstants {
 	// ===========================================================
 	@Override
 	public void createScreen() {
-		this.mMap = new Map(this._game, 1);
-		this.mTest = new Character(_game, 50, 50, WALK_SOUTH, 1, 4, 1);
-		
-		this._game.getCamera().zoom = 0.9f;
+		this.map = 34;
+		this.mGame.getCurrentMap().setMap(this.map);
+		this.mGame.getCharacterHandler().makeChar(1, 50, 50, WALK_SOUTH, 64, 6, 1);
 		
 		this.mInputMultiplexer = new InputMultiplexer();
 	}
 
 	@Override
 	public void update(float dt) {
+		Gdx.app.log(this.getClass().getSimpleName(), "FPS: " + String.valueOf(Gdx.graphics.getFramesPerSecond()));
+		
+		if(Gdx.input.justTouched()) {
+			this.map += 1;
+			this.mGame.getCurrentMap().setMap(this.map);
+		}
+		
 		if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-			this.mTest.moveLeft();
+			this.mGame.getCharacterHandler().getPlayer().moveLeft();
 		}
 		if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-			this.mTest.moveRight();
+			this.mGame.getCharacterHandler().getPlayer().moveRight();
 		}
 		if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
-			this.mTest.moveUp();
+			this.mGame.getCharacterHandler().getPlayer().moveUp();
 		}
 		if(Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-			this.mTest.moveDown();
+			this.mGame.getCharacterHandler().getPlayer().moveDown();
 		}
 		
 		// Clean up Scene
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
-        // Update our Camera
-		this.mTest.focusCamera();
-		this._game.getCamera().update();
+        // Focus camera on player
+		this.mGame.getCharacterHandler().getPlayer().focusCamera();
+		this.mGame.getCamera().update();
 		
 		// Draw each component of the scene
 		Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-		this._game.getSpriteBatch().setProjectionMatrix(this._game.getCamera().combined);
-		this._game.getSpriteBatch().begin();
-        this.mMap.update(dt);
-        this.mTest.update(dt);
-		this._game.getSpriteBatch().end();
+		this.mGame.getSpriteBatch().setProjectionMatrix(this.mGame.getCamera().combined);
+		this.mGame.getSpriteBatch().begin();
+        this.mGame.getCurrentMap().update(dt);
+		this.mGame.getSpriteBatch().end();
 	}
 
 	// ===========================================================
 	// Getter & Setter
 	// ===========================================================
-
-
+	
 	// ===========================================================
 	// Methods
 	// ===========================================================

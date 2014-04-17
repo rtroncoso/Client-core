@@ -35,7 +35,7 @@ public class MovingSprite extends GameSprite {
 		this.mNextY = 0;
 		
 		this.mMoving = false;
-		this.mSpeed = 150.0f; // TODO : don't harcode movement speed
+		this.mSpeed = 200.0f; // TODO : don't harcode movement speed
 	}
 
 	// ===========================================================

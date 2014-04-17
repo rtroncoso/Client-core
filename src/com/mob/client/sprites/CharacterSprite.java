@@ -84,32 +84,34 @@ public class CharacterSprite extends MovingSprite implements ISprite, IConstants
 	public void update(float dt) {
 		
 		// Vars
-		float pixelOffsetX, pixelOffsetY;
+		float bodyPixelOffsetX, bodyPixelOffsetY, headPixelOffsetX, headPixelOffsetY;
 		
 		// Update internal timer
 		this.mDeltaTime = dt;
 		this.mBodySkin[this.mHeading].setAnimationTime(this.mBodySkin[this.mHeading].getAnimationTime() + this.mDeltaTime);
 		
 		// Calculate offset to draw
-		pixelOffsetX = this.mX - (this.getBody().getRegionWidth() / 2);
-		pixelOffsetY = this.mY - (this.getBody().getRegionHeight());
+		bodyPixelOffsetX = this.mX - (this.getBody().getRegionWidth() / 2);
+		bodyPixelOffsetY = this.mY - (this.getBody().getRegionHeight());
+		headPixelOffsetX = this.mX + this.mHeadOffsetX - (this.getHead().getRegionWidth() / 4) - 4;
+		headPixelOffsetY = this.mY + this.mHeadOffsetY - this.getBody().getRegionHeight() - 4;
 		
 		// Draw our character
 		if(this.mHeadGrhIndex != 0) {
 			if(this.mVisible) {
 				if(this.mBodyGrhIndex != 0) 
-					this.mGame.getSpriteBatch().draw(this.getBody(), pixelOffsetX, pixelOffsetY);
+					this.mGame.getSpriteBatch().draw(this.getBody(), bodyPixelOffsetX, bodyPixelOffsetY);
 						
 				if(this.mHeadGrhIndex != 0) {
-					this.mGame.getSpriteBatch().draw(this.getHead(), pixelOffsetX + this.mHeadOffsetX + (this.getHead().getRegionWidth() / 2) - 4, pixelOffsetY + (this.mHeadOffsetY * 2));
+					this.mGame.getSpriteBatch().draw(this.getHead(), headPixelOffsetX, headPixelOffsetY);
 				
 					if(this.mHelmetGrhIndex != 0)
-						this.mGame.getSpriteBatch().draw(this.getHelmet(), pixelOffsetX + this.mHeadOffsetX + (this.getHelmet().getRegionWidth() / 2) - 4, pixelOffsetY + (this.mHeadOffsetY * 2));
+						this.mGame.getSpriteBatch().draw(this.getHelmet(), headPixelOffsetX, headPixelOffsetY);
 				}
 			}
 		} else { // Draw only body
 			if(this.mBodyGrhIndex != 0) 
-				this.mGame.getSpriteBatch().draw(this.getBody(), pixelOffsetX, pixelOffsetY);
+				this.mGame.getSpriteBatch().draw(this.getBody(), bodyPixelOffsetX, bodyPixelOffsetY);
 		}
 		
 		// Update sprite Position

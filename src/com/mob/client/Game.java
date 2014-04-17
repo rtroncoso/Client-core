@@ -24,7 +24,9 @@ import com.mob.client.data.AnimationData;
 import com.mob.client.data.GrhData;
 import com.mob.client.data.HeadData;
 import com.mob.client.data.HelmetData;
+import com.mob.client.elements.Map;
 import com.mob.client.engine.TileEngine;
+import com.mob.client.handlers.CharacterHandler;
 import com.mob.client.handlers.MapHandler;
 import com.mob.client.handlers.SurfaceHandler;
 import com.mob.client.interfaces.IConstants;
@@ -60,6 +62,9 @@ public class Game implements ApplicationListener, IConstants {
 
 	protected MapHandler mMapHandler;
     protected SurfaceHandler mSurfaceHandler;
+    protected CharacterHandler mCharacterHandler;
+
+	protected Map mCurrentMap;
 
 	// ===========================================================
 	// Constructors
@@ -77,6 +82,8 @@ public class Game implements ApplicationListener, IConstants {
         this.mHelmetData = new Vector<HelmetData>();
         this.mInitLoader = new InitLoader(this);
         this.mMapHandler = new MapHandler(this);
+        this.mCurrentMap = new Map(this);
+        this.mCharacterHandler = new CharacterHandler(this);
           
     }
     
@@ -231,6 +238,34 @@ public class Game implements ApplicationListener, IConstants {
 		this.mSpriteBatch = mSpriteBatch;
 	}
 	
+	/**
+	 * @return the mCurrentMap
+	 */
+	public Map getCurrentMap() {
+		return mCurrentMap;
+	}
+
+	/**
+	 * @param mCurrentMap the mCurrentMap to set
+	 */
+	public void setCurrentMap(Map mCurrentMap) {
+		this.mCurrentMap = mCurrentMap;
+	}    
+	
+	/**
+	 * @return the mCharacterHandler
+	 */
+	public CharacterHandler getCharacterHandler() {
+		return mCharacterHandler;
+	}
+
+	/**
+	 * @param mCharacterHandler the mCharacterHandler to set
+	 */
+	public void setCharacterHandler(CharacterHandler mCharacterHandler) {
+		this.mCharacterHandler = mCharacterHandler;
+	}
+	
 	// ===========================================================
 	// Methods
 	// ===========================================================
@@ -269,7 +304,7 @@ public class Game implements ApplicationListener, IConstants {
         this.currentScreen = newScreen;  
         this.currentScreen.createScreen();  
 	}  
-	
+
 	public AnimationData initGrh(int grhIndex, int started) {
 	
 		int tmpStarted = 0, tmpFrameCounter = 0, tmpTicksCounter = 0;

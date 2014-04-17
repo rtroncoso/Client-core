@@ -83,7 +83,7 @@ public class SurfaceHandler implements IConstants {
 	 */
 	public void loadTexture(String fileName) {
 		Texture texture = new Texture(this.mGraphicsPath + "/" + fileName + GAME_GRAPHICS_EXTENSION);
-		texture.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
+		texture.setFilter(TextureFilter.Nearest, TextureFilter.MipMapLinearNearest);
 		this.add(fileName, texture);
 	}
 
@@ -92,11 +92,11 @@ public class SurfaceHandler implements IConstants {
 	 * @param texture Texture to add
 	 */
 	 public void add(final String key, final Texture texture) {
-	  if (this.mDict.containsKey(key)) {
-	   return;
-	  }
+		 if (this.mDict.containsKey(key)) {
+			 return;
+		 }
 	   
-	  this.mDict.put(key, texture);
+	 	this.mDict.put(key, texture);
 	 }
 
 	/**
@@ -114,21 +114,21 @@ public class SurfaceHandler implements IConstants {
 	  * @param key Index in map
 	  */
 	public void dispose(final String key) {
-	  if (!this.mDict.containsKey(key)) {
-	   return;
-	  }
+		if (!this.mDict.containsKey(key)) {
+			return;
+		}
 	   
-	  final Texture t = this.mDict.get(key);
-	  t.dispose();
-	  this.mDict.remove(key);
-	 }
+		final Texture t = this.mDict.get(key);
+		t.dispose();
+		this.mDict.remove(key);
+	}
 	  
-	 public void disposeAll() {
-	  for (final Texture t : this.mDict.values()) {
-	   t.dispose();
-	  }
-	   
-	  this.mDict.clear();
+	public void disposeAll() {
+		for (final Texture t : this.mDict.values()) {
+			t.dispose();
+		}
+   
+		this.mDict.clear();
 	 }
 
 	// ===========================================================

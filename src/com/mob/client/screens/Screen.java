@@ -8,6 +8,7 @@ package com.mob.client.screens;
 
 import com.badlogic.gdx.InputMultiplexer;
 import com.mob.client.Game;
+import com.mob.client.elements.Character;
 import com.mob.client.elements.Map;
 
 public abstract class Screen  implements com.badlogic.gdx.Screen {
@@ -21,14 +22,14 @@ public abstract class Screen  implements com.badlogic.gdx.Screen {
 	// Fields
 	// ===========================================================
 	protected InputMultiplexer mInputMultiplexer;
-	protected Game _game;
+	protected Game mGame;
 	protected Map mMap;
 
 	// ===========================================================
 	// Constructors
 	// ===========================================================
 	public Screen (Game game) {
-		this._game = game;
+		this.mGame = game;
 	}
 
 	// ===========================================================
@@ -55,7 +56,6 @@ public abstract class Screen  implements com.badlogic.gdx.Screen {
 	// ===========================================================
 	// Getter & Setter
 	// ===========================================================
-
 
 	// ===========================================================
 	// Methods

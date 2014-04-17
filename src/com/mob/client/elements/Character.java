@@ -19,6 +19,7 @@ public class Character extends CharacterSprite {
 	// ===========================================================
 	// Fields
 	// ===========================================================
+	private int mCharIndex;
 	private boolean mDead;
 	private boolean mInvisible;
 	private String mNombre;
@@ -26,9 +27,10 @@ public class Character extends CharacterSprite {
 	// ===========================================================
 	// Constructors
 	// ===========================================================
-	public Character(Game _game, int x, int y, byte mHeading, int bodyIndex, int headIndex, int helmetIndex) {
+	public Character(Game _game, int charIndex, int x, int y, byte mHeading, int bodyIndex, int headIndex, int helmetIndex) {
 		super(_game, x, y, mHeading, bodyIndex, headIndex, helmetIndex);
 		
+		this.mCharIndex = charIndex;
 		this.mDead = false;
 		this.mInvisible = false;
 		this.mNombre = "";
@@ -44,31 +46,45 @@ public class Character extends CharacterSprite {
 	
 	@Override
 	public void move(byte pHeading) {
+		int nextX = 0, nextY = 0;
 		if(this.mMoving) return; // Check if we are already moving
 		
-		// Set moving
+		// Set Heading
 		this.mHeading = pHeading;
-		this.mMoving = true;
 		
 		// Set up NextY (let place() handle)
 		switch(this.mHeading) {
 			case(WALK_NORTH):
-				this.mNextY = -1;
+				nextY = -1;
 				break;
 			case(WALK_EAST):
-				this.mNextX = 1;
+				nextX = 1;
 				break;
 			case(WALK_SOUTH):
-				this.mNextY = 1;
+				nextY = 1;
 				break;
 			case(WALK_WEST):
-				this.mNextX = -1;
+				nextX = -1;
 				break;
 		}
 		
-		// Update our position
+		// Check if legal pos
+		if(!this.mGame.getCurrentMap().getTile(this.mUserPosX + nextX, this.mUserPosY + nextY).isLegalPos()) return;
+		
+		// Delete old character on map
+		this.mGame.getCurrentMap().getTile(this.mUserPosX, this.mUserPosY).setCharacter(null);
+		
+		// Update our position and destination
+		this.mNextX = nextX;
+		this.mNextY = nextY;
 		this.mUserPosX += this.mNextX;
 		this.mUserPosY += this.mNextY;
+		
+		// Plot new character on map
+		this.mGame.getCurrentMap().setCharacter(this.mUserPosX, this.mUserPosY, this);
+		
+		// Set moving
+		this.mMoving = true;
 	}
 	
 	@Override
@@ -112,6 +128,20 @@ public class Character extends CharacterSprite {
 	// Getter & Setter
 	// ===========================================================
 	/**
+	 * @param mUserPosX the mUserPosX to set
+	 */
+	public void setUserPosX(int mUserPosX) {
+		super.setUserPosX(mUserPosX);
+	}
+
+	/**
+	 * @param mUserPosY the mUserPosY to set
+	 */
+	public void setUserPosY(int mUserPosY) {
+		super.setUserPosY(mUserPosY);
+	}
+	
+	/**
 	 * @return the mNombre
 	 */
 	public String getNombre() {
@@ -123,6 +153,20 @@ public class Character extends CharacterSprite {
 	 */
 	public void setNombre(String mNombre) {
 		this.mNombre = mNombre;
+	}
+
+	/**
+	 * @return the mCharIndex
+	 */
+	public int getCharIndex() {
+		return mCharIndex;
+	}
+
+	/**
+	 * @param mCharIndex the mCharIndex to set
+	 */
+	public void setCharIndex(int mCharIndex) {
+		this.mCharIndex = mCharIndex;
 	}
 
 	/**

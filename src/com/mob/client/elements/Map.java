@@ -10,6 +10,7 @@ import com.mob.client.Game;
 import com.mob.client.data.MapBlockData;
 import com.mob.client.data.MapData;
 import com.mob.client.interfaces.IConstants;
+import com.mob.client.textures.BundledTexture;
 
 public class Map implements IConstants {
 
@@ -23,12 +24,16 @@ public class Map implements IConstants {
 	// ===========================================================
 	private Tile[][] mTiles;
 	private int mMapNumber;
-	//private float mDeltaTime;
 	private Game mGame;
 
 	// ===========================================================
 	// Constructors
 	// ===========================================================
+	public Map(Game pGame) {
+		this.mMapNumber = 0;
+		this.mGame = pGame;
+	}
+	
 	/**
 	 * @param mMapNumber
 	 * @param mGame
@@ -81,10 +86,10 @@ public class Map implements IConstants {
 			for(int x = screenMinX; x <= screenMaxX; x++) {
 				
 				Tile tile = this.getTile(x, y);
+				BundledTexture layer = tile.getGraphic(0);
 
-				tile.getGraphic(0).setAnimationTime(tile.getGraphic(0).getAnimationTime() + dt);
-				this.mGame.getSpriteBatch().draw(tile.getGraphic(0).getGraphic(true), tile.getGraphic(0).getX(), tile.getGraphic(0).getY());
-				//this.mGame.getSpriteBatch().draw(tile.getGraphic(0).getGraphic(), tile.getGraphic(0).getX(), tile.getGraphic(0).getY());
+				layer.setAnimationTime(layer.getAnimationTime() + dt);
+				this.mGame.getSpriteBatch().draw(layer.getGraphic(true), layer.getX(), layer.getY());
 			}
 		}
 
@@ -95,9 +100,11 @@ public class Map implements IConstants {
 			for(int x = minAreaX; x <= maxAreaX; x++) {
 				
 				Tile tile = this.getTile(x, y);
+				BundledTexture layer = tile.getGraphic(1);
+				
 				if(mapData.getTile(x, y).getGraphic()[1] != 0) {
-					tile.getGraphic(1).setAnimationTime(tile.getGraphic(1).getAnimationTime() + dt);
-					this.mGame.getSpriteBatch().draw(tile.getGraphic(1).getGraphic(true), tile.getGraphic(1).getX(), tile.getGraphic(1).getY());
+					layer.setAnimationTime(layer.getAnimationTime() + dt);
+					this.mGame.getSpriteBatch().draw(layer.getGraphic(true), layer.getX(), layer.getY());
 				}
 			}
 		}
@@ -109,14 +116,20 @@ public class Map implements IConstants {
 			for(int x = minAreaX; x <= maxAreaX; x++) {
 				
 				Tile tile = this.getTile(x, y);
+				BundledTexture layer = tile.getGraphic(2);
 
+				// Layer 3
 				if(mapData.getTile(x, y).getGraphic()[2] != 0) {
-					tile.getGraphic(2).setAnimationTime(tile.getGraphic(2).getAnimationTime() + dt);
-					this.mGame.getSpriteBatch().draw(tile.getGraphic(2).getGraphic(true), tile.getGraphic(2).getX(), tile.getGraphic(2).getY());
+					layer.setAnimationTime(layer.getAnimationTime() + dt);
+					this.mGame.getSpriteBatch().draw(layer.getGraphic(true), layer.getX(), layer.getY());
+				}
+				
+				// Character layer
+				if(tile.getCharIndex() != 0) {
+					tile.getCharacter().update(dt);
 				}
 			}
 		}
-
 		
 		/******************************************
 		 * Layer 4
@@ -125,10 +138,11 @@ public class Map implements IConstants {
 			for(int x = minAreaX; x <= maxAreaX; x++) {
 				
 				Tile tile = this.getTile(x, y);
+				BundledTexture layer = tile.getGraphic(3);
 
 				if(mapData.getTile(x, y).getGraphic()[3] != 0) {
-					tile.getGraphic(3).setAnimationTime(tile.getGraphic(3).getAnimationTime() + dt);
-					this.mGame.getSpriteBatch().draw(tile.getGraphic(3).getGraphic(true), tile.getGraphic(3).getX(), tile.getGraphic(3).getY());
+					layer.setAnimationTime(layer.getAnimationTime() + dt);
+					this.mGame.getSpriteBatch().draw(layer.getGraphic(true), layer.getX(), layer.getY());
 				}
 			}
 		}
@@ -188,6 +202,15 @@ public class Map implements IConstants {
 	public void setTile(int pX, int pY, Tile pMapBlock) {
 		this.mTiles[pX][pY] = pMapBlock;
 	}
+	
+	public Character getCharacter(int pX, int pY) {
+		return this.mTiles[pX][pY].getCharacter();
+	}
+	
+	public void setCharacter(int pX, int pY, Character pCharacter) {
+		this.mTiles[pX][pY].setCharIndex(pCharacter.getCharIndex());
+		this.mTiles[pX][pY].setCharacter(pCharacter);
+	}
 
 	// ===========================================================
 	// Methods
@@ -206,6 +229,7 @@ public class Map implements IConstants {
 				
 				MapBlockData tile = mapData.getTile(x, y);
 				this.mTiles[x][y] = new Tile(this.mGame, x, y, tile.getGraphic());
+				this.mTiles[x][y].setBlocked(tile.isBlocked());
 			}
 		}
 	}
