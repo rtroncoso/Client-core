@@ -1,90 +1,80 @@
 /**
- * Sprite with capabilities to move but no rendering (usually inherited by characters or other moving sprites)
+ * Temporal storage for maps info until I make a Map element (to get maps rendered easier)
  * @author Rodrigo Troncoso
  * @version 0.1
  * @since 2014-04-10
  */
-package com.mob.client.sprites;
+package com.mob.client.data;
 
-import com.mob.client.Game;
+import com.mob.client.interfaces.IConstants;
 
-public class MovingSprite extends GameSprite {
+public class MapData implements IConstants {
+
 	// ===========================================================
 	// Constants
 	// ===========================================================
-	
+
 
 	// ===========================================================
 	// Fields
 	// ===========================================================
-	protected int mNextX;
-	protected int mNextY;
-	
-	protected boolean mMoving;
-	protected float mSpeed;
-	
-	protected byte mHeading;
-	
+	protected MapBlockData mTile[][];
+	protected boolean mLoaded;
+
 	// ===========================================================
 	// Constructors
 	// ===========================================================
-	public MovingSprite (Game game, float x, float y) {
-		super (game, x, y);
-		
-		this.mNextX = 0;
-		this.mNextY = 0;
-		
-		this.mMoving = false;
-		this.mSpeed = 150.0f; // TODO : don't harcode movement speed
+	/**
+	 * @param mTile
+	 */
+	public MapData() {
+		this.mTile = new MapBlockData[MAX_MAP_SIZE_WIDTH + 1][MAX_MAP_SIZE_HEIGHT + 1];
+		this.mLoaded = false;
 	}
 
 	// ===========================================================
 	// Methods for/from SuperClass/Interfaces
 	// ===========================================================
-	
-	
+
+
 	// ===========================================================
 	// Getter & Setter
 	// ===========================================================
 	/**
-	 * @return the _moving
+	 * @return the mTile
 	 */
-	public boolean isMoving() {
-		return mMoving;
+	public MapBlockData[][] getTileArray() {
+		return mTile;
 	}
 
 	/**
-	 * @param _moving the _moving to set
+	 * @param mTile the mTile to set
 	 */
-	public void setMoving(boolean _moving) {
-		this.mMoving = _moving;
+	public void setTileArray(MapBlockData mTile[][]) {
+		this.mTile = mTile;
+	}
+	
+	public MapBlockData getTile(int pX, int pY) {
+		return this.mTile[pX][pY];
+	}
+	
+	public void setTile(int pX, int pY, MapBlockData pMapBlock) {
+		this.mTile[pX][pY] = pMapBlock;
 	}
 
-	/**
-	 * @return the mHeading
-	 */
-	public byte getHeading() {
-		return mHeading;
+	public boolean isLoaded() {
+		return mLoaded;
 	}
 
-	/**
-	 * @param mHeading the mHeading to set
-	 */
-	public void setHeading(byte mHeading) {
-		this.mHeading = mHeading;
+	public void setLoaded(boolean pLoaded) {
+		this.mLoaded = pLoaded;
 	}
 
 	// ===========================================================
 	// Methods
 	// ===========================================================
-	public void move(byte pHeading) {
-		this.mHeading = pHeading;
-	}
-	
-	public void place() {
-		
-	}
-	
+
+
 	// ===========================================================
 	// Inner and Anonymous Classes
 	// ===========================================================

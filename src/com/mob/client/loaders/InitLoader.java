@@ -70,21 +70,17 @@ public class InitLoader implements IConstants {
 			inits.setSize(numGrhs + 1);
 			inits.setElementAt(new GrhData(sX, sY, fileNum, pixelWidth, pixelHeight, tileWidth, tileHeight, frames, speed), grh);
 			file.skipBytes(2);
-			Gdx.app.log(this.getClass().getName(), "(loadGrhData) numgrhs: " + numGrhs);
 			grh = Util.leShort(file.readShort());
 			file.skipBytes(2); // no es negro si nadie lo ve
-			//Gdx.app.log(this.getClass().getName(), "GRH: " + grh);
 			
 			while(grh > 0) {
 				numFrames = Util.leShort(file.readShort());
-				//Gdx.app.log(this.getClass().getName(), "NumFrames: " + numFrames);
 				
 				if(numFrames > 1) {
 					frames = new int[numFrames];
 					for(int j=0; j < numFrames; j++) {
 						frames[j] = Util.leShort(file.readShort());
 						file.skipBytes(2);
-						//Gdx.app.log(this.getClass().getName(), "Frames: " + frames[j]);
 						if(frames[j] <= 0) throw new IOException("frames[]: " + frames[j]);
 					}
 
@@ -107,7 +103,9 @@ public class InitLoader implements IConstants {
 					// Read normal GRH
 					fileNum = Util.leShort(file.readShort());
 					file.skipBytes(2);
-					//Gdx.app.log(this.getClass().getName(), "fileNum: " + fileNum);
+					if(fileNum == 12052) {
+						// debugueame
+					}
 					if(fileNum <= 0) throw new IOException("fileNum");
 					
 					sX = Util.leShort(file.readShort());
@@ -117,7 +115,6 @@ public class InitLoader implements IConstants {
 					if(sY < 0) throw new IOException("sY (numFrames < 1)");
 					
 					pixelWidth = Util.leShort(file.readShort());
-					//Gdx.app.log(this.getClass().getName(), "(loadGrhData) pixelWidth: " + pixelWidth);
 					if(pixelWidth <= 0) throw new IOException("pixelWidth (numFrames < 1)");
 					
 					pixelHeight = Util.leShort(file.readShort());
@@ -125,7 +122,6 @@ public class InitLoader implements IConstants {
 
 					tileWidth = (double) pixelWidth / TILE_PIXEL_WIDTH;
 					tileHeight = (double) pixelHeight / TILE_PIXEL_HEIGHT;
-					//Gdx.app.log(this.getClass().getName(), "(loadGrhData) tileWidth: " + tileWidth + ", " + (double) pixelWidth / 32);
 					
 					frames[0] = grh;
 				}
@@ -135,7 +131,7 @@ public class InitLoader implements IConstants {
 			}
 			
 		} catch (EOFException e) {
-			Gdx.app.log(this.getClass().getName(), "Carga de " + initFileName + " con exito");
+			Gdx.app.log(this.getClass().getSimpleName(), "Carga de " + initFileName + " con exito");
 			return inits;
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -155,23 +151,18 @@ public class InitLoader implements IConstants {
 			file.skipBytes(GAME_FILE_HEADER_SIZE);
 			numCuerpos = Util.leShort(file.readShort());
 			cuerpos.setSize(numCuerpos + 1);
-			//Gdx.app.log(this.getClass().getName(), "Cuerpos: " + numCuerpos);
 			
 			for(int i = 1; i <= numCuerpos; i++) {
 				AnimationData[] tmpCuerpo = new AnimationData[4];
 				
 				grhArray[WALK_NORTH] = Util.leShort(file.readShort());
 				tmpCuerpo[WALK_NORTH] = this._game.initGrh(grhArray[WALK_NORTH], 0);
-				//Gdx.app.log(this.getClass().getName(), "grhArray: " + grhArray[WALK_NORTH]);
 				grhArray[WALK_EAST] = Util.leShort(file.readShort());
 				tmpCuerpo[WALK_EAST] = this._game.initGrh(grhArray[WALK_EAST], 0);
-				//Gdx.app.log(this.getClass().getName(), "grhArray: " + grhArray[WALK_EAST]);
 				grhArray[WALK_SOUTH] = Util.leShort(file.readShort());
 				tmpCuerpo[WALK_SOUTH] = this._game.initGrh(grhArray[WALK_SOUTH], 0);
-				//Gdx.app.log(this.getClass().getName(), "grhArray: " + grhArray[WALK_SOUTH]);
 				grhArray[WALK_WEST] = Util.leShort(file.readShort());
 				tmpCuerpo[WALK_WEST] = this._game.initGrh(grhArray[WALK_WEST], 0);
-				//Gdx.app.log(this.getClass().getName(), "grhArray: " + grhArray[WALK_WEST]);
 				
 				headOffSetX = Util.leShort(file.readShort());
 				headOffSetY = Util.leShort(file.readShort());
@@ -179,7 +170,7 @@ public class InitLoader implements IConstants {
 				cuerpos.setElementAt(new BodyData(tmpCuerpo, headOffSetX, headOffSetY), i);
 				//Gdx.app.log("InitData", "Cargue un cuerpo, van: " + cuerpos.size());
 			}
-			Gdx.app.log(this.getClass().getName(), "Carga de " + initFileName + " con exito");
+			Gdx.app.log(this.getClass().getSimpleName(), "Carga de " + initFileName + " con exito");
 			return cuerpos;
 			
 		} catch (IOException e) {
@@ -200,24 +191,18 @@ public class InitLoader implements IConstants {
 			file.skipBytes(GAME_FILE_HEADER_SIZE);
 			numHeads = Util.leShort(file.readShort());
 			heads.setSize(numHeads + 1);
-			//Gdx.app.log(this.getClass().getName(), "Heads: " + numHeads);
 			
 			for(int i = 1; i <= numHeads; i++) {
 				int headIndex[] = new int[4];
 				
 				headIndex[WALK_NORTH] = Util.leShort(file.readShort());
-				//Gdx.app.log(this.getClass().getName(), "grhArray: " + headIndex[WALK_NORTH]);
 				headIndex[WALK_EAST] = Util.leShort(file.readShort());
-				//Gdx.app.log(this.getClass().getName(), "grhArray: " + headIndex[WALK_EAST]);
 				headIndex[WALK_SOUTH] = Util.leShort(file.readShort());
-				//Gdx.app.log(this.getClass().getName(), "grhArray: " + headIndex[WALK_SOUTH]);
 				headIndex[WALK_WEST] = Util.leShort(file.readShort());
-				//Gdx.app.log(this.getClass().getName(), "grhArray: " + headIndex[WALK_WEST]);
 
 				heads.setElementAt(new HeadData(headIndex), i);
-				//Gdx.app.log(this.getClass().getName(), "Cargue una cabeza, van: " + heads.size());
 			}
-			Gdx.app.log(this.getClass().getName(), "Carga de " + initFileName + " con exito");
+			Gdx.app.log(this.getClass().getSimpleName(), "Carga de " + initFileName + " con exito");
 			return heads;
 			
 		} catch (IOException e) {
@@ -237,24 +222,18 @@ public class InitLoader implements IConstants {
 			file.skipBytes(GAME_FILE_HEADER_SIZE);
 			numHelmets = Util.leShort(file.readShort());
 			helmets.setSize(numHelmets + 1);
-			//Gdx.app.log(this.getClass().getName(), "Cascos: " + numHelmets);
 			
 			for(int i = 1; i <= numHelmets; i++) {
 				int helmetIndex[] = new int[4];
 				
 				helmetIndex[WALK_NORTH] = Util.leShort(file.readShort());
-				//Gdx.app.log(this.getClass().getName(), "grhArray: " + helmetIndex[WALK_NORTH]);
 				helmetIndex[WALK_EAST] = Util.leShort(file.readShort());
-				//Gdx.app.log(this.getClass().getName(), "grhArray: " + helmetIndex[WALK_EAST]);
 				helmetIndex[WALK_SOUTH] = Util.leShort(file.readShort());
-				//Gdx.app.log(this.getClass().getName(), "grhArray: " + helmetIndex[WALK_SOUTH]);
 				helmetIndex[WALK_WEST] = Util.leShort(file.readShort());
-				//Gdx.app.log(this.getClass().getName(), "grhArray: " + helmetIndex[WALK_WEST]);
 				
 				helmets.setElementAt(new HelmetData(helmetIndex), i);
-				//Gdx.app.log(this.getClass().getName(), "Cargue un casco, van: " + heads.size());
 			}
-			Gdx.app.log(this.getClass().getName(), "Carga de " + initFileName + " con exito");
+			Gdx.app.log(this.getClass().getSimpleName(), "Carga de " + initFileName + " con exito");
 			return helmets;
 			
 		} catch (IOException e) {

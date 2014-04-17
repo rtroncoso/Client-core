@@ -1,5 +1,5 @@
 /**
- * Sprite with capabilities to move but no rendering (usually inherited by characters or other moving sprites)
+ * Holds a drawable tile information 
  * @author Rodrigo Troncoso
  * @version 0.1
  * @since 2014-04-10
@@ -7,84 +7,70 @@
 package com.mob.client.sprites;
 
 import com.mob.client.Game;
+import com.mob.client.interfaces.IConstants;
+import com.mob.client.textures.BundledAnimation;
+import com.mob.client.textures.BundledTexture;
 
-public class MovingSprite extends GameSprite {
+public class TileSprite extends GameSprite implements IConstants {
+
 	// ===========================================================
 	// Constants
 	// ===========================================================
-	
+
 
 	// ===========================================================
 	// Fields
 	// ===========================================================
-	protected int mNextX;
-	protected int mNextY;
-	
-	protected boolean mMoving;
-	protected float mSpeed;
-	
-	protected byte mHeading;
-	
+	protected BundledTexture[] mGraphic;
+	protected float mDeltaTime;
+
 	// ===========================================================
 	// Constructors
 	// ===========================================================
-	public MovingSprite (Game game, float x, float y) {
-		super (game, x, y);
+	public TileSprite(Game _game, int x, int y, int[] pGraphic) {
+		super(_game, x, y);
 		
-		this.mNextX = 0;
-		this.mNextY = 0;
+		this.mGraphic = new BundledTexture[4];
 		
-		this.mMoving = false;
-		this.mSpeed = 150.0f; // TODO : don't harcode movement speed
+		for(int i = 0; i < 4; i++) {
+			this.mGraphic[i] = new BundledTexture(_game, pGraphic[i]);
+			
+			// Correctly plot graphic position
+			this.mGraphic[i].setX((x * TILE_PIXEL_WIDTH) - (this.mGraphic[i].getGraphic().getRegionWidth() / 2));
+			this.mGraphic[i].setY((y * TILE_PIXEL_HEIGHT) - this.mGraphic[i].getGraphic().getRegionHeight());
+		}
 	}
 
 	// ===========================================================
 	// Methods for/from SuperClass/Interfaces
 	// ===========================================================
-	
-	
+
+
 	// ===========================================================
 	// Getter & Setter
 	// ===========================================================
 	/**
-	 * @return the _moving
+	 * @return the mGraphic
 	 */
-	public boolean isMoving() {
-		return mMoving;
+	public BundledTexture[] getGraphicArray() {
+		return mGraphic;
 	}
 
 	/**
-	 * @param _moving the _moving to set
+	 * @param mGraphic the mGraphic to set
 	 */
-	public void setMoving(boolean _moving) {
-		this.mMoving = _moving;
+	public void setGraphicArray(BundledTexture[] mGraphic) {
+		this.mGraphic = mGraphic;
 	}
-
-	/**
-	 * @return the mHeading
-	 */
-	public byte getHeading() {
-		return mHeading;
-	}
-
-	/**
-	 * @param mHeading the mHeading to set
-	 */
-	public void setHeading(byte mHeading) {
-		this.mHeading = mHeading;
+	
+	public BundledTexture getGraphic(int pIndex) {
+		return this.mGraphic[pIndex];
 	}
 
 	// ===========================================================
 	// Methods
 	// ===========================================================
-	public void move(byte pHeading) {
-		this.mHeading = pHeading;
-	}
-	
-	public void place() {
-		
-	}
-	
+
 	// ===========================================================
 	// Inner and Anonymous Classes
 	// ===========================================================

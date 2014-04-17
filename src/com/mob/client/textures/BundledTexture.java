@@ -21,6 +21,8 @@ public class BundledTexture implements IConstants {
 	// Fields
 	// ===========================================================
 	private TextureRegion mTextureRegion;
+	private float mX;
+	private float mY;
 
 	// ===========================================================
 	// Constructors
@@ -33,20 +35,6 @@ public class BundledTexture implements IConstants {
 		this.mTextureRegion.flip(false, true);
 	}
 
-	/**
-	 * @return the mTextureRegion
-	 */
-	public TextureRegion getTextureRegion() {
-		return mTextureRegion;
-	}
-
-	/**
-	 * @param mTextureRegion the mTextureRegion to set
-	 */
-	public void setTextureRegion(TextureRegion mTextureRegion) {
-		this.mTextureRegion = mTextureRegion;
-	}
-
 	// ===========================================================
 	// Methods for/from SuperClass/Interfaces
 	// ===========================================================
@@ -55,7 +43,47 @@ public class BundledTexture implements IConstants {
 	// ===========================================================
 	// Getter & Setter
 	// ===========================================================
+	/**
+	 * @return the mTextureRegion
+	 */
+	public TextureRegion getGraphic() {
+		return mTextureRegion;
+	}
 
+	/**
+	 * @param mTextureRegion the mTextureRegion to set
+	 */
+	public void setGraphic(TextureRegion mTextureRegion) {
+		this.mTextureRegion = mTextureRegion;
+	}
+
+	/**
+	 * @return the mX
+	 */
+	public float getX() {
+		return mX;
+	}
+
+	/**
+	 * @param mX the mX to set
+	 */
+	public void setX(float mX) {
+		this.mX = mX;
+	}
+
+	/**
+	 * @return the mY
+	 */
+	public float getY() {
+		return mY;
+	}
+
+	/**
+	 * @param mY the mY to set
+	 */
+	public void setY(float mY) {
+		this.mY = mY;
+	}
 
 	// ===========================================================
 	// Methods

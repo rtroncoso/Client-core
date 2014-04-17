@@ -11,6 +11,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.mob.client.Game;
 import com.mob.client.elements.Character;
+import com.mob.client.elements.Map;
 import com.mob.client.interfaces.IConstants;
 
 
@@ -33,13 +34,13 @@ public class TestScreen extends Screen implements IConstants {
 		super(game);
 	}
 
-
 	// ===========================================================
 	// Methods for/from SuperClass/Interfaces
 	// ===========================================================
 	@Override
 	public void createScreen() {
-		this.mTest = new Character(_game, 0, 1, WALK_SOUTH, 1, 4, 0);
+		this.mMap = new Map(this._game, 1);
+		this.mTest = new Character(_game, 1, 1, WALK_SOUTH, 1, 4, 1);
 	}
 
 	@Override
@@ -62,15 +63,16 @@ public class TestScreen extends Screen implements IConstants {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
         // Update our Camera
-		//this.mTest.focusCamera();
+		this.mTest.focusCamera();
 		this._game.getCamera().update();
 		
 		// Draw each component of the scene
 		Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-		this._game.spriteBatch.setProjectionMatrix(this._game.getCamera().combined);
+        //Gdx.gl.
+		this._game.getSpriteBatch().setProjectionMatrix(this._game.getCamera().combined);
+        this.mMap.update(dt);
         this.mTest.update(dt);
-		
 	}
 
 	// ===========================================================

@@ -104,7 +104,7 @@ public class Character extends CharacterSprite {
 	 * @param mUserPosX the mUserPosX to set
 	 */
 	public void setUserPosX(int mUserPosX) {
-		this._x = mUserPosX * TILE_PIXEL_WIDTH;
+		this.mX = (mUserPosX * TILE_PIXEL_WIDTH) - (this.getBody().getRegionWidth() / 2);
 		this.mUserPosX = mUserPosX;
 	}
 
@@ -119,7 +119,7 @@ public class Character extends CharacterSprite {
 	 * @param mUserPosY the mUserPosY to set
 	 */
 	public void setUserPosY(int mUserPosY) {
-		this._y = mUserPosY * TILE_PIXEL_HEIGHT;// * (TILE_MAP_HEIGHT * TILE_PIXEL_HEIGHT); // Adapt position to Ydown
+		this.mY = (mUserPosY * TILE_PIXEL_HEIGHT) - (this.getBody().getRegionHeight());
 		this.mUserPosY = mUserPosY;
 	}
 
@@ -127,8 +127,8 @@ public class Character extends CharacterSprite {
 	// Methods
 	// ===========================================================
 	public void focusCamera() {
-		this._game.getCamera().position.set(this._x, this._y, 0);
-		this._game.getCamera().update();
+		this.mGame.getCamera().position.set(this.mX, this.mY, 0);
+		this.mGame.getCamera().update();
 	}
 	
 	@Override
@@ -166,14 +166,14 @@ public class Character extends CharacterSprite {
 		
 		if(this.mNextX != 0) {
 			offsetCounterX += this.mNextX * this.mSpeed * this.mDeltaTime; 
-			this._x += offsetCounterX;
+			this.mX += offsetCounterX;
 			if(this.mNextX == 1) {
-				if(this._x >= (this.mUserPosX) * TILE_PIXEL_HEIGHT) {
+				if(this.mX >= (this.mUserPosX) * TILE_PIXEL_WIDTH) {
 					this.mNextX = 0;
 					this.mMoving = false;
 				}
 			} else if(this.mNextX == -1) {
-				if(this._x <= (this.mUserPosX) * TILE_PIXEL_HEIGHT) {
+				if(this.mX <= (this.mUserPosX) * TILE_PIXEL_WIDTH) {
 					this.mNextX = 0;
 					this.mMoving = false;
 				}
@@ -181,14 +181,14 @@ public class Character extends CharacterSprite {
 		}
 		if(this.mNextY != 0) {
 			offsetCounterY += this.mNextY * this.mSpeed * this.mDeltaTime; 
-			this._y += offsetCounterY;
+			this.mY += offsetCounterY;
 			if(this.mNextY == 1) {
-				if(this._y >= (this.mUserPosY) * TILE_PIXEL_HEIGHT) {
+				if(this.mY >= (this.mUserPosY) * TILE_PIXEL_HEIGHT) {
 					this.mNextY = 0;
 					this.mMoving = false;
 				}
 			} else if(this.mNextY == -1) {
-				if(this._y <= (this.mUserPosY) * TILE_PIXEL_HEIGHT) {
+				if(this.mY <= (this.mUserPosY) * TILE_PIXEL_HEIGHT) {
 					this.mNextY = 0;
 					this.mMoving = false;
 				}

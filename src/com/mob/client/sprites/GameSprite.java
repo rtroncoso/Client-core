@@ -20,28 +20,28 @@ public class GameSprite extends Sprite implements ISprite {
 	// ===========================================================
 	// Fields
 	// ===========================================================
-	protected boolean _active;
-	protected boolean _visible;
+	protected boolean mActive;
+	protected boolean mVisible;
 	
-	protected int _width;
-	protected int _height;
+	protected int mWidth;
+	protected int mHeight;
 	
-	protected float _x;
-	protected float _y;
+	protected float mX;
+	protected float mY;
 	
-	protected Game _game;
+	protected Game mGame;
 
 	// ===========================================================
 	// Constructors
 	// ===========================================================
 	public GameSprite(Game _game, float x, float y) {
-		this._game = _game;
+		this.mGame = _game;
 		
-		this._x = x;
-		this._y = y;
+		this.mX = x;
+		this.mY = y;
 		
-		this._active = true;
-		this._visible = true;
+		this.mActive = true;
+		this.mVisible = true;
 	}
 
 	// ===========================================================
@@ -50,10 +50,10 @@ public class GameSprite extends Sprite implements ISprite {
 	public void reset() {}
 	public void update(float dt) {}
 	public void show() {
-		this._visible = true;
+		this.mVisible = true;
 	}
 	public void hide() {
-		this._visible = false;
+		this.mVisible = false;
 	}
 	public void draw() {}
 	
@@ -64,86 +64,86 @@ public class GameSprite extends Sprite implements ISprite {
 	 * @return the mActive
 	 */
 	public boolean isActive() {
-		return _active;
+		return mActive;
 	}
 
 	/**
 	 * @param mActive the mActive to set
 	 */
 	public void setActive(boolean mActive) {
-		this._active = mActive;
+		this.mActive = mActive;
 	}
 
 	/**
 	 * @return the mVisible
 	 */
 	public boolean isVisible() {
-		return _visible;
+		return mVisible;
 	}
 
 	/**
 	 * @param mVisible the mVisible to set
 	 */
 	public void setVisible(boolean mVisible) {
-		this._visible = mVisible;
+		this.mVisible = mVisible;
 	}
 
 	/**
 	 * @param mHeight the mHeight to set
 	 */
 	public void setHeight(int mHeight) {
-		this._height = mHeight;
+		this.mHeight = mHeight;
 	}
 	
 	/**
 	 * @return the _x
 	 */
 	public float getX() {
-		return _x;
+		return mX;
 	}
 
 	/**
 	 * @param _x the _x to set
 	 */
 	public void setX(float _x) {
-		this._x = _x;
+		this.mX = _x;
 	}
 
 	/**
 	 * @return the _y
 	 */
 	public float getY() {
-		return _y;
+		return mY;
 	}
 
 	/**
 	 * @param _y the _y to set
 	 */
 	public void setY(int _y) {
-		this._y = _y;
+		this.mY = _y;
 	}
 
 	// ===========================================================
 	// Methods
 	// ===========================================================
 	public float right () {
-		return _x + _width;
+		return mX + mWidth;
 	}
 	
 	public float left () {
-		return _x;
+		return mX;
 	}
 	
 	public float top () {
-		return _y + _height;
+		return mY + mHeight;
 	}
 	
 	public float bottom () {
-		return _y;
+		return mY;
 	}
 	
 	public Rectangle bounds () {
-		return new Rectangle(_x + _width * 0.2f, _y + _height * 0.2f, _width * 0.8f, _height * 0.8f);
+		return new Rectangle(mX + mWidth * 0.2f, mY + mHeight * 0.2f, mWidth * 0.8f, mHeight * 0.8f);
 	}
 
 	// ===========================================================

@@ -6,8 +6,8 @@
  */
 package com.mob.client.screens;
 
-import com.badlogic.gdx.graphics.g2d.SpriteCache;
 import com.mob.client.Game;
+import com.mob.client.elements.Map;
 
 public abstract class Screen  implements com.badlogic.gdx.Screen {
 
@@ -19,18 +19,14 @@ public abstract class Screen  implements com.badlogic.gdx.Screen {
 	// ===========================================================
 	// Fields
 	// ===========================================================
-	//public List<GameSprite> _elements;
 	protected Game _game;
-	protected SpriteCache _spriteCache;
-	protected int _spriteCacheIndex;
+	protected Map mMap;
 
 	// ===========================================================
 	// Constructors
 	// ===========================================================
 	public Screen (Game game) {
 		this._game = game;
-		//this._elements = new ArrayList<GameSprite>();
-		this._spriteCache = new SpriteCache();
 	}
 
 	// ===========================================================

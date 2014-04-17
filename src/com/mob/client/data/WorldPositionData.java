@@ -1,90 +1,97 @@
 /**
- * Sprite with capabilities to move but no rendering (usually inherited by characters or other moving sprites)
+ * Stores data about a position in the world
  * @author Rodrigo Troncoso
  * @version 0.1
  * @since 2014-04-10
  */
-package com.mob.client.sprites;
+package com.mob.client.data;
 
-import com.mob.client.Game;
+public class WorldPositionData {
 
-public class MovingSprite extends GameSprite {
 	// ===========================================================
 	// Constants
 	// ===========================================================
-	
+
 
 	// ===========================================================
 	// Fields
 	// ===========================================================
-	protected int mNextX;
-	protected int mNextY;
-	
-	protected boolean mMoving;
-	protected float mSpeed;
-	
-	protected byte mHeading;
-	
+	private int mMap;
+	private int mPosX;
+	private int mPosY;
+
 	// ===========================================================
 	// Constructors
 	// ===========================================================
-	public MovingSprite (Game game, float x, float y) {
-		super (game, x, y);
-		
-		this.mNextX = 0;
-		this.mNextY = 0;
-		
-		this.mMoving = false;
-		this.mSpeed = 150.0f; // TODO : don't harcode movement speed
+	/**
+	 * @param mMap
+	 * @param mPosX
+	 * @param mPosY
+	 */
+	public WorldPositionData(int mMap, int mPosX, int mPosY) {
+		super();
+		this.mMap = mMap;
+		this.setPosX(mPosX);
+		this.setPosY(mPosY);
 	}
 
 	// ===========================================================
 	// Methods for/from SuperClass/Interfaces
 	// ===========================================================
-	
-	
+
+
 	// ===========================================================
 	// Getter & Setter
 	// ===========================================================
+
+
 	/**
-	 * @return the _moving
+	 * @return the mMap
 	 */
-	public boolean isMoving() {
-		return mMoving;
+	public int getMap() {
+		return mMap;
 	}
 
 	/**
-	 * @param _moving the _moving to set
+	 * @param mMap the mMap to set
 	 */
-	public void setMoving(boolean _moving) {
-		this.mMoving = _moving;
+	public void setMap(int mMap) {
+		this.mMap = mMap;
 	}
 
 	/**
-	 * @return the mHeading
+	 * @return the mPosX
 	 */
-	public byte getHeading() {
-		return mHeading;
+	public int getPosX() {
+		return mPosX;
 	}
 
 	/**
-	 * @param mHeading the mHeading to set
+	 * @param mPosX the mPosX to set
 	 */
-	public void setHeading(byte mHeading) {
-		this.mHeading = mHeading;
+	public void setPosX(int mPosX) {
+		this.mPosX = mPosX;
+	}
+
+	/**
+	 * @return the mPosY
+	 */
+	public int getPosY() {
+		return mPosY;
+	}
+
+	/**
+	 * @param mPosY the mPosY to set
+	 */
+	public void setPosY(int mPosY) {
+		this.mPosY = mPosY;
 	}
 
 	// ===========================================================
 	// Methods
 	// ===========================================================
-	public void move(byte pHeading) {
-		this.mHeading = pHeading;
-	}
-	
-	public void place() {
-		
-	}
-	
+
+
 	// ===========================================================
 	// Inner and Anonymous Classes
 	// ===========================================================

@@ -11,6 +11,7 @@ import java.util.HashMap;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.mob.client.Game;
 import com.mob.client.interfaces.IConstants;
 
@@ -70,6 +71,7 @@ public class SurfaceHandler implements IConstants {
 		if(file.isDirectory()) {
 			for(FileHandle tmp : file.list()) {
 				if(tmp.extension() == GAME_GRAPHICS_EXTENSION) {
+					Gdx.app.log(this.getClass().getSimpleName(), "Cargando " + tmp.name());
 					this.loadTexture(tmp.nameWithoutExtension());
 				}
 			}
@@ -81,6 +83,7 @@ public class SurfaceHandler implements IConstants {
 	 */
 	public void loadTexture(String fileName) {
 		Texture texture = new Texture(this.mGraphicsPath + "/" + fileName + GAME_GRAPHICS_EXTENSION);
+		texture.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
 		this.add(fileName, texture);
 	}
 

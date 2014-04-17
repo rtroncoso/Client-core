@@ -25,6 +25,7 @@ import com.mob.client.data.GrhData;
 import com.mob.client.data.HeadData;
 import com.mob.client.data.HelmetData;
 import com.mob.client.engine.TileEngine;
+import com.mob.client.handlers.MapHandler;
 import com.mob.client.handlers.SurfaceHandler;
 import com.mob.client.interfaces.IConstants;
 import com.mob.client.loaders.InitLoader;
@@ -41,20 +42,24 @@ public class Game implements ApplicationListener, IConstants {
 	// Fields
 	// ===========================================================
     public GameData gameData;  
-    public SpriteBatch spriteBatch;  
     public int screenWidth = 0;  
     public int screenHeight = 0;  
     public Screen currentScreen;
 
     protected OrthographicCamera mCamera;  
     protected TileEngine mEngine;
-    protected InitLoader _initLoader;
-    protected HashMap<String, Screen> _screens;  
-    protected Vector<GrhData> _grhData;
-    protected Vector<BodyData> _bodyData;
-    protected Vector<HeadData> _headData;
-    protected Vector<HelmetData> _helmetData;
-    protected SurfaceHandler _surfaceHandler;
+    protected HashMap<String, Screen> mScreens;  
+    protected SpriteBatch mSpriteBatch;  
+    
+    protected InitLoader mInitLoader;
+    
+    protected Vector<GrhData> mGrhData;
+    protected Vector<BodyData> mBodyData;
+    protected Vector<HeadData> mHeadData;
+    protected Vector<HelmetData> mHelmetData;
+
+	protected MapHandler mMapHandler;
+    protected SurfaceHandler mSurfaceHandler;
 
 	// ===========================================================
 	// Constructors
@@ -65,12 +70,13 @@ public class Game implements ApplicationListener, IConstants {
 	// Methods for/from SuperClass/Interfaces
 	// ===========================================================
     public void create() {  
-    	this._screens = new HashMap<String, Screen>();  
-        this._grhData = new Vector<GrhData>();
-        this._bodyData = new Vector<BodyData>();
-        this._headData = new Vector<HeadData>();
-        this._helmetData = new Vector<HelmetData>();
-        this._initLoader = new InitLoader(this);
+    	this.mScreens = new HashMap<String, Screen>();  
+        this.mGrhData = new Vector<GrhData>();
+        this.mBodyData = new Vector<BodyData>();
+        this.mHeadData = new Vector<HeadData>();
+        this.mHelmetData = new Vector<HelmetData>();
+        this.mInitLoader = new InitLoader(this);
+        this.mMapHandler = new MapHandler(this);
           
     }
     
@@ -103,70 +109,70 @@ public class Game implements ApplicationListener, IConstants {
 	* @return the _grhData
 	*/
 	public Vector<GrhData> getGrhData() {
-		return _grhData;
+		return mGrhData;
 	}
 	
 	/**
 	* @param _grhData the _grhData to set
 	*/
 	public void setGrhData(Vector<GrhData> _grhData) {
-		this._grhData = _grhData;
+		this.mGrhData = _grhData;
 	}
 	
 	/**
 	* @return the _bodyData
 	*/
 	public Vector<BodyData> getBodyData() {
-		return _bodyData;
+		return mBodyData;
 	}
 	
 	/**
 	* @param _bodyData the _bodyData to set
 	*/
 	public void setBodyData(Vector<BodyData> _bodyData) {
-		this._bodyData = _bodyData;
+		this.mBodyData = _bodyData;
 	}
 
 	/**
 	 * @return the _headData
 	 */
 	public Vector<HeadData> getHeadData() {
-		return _headData;
+		return mHeadData;
 	}
 
 	/**
 	 * @param _headData the _headData to set
 	 */
 	public void setHeadData(Vector<HeadData> _headData) {
-		this._headData = _headData;
+		this.mHeadData = _headData;
 	}
 
 	/**
 	 * @return the _helmetData
 	 */
 	public Vector<HelmetData> getHelmetData() {
-		return _helmetData;
+		return mHelmetData;
 	}
 
 	/**
 	 * @param _helmetData the _helmetData to set
 	 */
 	public void setHelmetData(Vector<HelmetData> _helmetData) {
-		this._helmetData = _helmetData;
+		this.mHelmetData = _helmetData;
 	}
 
 	/**
 	 * @return the _surfaceHandler
 	 */
 	public SurfaceHandler getSurfaceHandler() {
-		return _surfaceHandler;
+		return mSurfaceHandler;
 	}
 
 	/**
 	 * @param _surfaceHandler the _surfaceHandler to set
 	 */
 	public void setSurfaceHandler(SurfaceHandler _surfaceHandler) {
-		this._surfaceHandler = _surfaceHandler;
+		this.mSurfaceHandler = _surfaceHandler;
 	}
 
 	/**
@@ -197,6 +203,34 @@ public class Game implements ApplicationListener, IConstants {
 		this.mEngine = mEngine;
 	}
 
+    /**
+	 * @return the mMapHandler
+	 */
+	public MapHandler getMapHandler() {
+		return mMapHandler;
+	}
+
+	/**
+	 * @param mMapHandler the mMapHandler to set
+	 */
+	public void setMapHandler(MapHandler mMapHandler) {
+		this.mMapHandler = mMapHandler;
+	}
+
+	/**
+	 * @return the mSpriteBatch
+	 */
+	public SpriteBatch getSpriteBatch() {
+		return mSpriteBatch;
+	}
+
+	/**
+	 * @param mSpriteBatch the mSpriteBatch to set
+	 */
+	public void setSpriteBatch(SpriteBatch mSpriteBatch) {
+		this.mSpriteBatch = mSpriteBatch;
+	}
+	
 	// ===========================================================
 	// Methods
 	// ===========================================================
@@ -205,13 +239,13 @@ public class Game implements ApplicationListener, IConstants {
         screenClassName = "com.mob.client.screens."+screenClassName;  
         Screen newScreen = null;  
           
-        if (this._screens.containsKey(screenClassName) == false) {  
+        if (this.mScreens.containsKey(screenClassName) == false) {  
               
             try {  
                 Class<?> screenClass =  Class.forName(screenClassName);   
                 Constructor<?> constructor = screenClass.getConstructor(Game.class);      
                 newScreen = (Screen) constructor.newInstance(this);  
-                this._screens.put(screenClassName, newScreen);  
+                this.mScreens.put(screenClassName, newScreen);  
             } catch ( InvocationTargetException ex ){  
                 System.err.println( ex + " Screen with Wrong args in Constructor.");  
             } catch ( NoSuchMethodException ex ){  
@@ -223,7 +257,7 @@ public class Game implements ApplicationListener, IConstants {
               System.err.println( ex + " Screen with Wrong number of args.");  
             }  
         } else {  
-            newScreen = this._screens.get(screenClassName);  
+            newScreen = this.mScreens.get(screenClassName);  
         }  
           
         if (newScreen == null) return;  
@@ -245,13 +279,13 @@ public class Game implements ApplicationListener, IConstants {
 		if(grhIndex == 0) return null;
 		
 		if(started == 2) {
-			if(this._grhData.get(grhIndex).getFrames().length > 1) {
+			if(this.mGrhData.get(grhIndex).getFrames().length > 1) {
 				tmpStarted = 1;
 			} else {
 				tmpStarted = 0;
 			}
 		} else {
-			if(this._grhData.get(grhIndex).getFrames().length == 0) tmpStarted = 0;
+			if(this.mGrhData.get(grhIndex).getFrames().length == 0) tmpStarted = 0;
 			tmpStarted = started;
 		}
 		
@@ -262,7 +296,7 @@ public class Game implements ApplicationListener, IConstants {
 		}
 		
 		tmpFrameCounter = 1;
-		tmpSpeedCounter = this._grhData.get(grhIndex).getSpeed();
+		tmpSpeedCounter = this.mGrhData.get(grhIndex).getSpeed();
 		tmpTicksCounter = (int) TimeUtils.millis();
 		
 		return new AnimationData(grhIndex, tmpFrameCounter, tmpSpeedCounter, tmpTicksCounter, tmpStarted, tmpLoops);

@@ -25,28 +25,33 @@ public class BundledAnimation {
 	private Animation mAnimation;
 	private float mAnimationTime;
 	private TextureRegion[] mFrames;
-	private Game _game;
+	private float mX;
+	private float mY;
 
 	// ===========================================================
 	// Constructors
 	// ===========================================================
 	public BundledAnimation (Game _game, int grhIndex) {
-		this._game = _game;
 		this.mAnimationTime = 0.0f;
 		
-		GrhData grh = this._game.getGrhData().get(grhIndex);
+		GrhData grh = _game.getGrhData().get(grhIndex);
 		int numFrames = grh.getFrames().length;
 		TextureRegion[] frames = new TextureRegion[numFrames];
 		
-		for(int i = 0; i < numFrames; i++) {
-			GrhData frame = this._game.getGrhData().get(grh.getFrames()[i]);
-			Texture texture = this._game.getSurfaceHandler().get(String.valueOf(frame.getFileNum()));
-			frames[i] = new TextureRegion(texture, frame.getX(), frame.getY(), frame.getPixelWidth(), frame.getPixelHeight());
-			frames[i].flip(false, true);
+		if(numFrames == 1) {
+			Texture texture = _game.getSurfaceHandler().get(String.valueOf(grh.getFileNum()));
+			frames[0] = new TextureRegion(texture, grh.getX(), grh.getY(), grh.getPixelWidth(), grh.getPixelHeight());
+		} else {
+			for(int i = 0; i < numFrames; i++) {
+				GrhData frame = _game.getGrhData().get(grh.getFrames()[i]);
+				Texture texture = _game.getSurfaceHandler().get(String.valueOf(frame.getFileNum()));
+				frames[i] = new TextureRegion(texture, frame.getX(), frame.getY(), frame.getPixelWidth(), frame.getPixelHeight());
+				frames[i].flip(false, true);
+			}
+			this.mAnimation = new Animation((float) grh.getSpeed() / 1000, frames);
 		}
 		
 		this.setFrames(frames);
-		this.mAnimation = new Animation((float) grh.getSpeed() / 1000, frames);
 	}
 
 	// ===========================================================
@@ -56,29 +61,6 @@ public class BundledAnimation {
 	// ===========================================================
 	// Getter & Setter
 	// ===========================================================
-
-	// ===========================================================
-	// Methods
-	// ===========================================================
-	/*public TextureRegion getKeyFrame (float stateTime, boolean loop) {
-		int frameNumber = (int)(stateTime / this.mAnimframeDuration);
-
-		if (!loop) {
-			frameNumber = Math.min(keyFrames.length - 1, frameNumber);
-			if (frameNumber == keyFrames.length - 1) {
-				sendEvent();
-			}
-		} else {
-			frameNumber = frameNumber % keyFrames.length;
-		}
-		
-		return keyFrames[frameNumber];
-	}*/
-
-	// ===========================================================
-	// Inner and Anonymous Classes
-	// ===========================================================
-	
 	/**
 	 * @return the mAnimation
 	 */
@@ -120,4 +102,44 @@ public class BundledAnimation {
 	public void setFrames(TextureRegion[] mFrames) {
 		this.mFrames = mFrames;
 	}
+	
+	public TextureRegion getGraphic(int pIndex) {
+		return this.mFrames[pIndex];
+	}
+
+	/**
+	 * @return the mX
+	 */
+	public float getX() {
+		return mX;
+	}
+
+	/**
+	 * @param mX the mX to set
+	 */
+	public void setX(float mX) {
+		this.mX = mX;
+	}
+
+	/**
+	 * @return the mY
+	 */
+	public float getY() {
+		return mY;
+	}
+
+	/**
+	 * @param mY the mY to set
+	 */
+	public void setY(float mY) {
+		this.mY = mY;
+	}
+	// ===========================================================
+	// Methods
+	// ===========================================================
+
+	// ===========================================================
+	// Inner and Anonymous Classes
+	// ===========================================================
+	
 }
