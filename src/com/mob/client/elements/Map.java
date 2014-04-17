@@ -49,7 +49,7 @@ public class Map implements IConstants {
 		// Vars
 		int screenMinX, screenMaxX, screenMinY, screenMaxY, minAreaX, minAreaY, maxAreaX, maxAreaY;
 		MapData mapData = this.mGame.getMapHandler().get(this.mMapNumber);
-		int tileBufferSize = 9; // TODO : hardcoded
+		int tileBufferSize = 7; // TODO : hardcoded
 		
 		// Calculate visible part of the map
 		screenMinX = ((int) (this.mGame.getCamera().position.x - ((this.mGame.getCamera().position.x + this.mGame.getCamera().viewportWidth) / 2)) / TILE_PIXEL_WIDTH) - 1;
@@ -60,7 +60,7 @@ public class Map implements IConstants {
 		minAreaX = screenMinX - tileBufferSize;
 		maxAreaX = screenMaxX + tileBufferSize;
 		minAreaY = screenMinY - tileBufferSize;
-		maxAreaY = screenMaxY - tileBufferSize;
+		maxAreaY = screenMaxY + tileBufferSize;
 		
 		// Make sure it is between map bounds
 		if(minAreaX < MIN_MAP_SIZE_WIDTH) minAreaX = MIN_MAP_SIZE_WIDTH;
@@ -82,11 +82,9 @@ public class Map implements IConstants {
 				
 				Tile tile = this.getTile(x, y);
 
-				this.mGame.getSpriteBatch().begin();
-				//tile.getGraphic(0).setAnimationTime(tile.getGraphic(0).getAnimationTime() + dt);
-				//this.mGame.getSpriteBatch().draw(tile.getGraphic(0).getAnimation().getKeyFrame(tile.getGraphic(0).getAnimationTime()), tile.getGraphic(0).getX(), tile.getGraphic(0).getY());
-				this.mGame.getSpriteBatch().draw(tile.getGraphic(0).getGraphic(), tile.getGraphic(0).getX(), tile.getGraphic(0).getY());
-				this.mGame.getSpriteBatch().end();
+				tile.getGraphic(0).setAnimationTime(tile.getGraphic(0).getAnimationTime() + dt);
+				this.mGame.getSpriteBatch().draw(tile.getGraphic(0).getGraphic(true), tile.getGraphic(0).getX(), tile.getGraphic(0).getY());
+				//this.mGame.getSpriteBatch().draw(tile.getGraphic(0).getGraphic(), tile.getGraphic(0).getX(), tile.getGraphic(0).getY());
 			}
 		}
 
@@ -98,9 +96,8 @@ public class Map implements IConstants {
 				
 				Tile tile = this.getTile(x, y);
 				if(mapData.getTile(x, y).getGraphic()[1] != 0) {
-					this.mGame.getSpriteBatch().begin();
-					this.mGame.getSpriteBatch().draw(tile.getGraphic(1).getGraphic(), tile.getGraphic(1).getX(), tile.getGraphic(1).getY());
-					this.mGame.getSpriteBatch().end();
+					tile.getGraphic(1).setAnimationTime(tile.getGraphic(1).getAnimationTime() + dt);
+					this.mGame.getSpriteBatch().draw(tile.getGraphic(1).getGraphic(true), tile.getGraphic(1).getX(), tile.getGraphic(1).getY());
 				}
 			}
 		}
@@ -114,9 +111,8 @@ public class Map implements IConstants {
 				Tile tile = this.getTile(x, y);
 
 				if(mapData.getTile(x, y).getGraphic()[2] != 0) {
-					this.mGame.getSpriteBatch().begin();
-					this.mGame.getSpriteBatch().draw(tile.getGraphic(2).getGraphic(), tile.getGraphic(2).getX(), tile.getGraphic(2).getY());
-					this.mGame.getSpriteBatch().end();
+					tile.getGraphic(2).setAnimationTime(tile.getGraphic(2).getAnimationTime() + dt);
+					this.mGame.getSpriteBatch().draw(tile.getGraphic(2).getGraphic(true), tile.getGraphic(2).getX(), tile.getGraphic(2).getY());
 				}
 			}
 		}
@@ -131,9 +127,8 @@ public class Map implements IConstants {
 				Tile tile = this.getTile(x, y);
 
 				if(mapData.getTile(x, y).getGraphic()[3] != 0) {
-					this.mGame.getSpriteBatch().begin();
-					this.mGame.getSpriteBatch().draw(tile.getGraphic(3).getGraphic(), tile.getGraphic(3).getX(), tile.getGraphic(3).getY());
-					this.mGame.getSpriteBatch().end();
+					tile.getGraphic(3).setAnimationTime(tile.getGraphic(3).getAnimationTime() + dt);
+					this.mGame.getSpriteBatch().draw(tile.getGraphic(3).getGraphic(true), tile.getGraphic(3).getX(), tile.getGraphic(3).getY());
 				}
 			}
 		}

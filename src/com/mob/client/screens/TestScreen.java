@@ -8,6 +8,7 @@ package com.mob.client.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.GL20;
 import com.mob.client.Game;
 import com.mob.client.elements.Character;
@@ -39,8 +40,12 @@ public class TestScreen extends Screen implements IConstants {
 	// ===========================================================
 	@Override
 	public void createScreen() {
-		this.mMap = new Map(this._game, 34);
+		this.mMap = new Map(this._game, 1);
 		this.mTest = new Character(_game, 50, 50, WALK_SOUTH, 1, 4, 1);
+		
+		this._game.getCamera().zoom = 0.9f;
+		
+		this.mInputMultiplexer = new InputMultiplexer();
 	}
 
 	@Override
@@ -69,10 +74,11 @@ public class TestScreen extends Screen implements IConstants {
 		// Draw each component of the scene
 		Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-        //Gdx.gl.
 		this._game.getSpriteBatch().setProjectionMatrix(this._game.getCamera().combined);
+		this._game.getSpriteBatch().begin();
         this.mMap.update(dt);
         this.mTest.update(dt);
+		this._game.getSpriteBatch().end();
 	}
 
 	// ===========================================================

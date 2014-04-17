@@ -14,7 +14,6 @@ import com.mob.client.data.HeadData;
 import com.mob.client.data.HelmetData;
 import com.mob.client.interfaces.IConstants;
 import com.mob.client.interfaces.ISprite;
-import com.mob.client.textures.BundledAnimation;
 import com.mob.client.textures.BundledTexture;
 
 public class CharacterSprite extends MovingSprite implements ISprite, IConstants {
@@ -27,7 +26,7 @@ public class CharacterSprite extends MovingSprite implements ISprite, IConstants
 	// ===========================================================
 	// Fields
 	// ===========================================================
-	protected BundledAnimation[] mBodySkin;
+	protected BundledTexture[] mBodySkin;
 	protected int mBodyGrhIndex;
 	protected BundledTexture[] mHeadSkin;
 	protected int mHeadGrhIndex;
@@ -50,16 +49,19 @@ public class CharacterSprite extends MovingSprite implements ISprite, IConstants
 	public CharacterSprite(Game _game, int x, int y, byte mHeading, int bodyIndex, int headIndex, int helmetIndex) {
 		super(_game, x , y);
 		
+		// Init class
 		this.mHeading = mHeading;
-		
 		this.mDeltaTime = 0.0f;
 		
+		// Check null indexes
 		if(helmetIndex == 0) helmetIndex = 2;
 		
+		// Load graphics
 		this.loadBody(this.mGame.getBodyData().get(bodyIndex));
 		this.loadHead(this.mGame.getHeadData().get(headIndex));
 		this.loadHelmet(this.mGame.getHelmetData().get(helmetIndex));
 		
+		// Calculate offsets
 		this.mHeadOffsetX = this.mGame.getBodyData().get(bodyIndex).getHeadOffsetX();
 		this.mHeadOffsetY = this.mGame.getBodyData().get(bodyIndex).getHeadOffsetY();
 		
@@ -84,7 +86,7 @@ public class CharacterSprite extends MovingSprite implements ISprite, IConstants
 		// Vars
 		float pixelOffsetX, pixelOffsetY;
 		
-		// Update animations
+		// Update internal timer
 		this.mDeltaTime = dt;
 		this.mBodySkin[this.mHeading].setAnimationTime(this.mBodySkin[this.mHeading].getAnimationTime() + this.mDeltaTime);
 		
@@ -92,8 +94,7 @@ public class CharacterSprite extends MovingSprite implements ISprite, IConstants
 		pixelOffsetX = this.mX - (this.getBody().getRegionWidth() / 2);
 		pixelOffsetY = this.mY - (this.getBody().getRegionHeight());
 		
-		// Init spritebatch
-		this.mGame.getSpriteBatch().begin(); 
+		// Draw our character
 		if(this.mHeadGrhIndex != 0) {
 			if(this.mVisible) {
 				if(this.mBodyGrhIndex != 0) 
@@ -110,7 +111,6 @@ public class CharacterSprite extends MovingSprite implements ISprite, IConstants
 			if(this.mBodyGrhIndex != 0) 
 				this.mGame.getSpriteBatch().draw(this.getBody(), pixelOffsetX, pixelOffsetY);
 		}
-		this.mGame.getSpriteBatch().end();
 		
 		// Update sprite Position
 		this.place();
@@ -121,7 +121,7 @@ public class CharacterSprite extends MovingSprite implements ISprite, IConstants
 	// ===========================================================
 	public TextureRegion getBody() {
 		if(this.mMoving)
-			return this.mBodySkin[this.mHeading].getAnimation().getKeyFrame(this.mBodySkin[this.mHeading].getAnimationTime(), true);
+			return this.mBodySkin[this.mHeading].getGraphic(true);
 		else
 			return this.mBodySkin[this.mHeading].getGraphic();
 	}
@@ -169,11 +169,11 @@ public class CharacterSprite extends MovingSprite implements ISprite, IConstants
 	// ===========================================================
 	public void loadBody(BodyData bodyData) {
 		this.mBodyGrhIndex = bodyData.getBodyArray()[WALK_NORTH].getGrhIndex();
-		this.mBodySkin = new BundledAnimation[4];
-		this.mBodySkin[WALK_NORTH] = new BundledAnimation(this.mGame, bodyData.getBodyArray()[WALK_NORTH].getGrhIndex());
-		this.mBodySkin[WALK_SOUTH] = new BundledAnimation(this.mGame, bodyData.getBodyArray()[WALK_SOUTH].getGrhIndex());
-		this.mBodySkin[WALK_WEST] = new BundledAnimation(this.mGame, bodyData.getBodyArray()[WALK_WEST].getGrhIndex());
-		this.mBodySkin[WALK_EAST] = new BundledAnimation(this.mGame, bodyData.getBodyArray()[WALK_EAST].getGrhIndex());
+		this.mBodySkin = new BundledTexture[4];
+		this.mBodySkin[WALK_NORTH] = new BundledTexture(this.mGame, bodyData.getBodyArray()[WALK_NORTH].getGrhIndex(), true);
+		this.mBodySkin[WALK_SOUTH] = new BundledTexture(this.mGame, bodyData.getBodyArray()[WALK_SOUTH].getGrhIndex(), true);
+		this.mBodySkin[WALK_WEST] = new BundledTexture(this.mGame, bodyData.getBodyArray()[WALK_WEST].getGrhIndex(), true);
+		this.mBodySkin[WALK_EAST] = new BundledTexture(this.mGame, bodyData.getBodyArray()[WALK_EAST].getGrhIndex(), true);
 	}
 	
 	public void loadHead(HeadData headData) {

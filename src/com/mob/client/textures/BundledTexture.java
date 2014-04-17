@@ -1,17 +1,19 @@
 /**
- * Packages and loads a Texture into a TextureRegion by a given GrhIndex
+ * Now packs everything in GameTextures (previously known as BundledTexture) 
+ * treating everything as an animation
  * @author Rodrigo Troncoso
  * @version 0.1
- * @since 2014-04-10
+ * @since 2014-04-17
  */
 package com.mob.client.textures;
 
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.mob.client.Game;
 import com.mob.client.data.GrhData;
-import com.mob.client.interfaces.IConstants;
 
-public class BundledTexture implements IConstants {
+public class BundledTexture {
+	
 	// ===========================================================
 	// Constants
 	// ===========================================================
@@ -20,40 +22,105 @@ public class BundledTexture implements IConstants {
 	// ===========================================================
 	// Fields
 	// ===========================================================
-	private TextureRegion mTextureRegion;
+	private GameTexture[] mFrames;
+	private Animation mAnimation;
+	private float mAnimationTime;
+	private boolean mAnimated;
 	private float mX;
 	private float mY;
 
 	// ===========================================================
 	// Constructors
 	// ===========================================================
-	public BundledTexture(Game _game, int grhIndex) {
-		GrhData grh = _game.getGrhData().get(grhIndex);
+	public BundledTexture (Game _game, int grhIndex) {
+		this(_game, grhIndex, false);
+	}
+	
+	public BundledTexture (Game _game, int grhIndex, boolean pAnimated) {
+		this.mAnimationTime = 0.0f;
 		
-		this.mTextureRegion = new TextureRegion(_game.getSurfaceHandler().get(String.valueOf(grh.getFileNum())), grh.getX(), grh.getY(), grh.getPixelWidth(), grh.getPixelHeight());
-		this.mTextureRegion.flip(false, true);
+		if(!pAnimated) {
+			this.mFrames = new GameTexture[1];
+			this.mFrames[0] = new GameTexture(_game, grhIndex);
+			this.mAnimated = false;
+		} else {
+			GrhData grh = _game.getGrhData().get(grhIndex);
+			int numFrames = grh.getFrames().length;
+			
+			this.mFrames = new GameTexture[numFrames];
+			TextureRegion tmpFrames[] = new TextureRegion[numFrames];
+			for(int i = 0; i < numFrames; i++) {
+				this.mFrames[i] = new GameTexture(_game, grh.getFrame(i));
+				tmpFrames[i] = this.mFrames[i].getGraphic();
+			}
+			this.mAnimation = new Animation((float) grh.getSpeed() / 1000, tmpFrames);
+			this.mAnimated = true;
+		}
 	}
 
 	// ===========================================================
 	// Methods for/from SuperClass/Interfaces
 	// ===========================================================
-
-
+	
 	// ===========================================================
 	// Getter & Setter
 	// ===========================================================
 	/**
-	 * @return the mTextureRegion
+	 * @return the mAnimation
 	 */
-	public TextureRegion getGraphic() {
-		return mTextureRegion;
+	public Animation getAnimation() {
+		return mAnimation;
 	}
 
 	/**
-	 * @param mTextureRegion the mTextureRegion to set
+	 * @param mAnimation the mAnimation to set
 	 */
-	public void setGraphic(TextureRegion mTextureRegion) {
-		this.mTextureRegion = mTextureRegion;
+	public void setAnimation(Animation mAnimation) {
+		this.mAnimation = mAnimation;
+	}
+
+	/**
+	 * @return the mAnimationTime
+	 */
+	public float getAnimationTime() {
+		return mAnimationTime;
+	}
+
+	/**
+	 * @param mAnimationTime the mAnimationTime to set
+	 */
+	public void setAnimationTime(float mAnimationTime) {
+		this.mAnimationTime = mAnimationTime;
+	}
+
+	/**
+	 * @return the mFrames
+	 */
+	public GameTexture[] getFrames() {
+		return mFrames;
+	}
+
+	/**
+	 * @param mFrames the mFrames to set
+	 */
+	public void setFrames(GameTexture[] mFrames) {
+		this.mFrames = mFrames;
+	}
+	
+	public TextureRegion getGraphic() {
+		return this.getGraphic(0);
+	}
+
+	
+	public TextureRegion getGraphic(int pIndex) {
+		return this.mFrames[pIndex].getGraphic();
+	}
+	
+	public TextureRegion getGraphic(boolean loop) {
+		if(this.mAnimated)
+			return this.mAnimation.getKeyFrame(this.mAnimationTime, loop);
+		else
+			return this.getGraphic();
 	}
 
 	/**
@@ -83,17 +150,26 @@ public class BundledTexture implements IConstants {
 	public void setY(float mY) {
 		this.mY = mY;
 	}
-
 	// ===========================================================
 	// Methods
 	// ===========================================================
 
+	/**
+	 * @return the mAnimated
+	 */
+	public boolean isAnimated() {
+		return mAnimated;
+	}
+
+	/**
+	 * @param mAnimated the mAnimated to set
+	 */
+	public void setAnimated(boolean mAnimated) {
+		this.mAnimated = mAnimated;
+	}
 
 	// ===========================================================
 	// Inner and Anonymous Classes
 	// ===========================================================
-
-
-	  
-
+	
 }

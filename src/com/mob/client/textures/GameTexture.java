@@ -1,17 +1,17 @@
 /**
- * Holds a drawable tile information 
+ * Packages and loads a Texture into a TextureRegion by a given GrhIndex
  * @author Rodrigo Troncoso
  * @version 0.1
  * @since 2014-04-10
  */
-package com.mob.client.sprites;
+package com.mob.client.textures;
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.mob.client.Game;
+import com.mob.client.data.GrhData;
 import com.mob.client.interfaces.IConstants;
-import com.mob.client.textures.BundledTexture;
 
-public class TileSprite extends GameSprite implements IConstants {
-
+public class GameTexture implements IConstants {
 	// ===========================================================
 	// Constants
 	// ===========================================================
@@ -20,27 +20,18 @@ public class TileSprite extends GameSprite implements IConstants {
 	// ===========================================================
 	// Fields
 	// ===========================================================
-	protected BundledTexture[] mGraphic;
-	protected float mDeltaTime;
+	private TextureRegion mTextureRegion;
+	private float mX;
+	private float mY;
 
 	// ===========================================================
 	// Constructors
 	// ===========================================================
-	public TileSprite(Game _game, int x, int y, int[] pGraphic) {
-		super(_game, x, y);
+	public GameTexture(Game _game, int grhIndex) {
+		GrhData grh = _game.getGrhData().get(grhIndex);
 		
-		this.mGraphic = new BundledTexture[4];
-		
-		for(int i = 0; i < 4; i++) {
-			if(_game.getGrhData().get(pGraphic[i]).getFrames().length != 0) 
-				this.mGraphic[i] = new BundledTexture(_game, pGraphic[i], true);
-			else
-				this.mGraphic[i] = new BundledTexture(_game, pGraphic[i]);
-			
-			// Correctly plot graphic position
-			this.mGraphic[i].setX((x * TILE_PIXEL_WIDTH) - (this.mGraphic[i].getGraphic().getRegionWidth() / 2));
-			this.mGraphic[i].setY((y * TILE_PIXEL_HEIGHT) - this.mGraphic[i].getGraphic().getRegionHeight());
-		}
+		this.mTextureRegion = new TextureRegion(_game.getSurfaceHandler().get(String.valueOf(grh.getFileNum())), grh.getX(), grh.getY(), grh.getPixelWidth(), grh.getPixelHeight());
+		this.mTextureRegion.flip(false, true);
 	}
 
 	// ===========================================================
@@ -52,29 +43,57 @@ public class TileSprite extends GameSprite implements IConstants {
 	// Getter & Setter
 	// ===========================================================
 	/**
-	 * @return the mGraphic
+	 * @return the mTextureRegion
 	 */
-	public BundledTexture[] getGraphicArray() {
-		return mGraphic;
+	public TextureRegion getGraphic() {
+		return mTextureRegion;
 	}
 
 	/**
-	 * @param mGraphic the mGraphic to set
+	 * @param mTextureRegion the mTextureRegion to set
 	 */
-	public void setGraphicArray(BundledTexture[] mGraphic) {
-		this.mGraphic = mGraphic;
+	public void setGraphic(TextureRegion mTextureRegion) {
+		this.mTextureRegion = mTextureRegion;
 	}
-	
-	public BundledTexture getGraphic(int pIndex) {
-		return this.mGraphic[pIndex];
+
+	/**
+	 * @return the mX
+	 */
+	public float getX() {
+		return mX;
+	}
+
+	/**
+	 * @param mX the mX to set
+	 */
+	public void setX(float mX) {
+		this.mX = mX;
+	}
+
+	/**
+	 * @return the mY
+	 */
+	public float getY() {
+		return mY;
+	}
+
+	/**
+	 * @param mY the mY to set
+	 */
+	public void setY(float mY) {
+		this.mY = mY;
 	}
 
 	// ===========================================================
 	// Methods
 	// ===========================================================
 
+
 	// ===========================================================
 	// Inner and Anonymous Classes
 	// ===========================================================
+
+
+	  
 
 }
