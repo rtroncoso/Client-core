@@ -11,8 +11,6 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.GL20;
 import com.mob.client.Game;
-import com.mob.client.elements.Character;
-import com.mob.client.elements.Map;
 import com.mob.client.interfaces.IConstants;
 
 
@@ -49,11 +47,12 @@ public class TestScreen extends Screen implements IConstants {
 
 	@Override
 	public void update(float dt) {
-		Gdx.app.log(this.getClass().getSimpleName(), "FPS: " + String.valueOf(Gdx.graphics.getFramesPerSecond()));
+		Gdx.graphics.setTitle("FPS: " + String.valueOf(Gdx.graphics.getFramesPerSecond()));
 		
 		if(Gdx.input.justTouched()) {
 			this.map += 1;
 			this.mGame.getCurrentMap().setMap(this.map);
+			this.mGame.getCharacterHandler().getPlayer().updateUserPos();
 		}
 		
 		if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {

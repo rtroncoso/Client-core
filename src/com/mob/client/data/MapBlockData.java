@@ -60,11 +60,14 @@ public class MapBlockData {
 	// ===========================================================
 	// Getter & Setter
 	// ===========================================================
+	public int getGraphic(int pIndex) {
+		return this.mGraphic[pIndex];
+	}
 	/**
 	 * @return the mGraphic
 	 */
 	public int[] getGraphic() {
-		return mGraphic;
+		return this.mGraphic;
 	}
 
 	/**

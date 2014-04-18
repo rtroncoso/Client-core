@@ -230,6 +230,12 @@ public class Map implements IConstants {
 				MapBlockData tile = mapData.getTile(x, y);
 				this.mTiles[x][y] = new Tile(this.mGame, x, y, tile.getGraphic());
 				this.mTiles[x][y].setBlocked(tile.isBlocked());
+				this.mTiles[x][y].setCharacter(null);
+				
+				// Check if there is a tree TODO : hardcoded
+				if(tile.getGraphic(3) == 735 || (tile.getGraphic(3) >= 6994 && tile.getGraphic(3) <= 7002)) {
+					this.mTiles[x][y].setHasTree(true);
+				}
 			}
 		}
 	}

@@ -19,6 +19,8 @@ public class Character extends CharacterSprite {
 	// ===========================================================
 	// Fields
 	// ===========================================================
+	private int mLastUserPosX;
+	private int mLastUserPosY;
 	private int mCharIndex;
 	private boolean mDead;
 	private boolean mInvisible;
@@ -30,6 +32,8 @@ public class Character extends CharacterSprite {
 	public Character(Game _game, int charIndex, int x, int y, byte mHeading, int bodyIndex, int headIndex, int helmetIndex) {
 		super(_game, x, y, mHeading, bodyIndex, headIndex, helmetIndex);
 		
+		this.mLastUserPosX = 0;
+		this.mLastUserPosY = 0;
 		this.mCharIndex = charIndex;
 		this.mDead = false;
 		this.mInvisible = false;
@@ -71,17 +75,17 @@ public class Character extends CharacterSprite {
 		// Check if legal pos
 		if(!this.mGame.getCurrentMap().getTile(this.mUserPosX + nextX, this.mUserPosY + nextY).isLegalPos()) return;
 		
-		// Delete old character on map
-		this.mGame.getCurrentMap().getTile(this.mUserPosX, this.mUserPosY).setCharacter(null);
-		
-		// Update our position and destination
+		// Fill destination
 		this.mNextX = nextX;
 		this.mNextY = nextY;
+		
+		// Backup old position
+		this.mLastUserPosX = this.mUserPosX;
+		this.mLastUserPosY = this.mUserPosY;
+		
+		// Change position
 		this.mUserPosX += this.mNextX;
 		this.mUserPosY += this.mNextY;
-		
-		// Plot new character on map
-		this.mGame.getCurrentMap().setCharacter(this.mUserPosX, this.mUserPosY, this);
 		
 		// Set moving
 		this.mMoving = true;
@@ -91,18 +95,21 @@ public class Character extends CharacterSprite {
 	public void place() {
 		float offsetCounterX = 0.0f, offsetCounterY = 0.0f;
 		
+		// This routine calculates user position if they are moving then plots it on the screen
 		if(this.mNextX != 0) {
 			offsetCounterX += this.mNextX * this.mSpeed * this.mDeltaTime; 
 			this.mX += offsetCounterX;
 			if(this.mNextX == 1) {
 				if(this.mX >= (this.mUserPosX) * TILE_PIXEL_WIDTH) {
-					this.mNextX = 0;
+					this.updateUserPos();
 					this.mMoving = false;
+					this.mNextX = 0;
 				}
 			} else if(this.mNextX == -1) {
 				if(this.mX <= (this.mUserPosX) * TILE_PIXEL_WIDTH) {
-					this.mNextX = 0;
+					this.updateUserPos();
 					this.mMoving = false;
+					this.mNextX = 0;
 				}
 			}
 		}
@@ -112,35 +119,25 @@ public class Character extends CharacterSprite {
 			this.mY += offsetCounterY;
 			if(this.mNextY == 1) {
 				if(this.mY >= (this.mUserPosY) * TILE_PIXEL_HEIGHT) {
-					this.mNextY = 0;
+					this.updateUserPos();
 					this.mMoving = false;
+					this.mNextY = 0;
 				}
 			} else if(this.mNextY == -1) {
 				if(this.mY <= (this.mUserPosY) * TILE_PIXEL_HEIGHT) {
-					this.mNextY = 0;
+					this.updateUserPos();
 					this.mMoving = false;
+					this.mNextY = 0;
 				}
 			}
 		}
+		
+		// Update position
 	}
 
 	// ===========================================================
 	// Getter & Setter
 	// ===========================================================
-	/**
-	 * @param mUserPosX the mUserPosX to set
-	 */
-	public void setUserPosX(int mUserPosX) {
-		super.setUserPosX(mUserPosX);
-	}
-
-	/**
-	 * @param mUserPosY the mUserPosY to set
-	 */
-	public void setUserPosY(int mUserPosY) {
-		super.setUserPosY(mUserPosY);
-	}
-	
 	/**
 	 * @return the mNombre
 	 */
@@ -200,6 +197,29 @@ public class Character extends CharacterSprite {
 	// ===========================================================
 	// Methods
 	// ===========================================================
+	/**
+	 * IMPORTANT: CALL THIS TO CHANGE USER POSITION
+	 */
+	public void setUserPos(int x, int y) {
+		
+		// Delete old player position from map
+		this.mGame.getCurrentMap().getTile(this.mLastUserPosX, this.mLastUserPosY).setCharacter(null);;
+		
+		// Change our graphic position
+		this.setUserPosX(x);
+		this.setUserPosY(y);
+		
+		// Plot on map
+		this.mGame.getCurrentMap().setCharacter(this.mUserPosX, this.mUserPosY, this);
+	}
+	
+	/**
+	 * Probably going to use it on refresh position (player lagged)
+	 */
+	public void updateUserPos() {
+		this.setUserPos(this.mUserPosX, this.mUserPosY);
+	}
+	
 	public void focusCamera() {
 		this.mGame.getCamera().position.set(this.mX, this.mY, 0);
 		this.mGame.getCamera().update();

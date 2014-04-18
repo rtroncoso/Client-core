@@ -21,8 +21,9 @@ public class Tile extends TileSprite {
 	// Fields
 	// ===========================================================
 	private Character mCharacter;
-	private int mCharIndex;
 	private boolean mBlocked;
+	private boolean mHasTree;
+	private int mCharIndex;
 
 	// ===========================================================
 	// Constructors
@@ -90,6 +91,20 @@ public class Tile extends TileSprite {
 	 */
 	public void setBlocked(boolean mBlocked) {
 		this.mBlocked = mBlocked;
+	}
+
+	/**
+	 * @return the mHasTree
+	 */
+	public boolean hasTree() {
+		return mHasTree;
+	}
+
+	/**
+	 * @param mHasTree the mHasTree to set
+	 */
+	public void setHasTree(boolean mHasTree) {
+		this.mHasTree = mHasTree;
 	}
 
 	// ===========================================================
