@@ -53,7 +53,7 @@ public class BundledTexture {
 				this.mFrames[i] = new GameTexture(_game, grh.getFrame(i));
 				tmpFrames[i] = this.mFrames[i].getGraphic();
 			}
-			this.mAnimation = new Animation((float) grh.getSpeed() / 1000, tmpFrames);
+			this.mAnimation = new Animation(grh.getSpeed() / 1000, tmpFrames);
 			this.mAnimated = true;
 		}
 	}

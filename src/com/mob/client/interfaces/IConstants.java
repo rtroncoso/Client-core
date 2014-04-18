@@ -18,6 +18,7 @@ public interface IConstants {
 	public static final String GAME_GRAPHICS_EXTENSION = ".png";
 	public static final String GAME_MAPS_PATH = "data/mapas";
 	public static final String GAME_FONTS_PATH = "data/fonts/";
+	public static final String GAME_INIT_PATH = "data/init/";
     public static final int GAME_FILE_HEADER_SIZE = 263; 
     public static final int GAME_STATE_PLAY = 0;  
     public static final int GAME_STATE_PAUSE = 1;  

@@ -19,6 +19,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;  
 import com.mob.client.data.BodyData;
+import com.mob.client.data.FxData;
 import com.mob.client.data.GrhData;
 import com.mob.client.data.HeadData;
 import com.mob.client.data.HelmetData;
@@ -50,6 +51,7 @@ public class Game implements ApplicationListener, IConstants {
     protected Vector<BodyData> mBodyData;
     protected Vector<HeadData> mHeadData;
     protected Vector<HelmetData> mHelmetData;
+    protected Vector<FxData> mFxData;
 
 	protected MapHandler mMapHandler;
     protected SurfaceHandler mSurfaceHandler;
@@ -74,6 +76,7 @@ public class Game implements ApplicationListener, IConstants {
         this.mBodyData = new Vector<BodyData>();
         this.mHeadData = new Vector<HeadData>();
         this.mHelmetData = new Vector<HelmetData>();
+        this.mFxData = new Vector<FxData>();
         this.mInitLoader = new InitLoader();
         this.mMapHandler = new MapHandler(this);
         this.mEngine = new Engine(this);
@@ -243,6 +246,20 @@ public class Game implements ApplicationListener, IConstants {
 	 */
 	public void setFont(BitmapFont mFont) {
 		this.mFont = mFont;
+	}
+	
+	/**
+	 * @return the mFxData
+	 */
+	public Vector<FxData> getFxData() {
+		return mFxData;
+	}
+
+	/**
+	 * @param mFxData the mFxData to set
+	 */
+	public void setFxData(Vector<FxData> mFxData) {
+		this.mFxData = mFxData;
 	}
 	
 	// ===========================================================

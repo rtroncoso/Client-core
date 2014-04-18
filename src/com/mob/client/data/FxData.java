@@ -1,13 +1,12 @@
 /**
- * Stores information about a head
+ * Store information about an FX
  * @author Rodrigo Troncoso
  * @version 0.1
  * @since 2014-04-10
  */
 package com.mob.client.data;
 
-public class HeadData {
-
+public class FxData {
 	// ===========================================================
 	// Constants
 	// ===========================================================
@@ -16,16 +15,22 @@ public class HeadData {
 	// ===========================================================
 	// Fields
 	// ===========================================================
-	private int[] mHeadIndex;
+	private int mGrhIndex;
+	private int mOffsetX;
+	private int mOffsetY;
 
 	// ===========================================================
 	// Constructors
 	// ===========================================================
 	/**
-	 * @param headIndex
+	 * @param mGrhIndex
+	 * @param mOffsetX
+	 * @param mOffsetY
 	 */
-	public HeadData(int[] headIndex) {
-		this.mHeadIndex = headIndex;
+	public FxData(int mGrhIndex, int mOffsetX, int mOffsetY) {
+		this.mGrhIndex = mGrhIndex;
+		this.mOffsetX = mOffsetX;
+		this.mOffsetY = mOffsetY;
 	}
 
 	// ===========================================================
@@ -37,22 +42,43 @@ public class HeadData {
 	// Getter & Setter
 	// ===========================================================
 	/**
-	 * @return the headIndex
+	 * @return the mGrhIndex
 	 */
-	public int[] getHeadIndex() {
-		return mHeadIndex;
+	public int getGraphic() {
+		return mGrhIndex;
 	}
-
 	/**
-	 * @param headIndex the headIndex to set
+	 * @param mGrhIndex the mGrhIndex to set
 	 */
-	public void setHeadIndex(int[] headIndex) {
-		this.mHeadIndex = headIndex;
+	public void setGraphic(int mGrhIndex) {
+		this.mGrhIndex = mGrhIndex;
 	}
 	
-	public int getHead(int pIndex) {
-		return this.mHeadIndex[pIndex];
+	/**
+	 * @return the mOffsetX
+	 */
+	public int getOffsetX() {
+		return mOffsetX;
 	}
+	/**
+	 * @param mOffsetX the mOffsetX to set
+	 */
+	public void setOffsetX(int mOffsetX) {
+		this.mOffsetX = mOffsetX;
+	}
+	/**
+	 * @return the mOffsetY
+	 */
+	public int getOffsetY() {
+		return mOffsetY;
+	}
+	/**
+	 * @param mOffsetY the mOffsetY to set
+	 */
+	public void setOffsetY(int mOffsetY) {
+		this.mOffsetY = mOffsetY;
+	}
+
 
 	// ===========================================================
 	// Methods

@@ -56,19 +56,20 @@ public class MobClient extends Game implements IConstants {
         this.mBodyData = this.mInitLoader.loadCuerpos("Personajes.ind");
         this.mHeadData = this.mInitLoader.loadCabezas("Cabezas.ind");
         this.mHelmetData = this.mInitLoader.loadCascos("Cascos.ind");
+        this.mFxData = this.mInitLoader.loadFxs("Fxs.ind");
         
         // Init texture engine
         this.setSurfaceHandler(new SurfaceHandler(this));
         this.getSurfaceHandler().setGraphicsPath(GAME_GRAPHICS_PATH);
-        this.getSurfaceHandler().loadAllTextures();
           
         // Init spritebatch
-        this.mSpriteBatch = new SpriteBatch();  
+        this.mSpriteBatch = new SpriteBatch();
         
         // Load font
         Texture text = new Texture(Gdx.files.internal(GAME_FONTS_PATH + "tahoma-bold.png"));
         this.mFont = new BitmapFont(Gdx.files.internal("data/fonts/tahoma-bold.fnt"), new TextureRegion(text), true);
           
+        // Load testing screen
         this.setScreen("TestScreen");  
           
     }  

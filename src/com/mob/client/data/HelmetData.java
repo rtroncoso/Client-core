@@ -16,11 +16,18 @@ public class HelmetData {
 	// ===========================================================
 	// Fields
 	// ===========================================================
-	private int[] helmetIndex;
+	private int[] mHelmetIndex;
 
 	// ===========================================================
 	// Constructors
 	// ===========================================================
+	/**
+	 * @param headIndex
+	 */
+	public HelmetData(int[] helmetIndex) {
+		super();
+		this.mHelmetIndex = helmetIndex;
+	}
 
 
 	// ===========================================================
@@ -32,25 +39,21 @@ public class HelmetData {
 	// Getter & Setter
 	// ===========================================================
 	/**
-	 * @param headIndex
-	 */
-	public HelmetData(int[] helmetIndex) {
-		super();
-		this.helmetIndex = helmetIndex;
-	}
-
-	/**
 	 * @return the headIndex
 	 */
 	public int[] getHelmetIndex() {
-		return helmetIndex;
+		return mHelmetIndex;
 	}
 
 	/**
 	 * @param headIndex the headIndex to set
 	 */
 	public void setHelmetIndex(int[] helmetIndex) {
-		this.helmetIndex = helmetIndex;
+		this.mHelmetIndex = helmetIndex;
+	}
+	
+	public int getHelmet(int pIndex) {
+		return this.mHelmetIndex[pIndex];
 	}
 
 	// ===========================================================

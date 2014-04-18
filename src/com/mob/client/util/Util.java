@@ -1,5 +1,5 @@
 /**
- * General methods. No place to put something? Get them over here
+ * General math methods
  * TODO : 
  * 	- Split into a Math class and give everything it's right place
  * @author Rodrigo Troncoso
@@ -8,7 +8,6 @@
  */
 package com.mob.client.util;
 
-import com.badlogic.gdx.Gdx;
 
 public class Util {
 
@@ -29,39 +28,13 @@ public class Util {
 	}
 
 	public static int leInt(int n) {
-		int a = n & 0xff;
-		int b = n & 0xff00;
-		int c = n & 0xff0000;
-		int d = n & 0xff000000;
-		return ((a << 24) | (b << 16) | (c << 8) | d);
+		return (((n & 0xff) << 24) | ((n & 0xff00) << 8) | ((n & 0xff0000) >> 8) | ((n & 0xff000000) >> 24));
 	}
 	
 	public static int leMix(short j, short k) {
 		int a = j & 0xffff;
 		int b = k & 0xffff0000;
-		Gdx.app.log("Util", "a " + Integer.toBinaryString(a));
-		Gdx.app.log("Util", "b " + Integer.toBinaryString(b));
 		return (int) ((b << 16) | a) >> 31;
-	}
-	
-	public static int byteArrayToInt(byte[] b) 
-	{
-	    int value = 0;
-	    for (int i = 0; i < 4; i++) {
-	        int shift = (4 - 1 - i) * 8;
-	        value += (b[i] & 0x000000FF) << shift;
-	    }
-	    return value;
-	}
-
-	public static byte[] intToByteArray(int a)
-	{
-	    byte[] ret = new byte[4];
-	    ret[0] = (byte) (a & 0xFF);   
-	    ret[1] = (byte) ((a >> 8) & 0xFF);   
-	    ret[2] = (byte) ((a >> 16) & 0xFF);   
-	    ret[3] = (byte) ((a >> 24) & 0xFF);
-	    return ret;
 	}
 
 	public static double distance(int x1, int y1, int x2, int y2) {

@@ -22,16 +22,16 @@ public class GrhData {
 	private int grhIndex;
 	private int pixelWidth;
 	private int pixelHeight;
-	private double tileWidth;
-	private double tileHeight;
+	private float tileWidth;
+	private float tileHeight;
 	private int[] frames;
-	private double speed;
+	private float speed;
 
 	// ===========================================================
 	// Constructors
 	// ===========================================================
 	public GrhData(int x, int y, int fileNum, int pixelWidth, int pixelHeight,
-			double tileWidth, double tileHeight, int[] frames, double speed) {
+			float tileWidth, float tileHeight, int[] frames, float speed) {
 		super();
 		this.x = x;
 		this.y = y;
@@ -125,28 +125,28 @@ public class GrhData {
 	/**
 	 * @return the tileWidth
 	 */
-	public double getTileWidth() {
+	public float getTileWidth() {
 		return tileWidth;
 	}
 
 	/**
 	 * @param tileWidth the tileWidth to set
 	 */
-	public void setTileWidth(double tileWidth) {
+	public void setTileWidth(float tileWidth) {
 		this.tileWidth = tileWidth;
 	}
 
 	/**
 	 * @return the tileHeight
 	 */
-	public double getTileHeight() {
+	public float getTileHeight() {
 		return tileHeight;
 	}
 
 	/**
 	 * @param tileHeight the tileHeight to set
 	 */
-	public void setTileHeight(double tileHeight) {
+	public void setTileHeight(float tileHeight) {
 		this.tileHeight = tileHeight;
 	}
 
@@ -171,14 +171,14 @@ public class GrhData {
 	/**
 	 * @return the speed
 	 */
-	public double getSpeed() {
+	public float getSpeed() {
 		return speed;
 	}
 
 	/**
 	 * @param speed the speed to set
 	 */
-	public void setSpeed(double speed) {
+	public void setSpeed(float speed) {
 		this.speed = speed;
 	}
 

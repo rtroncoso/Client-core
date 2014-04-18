@@ -9,6 +9,7 @@ package com.mob.client.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.mob.client.Game;
 import com.mob.client.interfaces.IConstants;
@@ -42,28 +43,82 @@ public class TestScreen extends Screen implements IConstants {
 		// Load a map
 		this.map = 1;
 		this.mGame.getEngine().setMap(this.map);
-		this.mGame.getEngine().setTint(COLOR_DAWN);
+		this.mGame.getEngine().setTint(COLOR_DAYLIGHT);
 		
 		// Plot a character
 		this.mGame.getCharacterHandler().makeChar(1, 50, 50, Heading.SOUTH, 1, 6, 4);
 		this.mGame.getCharacterHandler().getPlayer().setName("Froda");
+		this.mGame.getCharacterHandler().getPlayer().setFx(13);
 		
 		this.mInputMultiplexer = new InputMultiplexer();
+		this.mInputMultiplexer.addProcessor(new InputProcessor() {
+
+			@Override
+			public boolean keyDown(int keycode) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
+			@Override
+			public boolean keyUp(int keycode) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
+			@Override
+			public boolean keyTyped(char character) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
+			@Override
+			public boolean touchDown(int screenX, int screenY, int pointer,
+					int button) {
+				if(button == Input.Buttons.LEFT) map += 1;
+				else if(button == Input.Buttons.RIGHT) map -= 1;
+				mGame.getEngine().setMap(map);
+				mGame.getCharacterHandler().getPlayer().updateUserPos();
+				return false;
+			}
+
+			@Override
+			public boolean touchUp(int screenX, int screenY, int pointer,
+					int button) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
+			@Override
+			public boolean touchDragged(int screenX, int screenY, int pointer) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
+			@Override
+			public boolean mouseMoved(int screenX, int screenY) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
+			@Override
+			public boolean scrolled(int amount) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+			
+		});
 	}
 
 	@Override
 	public void update(float dt) {
 		
 		Gdx.graphics.setTitle("FPS: " + String.valueOf(Gdx.graphics.getFramesPerSecond()
+				+ " Map: " + map
 				+ " X: " + this.mGame.getCharacterHandler().getPlayer().getUserPosX()
 				+ " Y: " + this.mGame.getCharacterHandler().getPlayer().getUserPosY()));
 		
 		// Input detection
-		if(Gdx.input.justTouched()) {
-			this.map += 1;
-			this.mGame.getEngine().setMap(this.map);
-			this.mGame.getCharacterHandler().getPlayer().updateUserPos();
-		}
+		Gdx.input.setInputProcessor(this.mInputMultiplexer);
 		
 		if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
 			this.mGame.getCharacterHandler().getPlayer().moveLeft();

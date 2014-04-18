@@ -16,6 +16,7 @@ import java.util.Vector;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.mob.client.data.BodyData;
+import com.mob.client.data.FxData;
 import com.mob.client.data.GrhData;
 import com.mob.client.data.HeadData;
 import com.mob.client.data.HelmetData;
@@ -54,21 +55,23 @@ public class InitLoader implements IConstants {
 	// ===========================================================
 	public Vector<GrhData> loadGrhData(String initFileName) {
 		Vector<GrhData> inits = new Vector<GrhData>();
-		this.fileHandle = Gdx.files.internal("data/init/" + initFileName);
+		this.fileHandle = Gdx.files.internal(GAME_INIT_PATH + initFileName);
 		
 		try {
 			DataInputStream file = new DataInputStream(fileHandle.read());
 			file.skipBytes(4);
 			int numGrhs = Util.leShort(file.readShort());
+			file.skipBytes(2);
+			
 			inits.setSize(numGrhs + 1);
 			inits.setElementAt(new GrhData(0, 0, 0, 0, 0, 0, 0, new int[0], 0), 0);
-			file.skipBytes(2);
+			
 			int grh = Util.leShort(file.readShort());
 			file.skipBytes(2); // no es negro si nadie lo ve
 			
 			while(grh > 0) {
 				int fileNum = 0, sX = 0, sY = 0, numFrames = 0, pixelWidth = 0, pixelHeight = 0, frames[] = new int[0];
-				double speed = 0.0d, tileWidth = 0.0d, tileHeight = 0.0d;
+				float speed = 0.0f, tileWidth = 0.0f, tileHeight = 0.0f;
 				numFrames = Util.leShort(file.readShort());
 				
 				if(numFrames > 1) {
@@ -113,8 +116,8 @@ public class InitLoader implements IConstants {
 					pixelHeight = Util.leShort(file.readShort());
 					if(pixelHeight <= 0) throw new IOException("pixelHeight (numFrames < 1)");
 
-					tileWidth = (double) pixelWidth / TILE_PIXEL_WIDTH;
-					tileHeight = (double) pixelHeight / TILE_PIXEL_HEIGHT;
+					tileWidth = (float) pixelWidth / TILE_PIXEL_WIDTH;
+					tileHeight = (float) pixelHeight / TILE_PIXEL_HEIGHT;
 				}
 				inits.setElementAt(new GrhData(sX, sY, fileNum, pixelWidth, pixelHeight, tileWidth, tileHeight, frames, speed), grh);
 				grh = Util.leShort(file.readShort());
@@ -133,7 +136,7 @@ public class InitLoader implements IConstants {
 	
 	public Vector<BodyData> loadCuerpos(String initFileName) {
 		Vector<BodyData> cuerpos = new Vector<BodyData>();
-		this.fileHandle = Gdx.files.internal("data/init/" + initFileName);
+		this.fileHandle = Gdx.files.internal(GAME_INIT_PATH + initFileName);
 		int numCuerpos = 0;
 		
 		DataInputStream file = new DataInputStream(fileHandle.read());
@@ -168,7 +171,7 @@ public class InitLoader implements IConstants {
 	
 	public Vector<HeadData> loadCabezas(String initFileName) {
 		Vector<HeadData> heads = new Vector<HeadData>();
-		this.fileHandle = Gdx.files.internal("data/init/" + initFileName);
+		this.fileHandle = Gdx.files.internal(GAME_INIT_PATH + initFileName);
 		int numHeads = 0;
 		
 		DataInputStream file = new DataInputStream(fileHandle.read());
@@ -199,7 +202,7 @@ public class InitLoader implements IConstants {
 	
 	public Vector<HelmetData> loadCascos(String initFileName) {
 		Vector<HelmetData> helmets = new Vector<HelmetData>();
-		this.fileHandle = Gdx.files.internal("data/init/" + initFileName);
+		this.fileHandle = Gdx.files.internal(GAME_INIT_PATH + initFileName);
 		int numHelmets = 0;
 		
 		DataInputStream file = new DataInputStream(fileHandle.read());
@@ -221,6 +224,36 @@ public class InitLoader implements IConstants {
 			}
 			Gdx.app.log(this.getClass().getSimpleName(), "Carga de " + initFileName + " con exito");
 			return helmets;
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public Vector<FxData> loadFxs(String initFileName) {
+		Vector<FxData> fxs = new Vector<FxData>();
+		this.fileHandle = Gdx.files.internal(GAME_INIT_PATH + initFileName);
+		int numFxs = 0;
+		
+		DataInputStream file = new DataInputStream(fileHandle.read());
+		
+		try {
+			file.skipBytes(GAME_FILE_HEADER_SIZE);
+			numFxs = Util.leShort(file.readShort());
+			fxs.setSize(numFxs + 1);
+			
+			for(int i = 1; i <= numFxs; i++) {
+				int offsetX = 0, offsetY = 0, fxIndex = 0;
+				
+				fxIndex = Util.leShort(file.readShort());
+				offsetX = Util.leShort(file.readShort());
+				offsetY = Util.leShort(file.readShort());
+				
+				fxs.setElementAt(new FxData(fxIndex, offsetX, offsetY), i);
+			}
+			Gdx.app.log(this.getClass().getSimpleName(), "Carga de " + initFileName + " con exito");
+			return fxs;
 			
 		} catch (IOException e) {
 			e.printStackTrace();
