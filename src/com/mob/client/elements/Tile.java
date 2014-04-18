@@ -23,6 +23,7 @@ public class Tile extends TileSprite {
 	private Character mCharacter;
 	private boolean mBlocked;
 	private boolean mHasTree;
+	private boolean mHasWater;
 	private int mCharIndex;
 	private int mTrigger;
 
@@ -32,12 +33,24 @@ public class Tile extends TileSprite {
 
 	public Tile(Game _game, int x, int y, int[] pGraphic, Character pCharacter) {
 		super(_game, x, y, pGraphic);
+		
 		this.setCharacter(pCharacter);
+		
+		// Check if there is a tree
+		if(this.getGrhIndex(2) == 735 || (this.getGrhIndex(2) >= 6994 && this.getGrhIndex(2) <= 7002)) {
+			this.mHasTree = true;
+		}
+		
+		// Check if it has water
+		if((this.getGrhIndex(0) >= 1505 && this.getGrhIndex(0) <= 1520) || 
+		   (this.getGrhIndex(0) >= 5665 && this.getGrhIndex(0) <= 5680) ||
+		   (this.getGrhIndex(0) >= 13547 && this.getGrhIndex(0) <= 13562)) {
+			if(this.getGrhIndex(1) == 0) this.mHasWater = true;
+		}
 	}
 	
 	public Tile(Game _game, int x, int y, int[] pGraphic) {
-		super(_game, x, y, pGraphic);
-		this.setCharacter(null);
+		this(_game, x, y, pGraphic, null);
 	}
 
 	// ===========================================================
@@ -123,11 +136,17 @@ public class Tile extends TileSprite {
 	}
 	
 	/**
-	 * @return returns if we are a roof
+	 * @return the mHasWater
 	 */
-	public boolean isRoof() {
-		if(this.mTrigger == 1 || this.mTrigger == 2 || this.mTrigger == 4) return true;
-		return false;
+	public boolean hasWater() {
+		return mHasWater;
+	}
+
+	/**
+	 * @param mHasWater the mHasWater to set
+	 */
+	public void setWater(boolean mHasWater) {
+		this.mHasWater = mHasWater;
 	}
 
 	// ===========================================================
@@ -136,8 +155,16 @@ public class Tile extends TileSprite {
 	public boolean isLegalPos() {
 		if(this.mBlocked) return false;
 		if(this.mCharIndex > 0) return false;
-		// TODO : checkear hayagua
+		if(this.mHasWater) return false;
 		return true;
+	}
+
+	/**
+	 * @return returns if we are a roof
+	 */
+	public boolean isRoof() {
+		if(this.mTrigger == 1 || this.mTrigger == 2 || this.mTrigger == 4) return true;
+		return false;
 	}
 
 	// ===========================================================

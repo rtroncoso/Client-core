@@ -8,8 +8,10 @@ package com.mob.client;
 import com.badlogic.gdx.Gdx;  
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;  
-import com.mob.client.data.GameData;  
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch; 
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.mob.client.handlers.SurfaceHandler;
 import com.mob.client.interfaces.IConstants;
   
@@ -60,8 +62,12 @@ public class MobClient extends Game implements IConstants {
         this.getSurfaceHandler().setGraphicsPath(GAME_GRAPHICS_PATH);
         this.getSurfaceHandler().loadAllTextures();
           
-        this.gameData = new GameData(this);  
+        // Init spritebatch
         this.mSpriteBatch = new SpriteBatch();  
+        
+        // Load font
+        Texture text = new Texture(Gdx.files.internal(GAME_FONTS_PATH + "tahoma-bold.png"));
+        this.mFont = new BitmapFont(Gdx.files.internal("data/fonts/tahoma-bold.fnt"), new TextureRegion(text), true);
           
         this.setScreen("TestScreen");  
           
@@ -80,7 +86,7 @@ public class MobClient extends Game implements IConstants {
     @Override  
     public void render() {  
         if (mCurrentScreen != null) {  
-            mCurrentScreen.update(Gdx.graphics.getDeltaTime());  
+            mCurrentScreen.update(Gdx.graphics.getRawDeltaTime());  
         } else {  
               
         	Gdx.gl.glClearColor(0, 0, 0, 1);  

@@ -7,6 +7,8 @@
 package com.mob.client.sprites;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.BitmapFont.HAlignment;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.mob.client.Game;
@@ -45,6 +47,9 @@ public class CharacterSprite extends MovingSprite implements ISprite, IConstants
 	protected Rectangle mCharacter;
 	protected Color mColor;
 	
+	protected String mName;
+	protected BitmapFont mFont;
+	
 	// ===========================================================
 	// Constructors
 	// ===========================================================
@@ -53,6 +58,8 @@ public class CharacterSprite extends MovingSprite implements ISprite, IConstants
 		
 		// Init class
 		this.mColor = this.mGame.getCurrentMap().getTint();
+		this.mFont = this.mGame.getFont();
+		this.mFont.setColor(0.0f, 0.6f, 0.0f, 1.0f);
 		this.mHeading = mHeading;
 		this.mDeltaTime = 0.0f;
 		this.mBodyGrhIndex = 0;
@@ -93,6 +100,7 @@ public class CharacterSprite extends MovingSprite implements ISprite, IConstants
 				helmetPixelOffsetX = 0, helmetPixelOffsetY = 0;
 		Color oldColor = this.mGame.getSpriteBatch().getColor();
 		
+		
 		// Set our sprite color
 		this.mGame.getSpriteBatch().setColor(this.mColor);
 		
@@ -107,7 +115,7 @@ public class CharacterSprite extends MovingSprite implements ISprite, IConstants
 		}
 		if(this.mHeadGrhIndex != 0) {
 			headPixelOffsetX = this.mX + this.mHeadOffsetX - (this.getHead().getRegionWidth() / 4) - 4;
-			headPixelOffsetY = this.mY + this.mHeadOffsetY - this.getBody().getRegionHeight() - 4;
+			headPixelOffsetY = this.mY + this.mHeadOffsetY - this.getBody().getRegionHeight() - 5;
 		}
 		if(this.mHelmetGrhIndex != 0) {
 			helmetPixelOffsetX = this.mX + this.mHeadOffsetX - (this.getHead().getRegionWidth() / 4) - 4;
@@ -132,11 +140,17 @@ public class CharacterSprite extends MovingSprite implements ISprite, IConstants
 				this.mGame.getSpriteBatch().draw(this.getBody(), bodyPixelOffsetX, bodyPixelOffsetY);
 		}
 		
-		// Update sprite Position
-		this.place();
+		// Draw name over our head
+		if(this.mName.length() != 0) {
+			String line = this.mName + "\n<Mob Staff>";
+			this.mFont.drawMultiLine(this.mGame.getSpriteBatch(), line, this.mX - ((this.mName.length() * 10) / 2), this.mY - 4, this.mName.length() * 10, HAlignment.CENTER);
+		}
 		
 		// Replace old color
 		this.mGame.getSpriteBatch().setColor(oldColor);
+		
+		// Update sprite Position
+		this.place();
 	}
 
 	// ===========================================================
@@ -205,12 +219,12 @@ public class CharacterSprite extends MovingSprite implements ISprite, IConstants
 	// Methods
 	// ===========================================================
 	public void loadBody(BodyData bodyData) {
-		this.mBodyGrhIndex = bodyData.getBodyArray()[Heading.NORTH.toInt()].getGrhIndex();
+		this.mBodyGrhIndex = bodyData.getGraphic(Heading.NORTH.toInt());
 		this.mBodySkin = new BundledTexture[4];
-		this.mBodySkin[Heading.NORTH.toInt()] = new BundledTexture(this.mGame, bodyData.getBodyArray()[Heading.NORTH.toInt()].getGrhIndex(), true);
-		this.mBodySkin[Heading.SOUTH.toInt()] = new BundledTexture(this.mGame, bodyData.getBodyArray()[Heading.SOUTH.toInt()].getGrhIndex(), true);
-		this.mBodySkin[Heading.WEST.toInt()] = new BundledTexture(this.mGame, bodyData.getBodyArray()[Heading.WEST.toInt()].getGrhIndex(), true);
-		this.mBodySkin[Heading.EAST.toInt()] = new BundledTexture(this.mGame, bodyData.getBodyArray()[Heading.EAST.toInt()].getGrhIndex(), true);
+		this.mBodySkin[Heading.NORTH.toInt()] = new BundledTexture(this.mGame, bodyData.getGraphic(Heading.NORTH.toInt()), true);
+		this.mBodySkin[Heading.SOUTH.toInt()] = new BundledTexture(this.mGame, bodyData.getGraphic(Heading.SOUTH.toInt()), true);
+		this.mBodySkin[Heading.WEST.toInt()] = new BundledTexture(this.mGame, bodyData.getGraphic(Heading.WEST.toInt()), true);
+		this.mBodySkin[Heading.EAST.toInt()] = new BundledTexture(this.mGame, bodyData.getGraphic(Heading.EAST.toInt()), true);
 	}
 	
 	public void loadHead(HeadData headData) {

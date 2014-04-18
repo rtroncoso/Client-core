@@ -18,6 +18,7 @@ public interface IConstants {
 	public static final String GAME_GRAPHICS_PATH = "data/graficos";
 	public static final String GAME_GRAPHICS_EXTENSION = ".png";
 	public static final String GAME_MAPS_PATH = "data/mapas";
+	public static final String GAME_FONTS_PATH = "data/fonts/";
     
     public static final int GAME_FILE_HEADER_SIZE = 263; 
 
@@ -41,7 +42,7 @@ public interface IConstants {
     public static final Color COLOR_DAWN = new Color(0.6f, 0.6f, 0.6f, 1.0f);
     public static final Color COLOR_NIGHT = new Color(0.4f, 0.8f, 0.8f, 1.0f);
     
-    public static final float ALPHA_TREES = 0.7f;
+    public static final float ALPHA_TREES = 1.0f;
     
     public enum Heading {
     	NORTH(0), EAST(1), SOUTH(2), WEST(3);

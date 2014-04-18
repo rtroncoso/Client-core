@@ -16,16 +16,13 @@ import java.util.Vector;
 
 import com.badlogic.gdx.ApplicationListener;  
 import com.badlogic.gdx.graphics.OrthographicCamera;  
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;  
-import com.badlogic.gdx.utils.TimeUtils;
 import com.mob.client.data.BodyData;
-import com.mob.client.data.GameData;  
-import com.mob.client.data.AnimationData;
 import com.mob.client.data.GrhData;
 import com.mob.client.data.HeadData;
 import com.mob.client.data.HelmetData;
 import com.mob.client.elements.Map;
-import com.mob.client.engine.TileEngine;
 import com.mob.client.handlers.CharacterHandler;
 import com.mob.client.handlers.MapHandler;
 import com.mob.client.handlers.SurfaceHandler;
@@ -43,12 +40,7 @@ public class Game implements ApplicationListener, IConstants {
 	// ===========================================================
 	// Fields
 	// ===========================================================
-    public GameData gameData;  
-    public int screenWidth = 0;  
-    public int screenHeight = 0;  
-
     protected OrthographicCamera mCamera;  
-    protected TileEngine mEngine;
     protected HashMap<String, Screen> mScreens;  
     protected SpriteBatch mSpriteBatch;  
     
@@ -65,11 +57,13 @@ public class Game implements ApplicationListener, IConstants {
 
 	protected Map mCurrentMap;
     protected Screen mCurrentScreen;
+    
+    protected BitmapFont mFont;
 
 	// ===========================================================
 	// Constructors
 	// ===========================================================
-
+    
 
 	// ===========================================================
 	// Methods for/from SuperClass/Interfaces
@@ -80,11 +74,11 @@ public class Game implements ApplicationListener, IConstants {
         this.mBodyData = new Vector<BodyData>();
         this.mHeadData = new Vector<HeadData>();
         this.mHelmetData = new Vector<HelmetData>();
-        this.mInitLoader = new InitLoader(this);
+        this.mInitLoader = new InitLoader();
         this.mMapHandler = new MapHandler(this);
         this.mCurrentMap = new Map(this);
         this.mCharacterHandler = new CharacterHandler(this);
-          
+        this.mFont = new BitmapFont();
     }
     
     public void update (float dt) {}  
@@ -181,20 +175,6 @@ public class Game implements ApplicationListener, IConstants {
 		this.mCamera = mCamera;
 	}
 
-	/**
-	 * @return the mEngine
-	 */
-	public TileEngine getEngine() {
-		return mEngine;
-	}
-
-	/**
-	 * @param mEngine the mEngine to set
-	 */
-	public void setEngine(TileEngine mEngine) {
-		this.mEngine = mEngine;
-	}
-
     /**
 	 * @return the mMapHandler
 	 */
@@ -250,6 +230,20 @@ public class Game implements ApplicationListener, IConstants {
 	public void setCharacterHandler(CharacterHandler mCharacterHandler) {
 		this.mCharacterHandler = mCharacterHandler;
 	}
+
+	/**
+	 * @return the mFont
+	 */
+	public BitmapFont getFont() {
+		return mFont;
+	}
+
+	/**
+	 * @param mFont the mFont to set
+	 */
+	public void setFont(BitmapFont mFont) {
+		this.mFont = mFont;
+	}
 	
 	// ===========================================================
 	// Methods
@@ -288,38 +282,6 @@ public class Game implements ApplicationListener, IConstants {
         }  
         this.mCurrentScreen = newScreen;  
         this.mCurrentScreen.createScreen();  
-	}  
-
-	public AnimationData initGrh(int grhIndex, int started) {
-	
-		int tmpStarted = 0, tmpFrameCounter = 0, tmpTicksCounter = 0;
-		boolean tmpLoops;
-		double tmpSpeedCounter = 0.0d;
-		
-		if(grhIndex == 0) return null;
-		
-		if(started == 2) {
-			if(this.mGrhData.get(grhIndex).getFrames().length > 1) {
-				tmpStarted = 1;
-			} else {
-				tmpStarted = 0;
-			}
-		} else {
-			if(this.mGrhData.get(grhIndex).getFrames().length == 0) tmpStarted = 0;
-			tmpStarted = started;
-		}
-		
-		if(tmpStarted >= 1) {
-			tmpLoops = true;
-		} else {
-			tmpLoops = false;
-		}
-		
-		tmpFrameCounter = 1;
-		tmpSpeedCounter = this.mGrhData.get(grhIndex).getSpeed();
-		tmpTicksCounter = (int) TimeUtils.millis();
-		
-		return new AnimationData(grhIndex, tmpFrameCounter, tmpSpeedCounter, tmpTicksCounter, tmpStarted, tmpLoops);
 	}
 
 	// ===========================================================

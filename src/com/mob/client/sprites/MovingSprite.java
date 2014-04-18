@@ -36,7 +36,7 @@ public class MovingSprite extends GameSprite implements IConstants {
 		this.mNextY = 0;
 		
 		this.mMoving = false;
-		this.mSpeed = 200.0f; // TODO : don't harcode movement speed
+		this.mSpeed = 175.0f; // TODO : don't harcode movement speed
 	}
 
 	// ===========================================================

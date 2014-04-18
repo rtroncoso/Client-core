@@ -46,6 +46,7 @@ public class Map implements IConstants {
 		this.mTint = new Color(Color.WHITE);
 		this.mMapNumber = pMapNumber;
 		this.mGame = pGame;
+		this.mTechoAB = 1.0f;
 		
 		this.load();
 	}
@@ -133,8 +134,8 @@ public class Map implements IConstants {
 					
 					// If user is behind a tree draw it with alpha blend
 					if(tile.hasTree()) {
-						if(Math.abs(this.mGame.getCharacterHandler().getPlayer().getUserPosX() - x) < 3 &&
-						   this.mGame.getCharacterHandler().getPlayer().getUserPosY() - y < 3) {
+						if(Math.abs(this.mGame.getCharacterHandler().getPlayer().getUserPosX() - x) < 4 &&
+						   Math.abs(this.mGame.getCharacterHandler().getPlayer().getUserPosY() - y) < 4) {
 							Color oldColor = this.mGame.getSpriteBatch().getColor();
 							this.mGame.getSpriteBatch().setColor(new Color(this.mTint.r, this.mTint.g, this.mTint.b, ALPHA_TREES));
 							this.mGame.getSpriteBatch().draw(layer.getGraphic(), layer.getX(), layer.getY());
@@ -164,7 +165,7 @@ public class Map implements IConstants {
 			}
 			if(this.mTechoAB < 0.05f) this.mTechoAB = 0.0f;
 		} else {
-			if(this.mTechoAB < 255) {
+			if(this.mTechoAB < 1.0f) {
 				this.mTechoAB += dt;
 			}
 			if(this.mTechoAB > 0.95f) this.mTechoAB = 1.0f;
@@ -273,11 +274,6 @@ public class Map implements IConstants {
 				this.mTiles[x][y].setBlocked(tile.isBlocked());
 				this.mTiles[x][y].setCharacter(null);
 				this.mTiles[x][y].setTrigger(tile.getTrigger());
-				
-				// Check if there is a tree TODO : hardcoded -> do it inside the tile, that's why we are using OOP duh
-				if(tile.getGraphic(2) == 735 || (tile.getGraphic(2) >= 6994 && tile.getGraphic(2) <= 7002)) {
-					this.mTiles[x][y].setHasTree(true);
-				}
 			}
 		}
 	}

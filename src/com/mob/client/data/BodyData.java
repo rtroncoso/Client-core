@@ -16,9 +16,9 @@ public class BodyData {
 	// ===========================================================
 	// Fields
 	// ===========================================================
-	private AnimationData[] grhCuerpo;
-	private int headOffsetX;
-	private int headOffsetY;
+	private int[] mGrhCuerpo;
+	private int mHeadOffsetX;
+	private int mHeadOffsetY;
 
 	// ===========================================================
 	// Constructors
@@ -28,11 +28,11 @@ public class BodyData {
 	 * @param headOffsetX
 	 * @param headOffsetY
 	 */
-	public BodyData(AnimationData[] grhIndex, int headOffsetX, int headOffsetY) {
+	public BodyData(int[] grhIndex, int headOffsetX, int headOffsetY) {
 		super();
-		this.grhCuerpo = grhIndex;
-		this.headOffsetX = headOffsetX;
-		this.headOffsetY = headOffsetY;
+		this.mGrhCuerpo = grhIndex;
+		this.mHeadOffsetX = headOffsetX;
+		this.mHeadOffsetY = headOffsetY;
 	}
 
 	// ===========================================================
@@ -43,46 +43,54 @@ public class BodyData {
 	// ===========================================================
 	// Getter & Setter
 	// ===========================================================
+	public int getGraphic(int pIndex) {
+		return this.mGrhCuerpo[pIndex];
+	}
+	
+	public void setGraphic(int pIndex, int pGraphic) {
+		this.mGrhCuerpo[pIndex] = pGraphic;
+	}
+	
 	/**
 	 * @return the grhIndex
 	 */
-	public AnimationData[] getBodyArray() {
-		return grhCuerpo;
+	public int[] getBodyArray() {
+		return mGrhCuerpo;
 	}
 
 	/**
 	 * @param grhIndex the grhIndex to set
 	 */
-	public void setBodyArray(AnimationData[] grhCuerpo) {
-		this.grhCuerpo = grhCuerpo;
+	public void setBodyArray(int[] grhCuerpo) {
+		this.mGrhCuerpo = grhCuerpo;
 	}
 
 	/**
 	 * @return the headOffsetX
 	 */
 	public int getHeadOffsetX() {
-		return headOffsetX;
+		return mHeadOffsetX;
 	}
 
 	/**
 	 * @param headOffsetX the headOffsetX to set
 	 */
 	public void setHeadOffsetX(int headOffsetX) {
-		this.headOffsetX = headOffsetX;
+		this.mHeadOffsetX = headOffsetX;
 	}
 
 	/**
 	 * @return the headOffsetY
 	 */
 	public int getHeadOffsetY() {
-		return headOffsetY;
+		return mHeadOffsetY;
 	}
 
 	/**
 	 * @param headOffsetY the headOffsetY to set
 	 */
 	public void setHeadOffsetY(int headOffsetY) {
-		this.headOffsetY = headOffsetY;
+		this.mHeadOffsetY = headOffsetY;
 	}
 
 	// ===========================================================

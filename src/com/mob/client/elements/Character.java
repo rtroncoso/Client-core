@@ -25,7 +25,6 @@ public class Character extends CharacterSprite {
 	private boolean mDead;
 	private boolean mInvisible;
 	private boolean mSeesRoof;
-	private String mNombre;
 
 	// ===========================================================
 	// Constructors
@@ -40,7 +39,7 @@ public class Character extends CharacterSprite {
 		this.mCharIndex = charIndex;
 		this.mDead = false;
 		this.mInvisible = false;
-		this.mNombre = "";
+		this.mName = "";
 		this.mSeesRoof = false;
 		
 		// Update user position
@@ -152,15 +151,15 @@ public class Character extends CharacterSprite {
 	/**
 	 * @return the mNombre
 	 */
-	public String getNombre() {
-		return mNombre;
+	public String getName() {
+		return mName;
 	}
 	
 	/**
 	 * @param mNombre the mNombre to set
 	 */
-	public void setNombre(String mNombre) {
-		this.mNombre = mNombre;
+	public void setName(String mName) {
+		this.mName = mName;
 	}
 
 	/**

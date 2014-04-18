@@ -15,9 +15,7 @@ import java.util.Vector;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import com.mob.client.Game;
 import com.mob.client.data.BodyData;
-import com.mob.client.data.AnimationData;
 import com.mob.client.data.GrhData;
 import com.mob.client.data.HeadData;
 import com.mob.client.data.HelmetData;
@@ -35,14 +33,11 @@ public class InitLoader implements IConstants {
 	// Fields
 	// ===========================================================
 	private FileHandle fileHandle;
-	private Game _game;
 
 	// ===========================================================
 	// Constructors
 	// ===========================================================
-	public InitLoader(Game game) {
-		this._game = game;
-	}
+	
 
 	// ===========================================================
 	// Methods for/from SuperClass/Interfaces
@@ -139,7 +134,7 @@ public class InitLoader implements IConstants {
 	public Vector<BodyData> loadCuerpos(String initFileName) {
 		Vector<BodyData> cuerpos = new Vector<BodyData>();
 		this.fileHandle = Gdx.files.internal("data/init/" + initFileName);
-		int numCuerpos = 0, grhArray[] = new int[4], headOffSetX = 0, headOffSetY = 0;
+		int numCuerpos = 0;
 		
 		DataInputStream file = new DataInputStream(fileHandle.read());
 		
@@ -149,22 +144,17 @@ public class InitLoader implements IConstants {
 			cuerpos.setSize(numCuerpos + 1);
 			
 			for(int i = 1; i <= numCuerpos; i++) {
-				AnimationData[] tmpCuerpo = new AnimationData[4];
+				int grhArray[] = new int[4], headOffSetX = 0, headOffSetY = 0;;
 				
 				grhArray[Heading.NORTH.toInt()] = Util.leShort(file.readShort());
-				tmpCuerpo[Heading.NORTH.toInt()] = this._game.initGrh(grhArray[Heading.NORTH.toInt()], 0);
 				grhArray[Heading.EAST.toInt()] = Util.leShort(file.readShort());
-				tmpCuerpo[Heading.EAST.toInt()] = this._game.initGrh(grhArray[Heading.EAST.toInt()], 0);
 				grhArray[Heading.SOUTH.toInt()] = Util.leShort(file.readShort());
-				tmpCuerpo[Heading.SOUTH.toInt()] = this._game.initGrh(grhArray[Heading.SOUTH.toInt()], 0);
 				grhArray[Heading.WEST.toInt()] = Util.leShort(file.readShort());
-				tmpCuerpo[Heading.WEST.toInt()] = this._game.initGrh(grhArray[Heading.WEST.toInt()], 0);
 				
 				headOffSetX = Util.leShort(file.readShort());
 				headOffSetY = Util.leShort(file.readShort());
 				
-				cuerpos.setElementAt(new BodyData(tmpCuerpo, headOffSetX, headOffSetY), i);
-				//Gdx.app.log("InitData", "Cargue un cuerpo, van: " + cuerpos.size());
+				cuerpos.setElementAt(new BodyData(grhArray, headOffSetX, headOffSetY), i);
 			}
 			Gdx.app.log(this.getClass().getSimpleName(), "Carga de " + initFileName + " con exito");
 			return cuerpos;
