@@ -83,7 +83,7 @@ public class SurfaceHandler implements IConstants {
 	 */
 	public void loadTexture(String fileName) {
 		Texture texture = new Texture(this.mGraphicsPath + "/" + fileName + GAME_GRAPHICS_EXTENSION);
-		texture.setFilter(TextureFilter.Nearest, TextureFilter.MipMapLinearNearest);
+		texture.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
 		this.add(fileName, texture);
 	}
 

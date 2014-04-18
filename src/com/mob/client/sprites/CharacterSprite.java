@@ -57,7 +57,7 @@ public class CharacterSprite extends MovingSprite implements ISprite, IConstants
 		super(_game, x , y);
 		
 		// Init class
-		this.mColor = this.mGame.getCurrentMap().getTint();
+		this.mColor = this.mGame.getEngine().getTint();
 		this.mFont = this.mGame.getFont();
 		this.mFont.setColor(0.0f, 0.6f, 0.0f, 1.0f);
 		this.mHeading = mHeading;
@@ -142,7 +142,9 @@ public class CharacterSprite extends MovingSprite implements ISprite, IConstants
 		
 		// Draw name over our head
 		if(this.mName.length() != 0) {
-			String line = this.mName + "\n<Mob Staff>";
+			
+			// To add new lines to our name just go \nNew Line (add clan, staff, etc)
+			String line = this.mName;// + "\n<Mob Staff>";
 			this.mFont.drawMultiLine(this.mGame.getSpriteBatch(), line, this.mX - ((this.mName.length() * 10) / 2), this.mY - 4, this.mName.length() * 10, HAlignment.CENTER);
 		}
 		

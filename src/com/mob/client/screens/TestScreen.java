@@ -41,8 +41,8 @@ public class TestScreen extends Screen implements IConstants {
 		
 		// Load a map
 		this.map = 1;
-		this.mGame.getCurrentMap().setMap(this.map);
-		this.mGame.getCurrentMap().setTint(COLOR_DAWN);
+		this.mGame.getEngine().setMap(this.map);
+		this.mGame.getEngine().setTint(COLOR_DAWN);
 		
 		// Plot a character
 		this.mGame.getCharacterHandler().makeChar(1, 50, 50, Heading.SOUTH, 1, 6, 4);
@@ -61,7 +61,7 @@ public class TestScreen extends Screen implements IConstants {
 		// Input detection
 		if(Gdx.input.justTouched()) {
 			this.map += 1;
-			this.mGame.getCurrentMap().setMap(this.map);
+			this.mGame.getEngine().setMap(this.map);
 			this.mGame.getCharacterHandler().getPlayer().updateUserPos();
 		}
 		
@@ -91,7 +91,7 @@ public class TestScreen extends Screen implements IConstants {
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		this.mGame.getSpriteBatch().setProjectionMatrix(this.mGame.getCamera().combined);
 		this.mGame.getSpriteBatch().begin();
-        this.mGame.getCurrentMap().update(dt);
+        this.mGame.getEngine().update(dt);
 		this.mGame.getSpriteBatch().end();
 	}
 

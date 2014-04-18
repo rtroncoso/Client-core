@@ -81,7 +81,7 @@ public class Character extends CharacterSprite {
 		}
 		
 		// Check if legal pos
-		if(!this.mGame.getCurrentMap().getTile(this.mUserPosX + nextX, this.mUserPosY + nextY).isLegalPos()) return;
+		if(!this.mGame.getEngine().getTile(this.mUserPosX + nextX, this.mUserPosY + nextY).isLegalPos()) return;
 		
 		// Fill destination
 		this.mNextX = nextX;
@@ -213,17 +213,17 @@ public class Character extends CharacterSprite {
 	public void setUserPos(int x, int y) {
 		
 		// Delete old player position from map
-		this.mGame.getCurrentMap().getTile(this.mLastUserPosX, this.mLastUserPosY).setCharacter(null);;
+		this.mGame.getEngine().getTile(this.mLastUserPosX, this.mLastUserPosY).setCharacter(null);;
 		
 		// Change our graphic position
 		this.setUserPosX(x);
 		this.setUserPosY(y);
 		
 		// Plot on map
-		this.mGame.getCurrentMap().setCharacter(this.mUserPosX, this.mUserPosY, this);
+		this.mGame.getEngine().setCharacter(this.mUserPosX, this.mUserPosY, this);
 		
 		// Check if we see a roof
-		if(this.mGame.getCurrentMap().getTile(this.mUserPosX, this.mUserPosY).isRoof())
+		if(this.mGame.getEngine().getTile(this.mUserPosX, this.mUserPosY).isRoof())
 			this.mSeesRoof = true;
 		else
 			this.mSeesRoof = false;

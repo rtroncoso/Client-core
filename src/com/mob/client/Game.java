@@ -22,7 +22,7 @@ import com.mob.client.data.BodyData;
 import com.mob.client.data.GrhData;
 import com.mob.client.data.HeadData;
 import com.mob.client.data.HelmetData;
-import com.mob.client.elements.Map;
+import com.mob.client.engine.Engine;
 import com.mob.client.handlers.CharacterHandler;
 import com.mob.client.handlers.MapHandler;
 import com.mob.client.handlers.SurfaceHandler;
@@ -55,7 +55,7 @@ public class Game implements ApplicationListener, IConstants {
     protected SurfaceHandler mSurfaceHandler;
     protected CharacterHandler mCharacterHandler;
 
-	protected Map mCurrentMap;
+	protected Engine mEngine;
     protected Screen mCurrentScreen;
     
     protected BitmapFont mFont;
@@ -76,7 +76,7 @@ public class Game implements ApplicationListener, IConstants {
         this.mHelmetData = new Vector<HelmetData>();
         this.mInitLoader = new InitLoader();
         this.mMapHandler = new MapHandler(this);
-        this.mCurrentMap = new Map(this);
+        this.mEngine = new Engine(this);
         this.mCharacterHandler = new CharacterHandler(this);
         this.mFont = new BitmapFont();
     }
@@ -206,15 +206,15 @@ public class Game implements ApplicationListener, IConstants {
 	/**
 	 * @return the mCurrentMap
 	 */
-	public Map getCurrentMap() {
-		return mCurrentMap;
+	public Engine getEngine() {
+		return mEngine;
 	}
 
 	/**
 	 * @param mCurrentMap the mCurrentMap to set
 	 */
-	public void setCurrentMap(Map mCurrentMap) {
-		this.mCurrentMap = mCurrentMap;
+	public void setEngine(Engine mCurrentMap) {
+		this.mEngine = mCurrentMap;
 	}    
 	
 	/**

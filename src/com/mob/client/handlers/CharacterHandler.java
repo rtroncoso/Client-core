@@ -132,7 +132,7 @@ public class CharacterHandler {
 		this.add(charIndex, character);
 		
 		// Plot on map
-		this.mGame.getCurrentMap().setCharacter(x, y, character);
+		this.mGame.getEngine().setCharacter(x, y, character);
 	}
 
 	// ===========================================================

@@ -4,16 +4,18 @@
  * @version 0.1
  * @since 2014-04-10
  */
-package com.mob.client.elements;
+package com.mob.client.engine;
 
 import com.badlogic.gdx.graphics.Color;
 import com.mob.client.Game;
 import com.mob.client.data.MapBlockData;
 import com.mob.client.data.MapData;
+import com.mob.client.elements.Character;
+import com.mob.client.elements.Tile;
 import com.mob.client.interfaces.IConstants;
 import com.mob.client.textures.BundledTexture;
 
-public class Map implements IConstants {
+public class Engine implements IConstants {
 
 	// ===========================================================
 	// Constants
@@ -32,7 +34,7 @@ public class Map implements IConstants {
 	// ===========================================================
 	// Constructors
 	// ===========================================================
-	public Map(Game pGame) {
+	public Engine(Game pGame) {
 		this.mMapNumber = 0;
 		this.mGame = pGame;
 	}
@@ -41,7 +43,7 @@ public class Map implements IConstants {
 	 * @param mMapNumber
 	 * @param mGame
 	 */
-	public Map(Game pGame, int pMapNumber) {
+	public Engine(Game pGame, int pMapNumber) {
 		
 		this.mTint = new Color(Color.WHITE);
 		this.mMapNumber = pMapNumber;
@@ -59,18 +61,21 @@ public class Map implements IConstants {
 		// Vars
 		int screenMinX, screenMaxX, screenMinY, screenMaxY, minAreaX, minAreaY, maxAreaX, maxAreaY;
 		MapData mapData = this.mGame.getMapHandler().get(this.mMapNumber);
-		int tileBufferSize = 7; // TODO : hardcoded
 		
 		// Calculate visible part of the map
-		screenMinX = ((int) (this.mGame.getCamera().position.x - ((this.mGame.getCamera().position.x + this.mGame.getCamera().viewportWidth) / 2)) / TILE_PIXEL_WIDTH) - 1;
-		screenMaxX = ((int) (this.mGame.getCamera().position.x + this.mGame.getCamera().viewportWidth) / TILE_PIXEL_WIDTH) + 1;
-		screenMinY = ((int) (this.mGame.getCamera().position.y - ((this.mGame.getCamera().position.y + this.mGame.getCamera().viewportHeight) / 2)) / TILE_PIXEL_WIDTH) - 1;
-		screenMaxY = ((int) (this.mGame.getCamera().position.y + this.mGame.getCamera().viewportHeight) / TILE_PIXEL_HEIGHT) + 1;
+		int cameraPosX = (int) (this.mGame.getCamera().position.x / TILE_PIXEL_WIDTH);
+		int cameraPosY = (int) (this.mGame.getCamera().position.y / TILE_PIXEL_HEIGHT);
+		int halfWindowTileWidth = (int) ((this.mGame.getCamera().viewportWidth / TILE_PIXEL_WIDTH) / 2);
+		int halfWindowTileHeight = (int) ((this.mGame.getCamera().viewportHeight / TILE_PIXEL_HEIGHT) / 2);
+		screenMinX = cameraPosX - halfWindowTileWidth - 1;
+		screenMaxX = cameraPosX + halfWindowTileWidth + 1;
+		screenMinY = cameraPosY - halfWindowTileHeight - 1;
+		screenMaxY = cameraPosY + halfWindowTileHeight + 1;
 		
-		minAreaX = screenMinX - tileBufferSize;
-		maxAreaX = screenMaxX + tileBufferSize;
-		minAreaY = screenMinY - tileBufferSize;
-		maxAreaY = screenMaxY + tileBufferSize;
+		minAreaX = screenMinX - TILE_BUFFER_SIZE;
+		maxAreaX = screenMaxX + TILE_BUFFER_SIZE;
+		minAreaY = screenMinY - TILE_BUFFER_SIZE;
+		maxAreaY = screenMaxY + TILE_BUFFER_SIZE;
 		
 		// Make sure it is between map bounds
 		if(minAreaX < MIN_MAP_SIZE_WIDTH) minAreaX = MIN_MAP_SIZE_WIDTH;
