@@ -10,6 +10,7 @@ import java.util.HashMap;
 
 import com.mob.client.Game;
 import com.mob.client.elements.Character;
+import com.mob.client.interfaces.IConstants.Heading;
 
 public class CharacterHandler {
 
@@ -107,13 +108,13 @@ public class CharacterHandler {
 		}
 	   
 		final Character t = this.mCharacterMap.get(key);
-		//t.dispose();
+		t.dispose();
 		this.mCharacterMap.remove(key);
 	}
 	  
 	public void disposeAll() {
 		for (final Character t : this.mCharacterMap.values()) {
-			//t.dispose();
+			t.dispose();
 		}
    
 		this.mCharacterMap.clear();
@@ -122,7 +123,7 @@ public class CharacterHandler {
 	// ===========================================================
 	// Methods
 	// ===========================================================
-	public void makeChar(int charIndex, int x, int y, byte heading, int bodyIndex, int headIndex, int helmetIndex) {
+	public void makeChar(int charIndex, int x, int y, Heading heading, int bodyIndex, int headIndex, int helmetIndex) {
 		
 		// Make character
 		Character character = new Character(this.mGame, charIndex, x, y, heading, bodyIndex, headIndex, helmetIndex);

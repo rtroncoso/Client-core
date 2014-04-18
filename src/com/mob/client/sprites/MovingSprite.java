@@ -7,8 +7,9 @@
 package com.mob.client.sprites;
 
 import com.mob.client.Game;
+import com.mob.client.interfaces.IConstants;
 
-public class MovingSprite extends GameSprite {
+public class MovingSprite extends GameSprite implements IConstants {
 	// ===========================================================
 	// Constants
 	// ===========================================================
@@ -23,7 +24,7 @@ public class MovingSprite extends GameSprite {
 	protected boolean mMoving;
 	protected float mSpeed;
 	
-	protected byte mHeading;
+	protected Heading mHeading;
 	
 	// ===========================================================
 	// Constructors
@@ -63,21 +64,25 @@ public class MovingSprite extends GameSprite {
 	/**
 	 * @return the mHeading
 	 */
-	public byte getHeading() {
+	public int getHeading() {
+		return mHeading.toInt();
+	}
+	
+	public Heading getHeadingEnum() {
 		return mHeading;
 	}
 
 	/**
 	 * @param mHeading the mHeading to set
 	 */
-	public void setHeading(byte mHeading) {
+	public void setHeading(Heading mHeading) {
 		this.mHeading = mHeading;
 	}
 
 	// ===========================================================
 	// Methods
 	// ===========================================================
-	public void move(byte pHeading) {
+	public void move(Heading pHeading) {
 		this.mHeading = pHeading;
 	}
 	

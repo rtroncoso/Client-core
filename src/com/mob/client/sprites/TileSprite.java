@@ -6,6 +6,7 @@
  */
 package com.mob.client.sprites;
 
+import com.badlogic.gdx.graphics.Color;
 import com.mob.client.Game;
 import com.mob.client.interfaces.IConstants;
 import com.mob.client.textures.BundledTexture;
@@ -22,6 +23,7 @@ public class TileSprite extends GameSprite implements IConstants {
 	// ===========================================================
 	protected BundledTexture[] mGraphic;
 	protected float mDeltaTime;
+	protected float mAlphaBlend;
 
 	// ===========================================================
 	// Constructors
@@ -30,6 +32,7 @@ public class TileSprite extends GameSprite implements IConstants {
 		super(_game, x, y);
 		
 		this.mGraphic = new BundledTexture[4];
+		this.mAlphaBlend = 1.0f;
 		
 		for(int i = 0; i < 4; i++) {
 			if(_game.getGrhData().get(pGraphic[i]).getFrames().length != 0) 
@@ -67,6 +70,20 @@ public class TileSprite extends GameSprite implements IConstants {
 	
 	public BundledTexture getGraphic(int pIndex) {
 		return this.mGraphic[pIndex];
+	}
+
+	/**
+	 * @return the mAlphaBlend
+	 */
+	public float getAlphaBlend() {
+		return mAlphaBlend;
+	}
+
+	/**
+	 * @param mAlphaBlend the mAlphaBlend to set
+	 */
+	public void setAlphaBlend(float mAlphaBlend) {
+		this.mAlphaBlend = mAlphaBlend;
 	}
 
 	// ===========================================================

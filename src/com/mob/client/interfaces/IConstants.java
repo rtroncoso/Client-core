@@ -6,6 +6,8 @@
  */
 package com.mob.client.interfaces;
 
+import com.badlogic.gdx.graphics.Color;
+
 public interface IConstants {
     
     public static final int GAME_SCREEN_WIDTH = 1280;
@@ -30,15 +32,29 @@ public interface IConstants {
     public static final int MIN_MAP_SIZE_WIDTH = 1;
     public static final int MAX_MAP_SIZE_HEIGHT = 100;
     public static final int MIN_MAP_SIZE_HEIGHT = 1;
-    public static final int MAX_MAPS = 1000; // TODO : fixme
     
-    public static final int OFFSET_HEAD = -34;
+    public static final int OFFSET_HEAD = 12;
     
     public static final int INFINITE_LOOPS = -1;
     
-    public static final byte WALK_NORTH = 0;
-    public static final byte WALK_EAST = 1;
-    public static final byte WALK_SOUTH = 2;
-    public static final byte WALK_WEST = 3;
+    public static final Color COLOR_DAYLIGHT = new Color(0.9f, 0.9f, 0.9f, 1.0f);
+    public static final Color COLOR_DAWN = new Color(0.6f, 0.6f, 0.6f, 1.0f);
+    public static final Color COLOR_NIGHT = new Color(0.4f, 0.8f, 0.8f, 1.0f);
+    
+    public static final float ALPHA_TREES = 0.7f;
+    
+    public enum Heading {
+    	NORTH(0), EAST(1), SOUTH(2), WEST(3);
+    	
+    	final int mHeading;
+    	
+    	Heading(int pHeading) {
+    		this.mHeading = pHeading;
+    	}
+    	
+    	public int toInt() {
+    		return this.mHeading;
+    	}
+    }
     
 }

@@ -47,6 +47,7 @@ public class GameSprite extends Sprite implements ISprite {
 	// ===========================================================
 	// Methods for/from SuperClass/Interfaces
 	// ===========================================================
+	public void dispose() {}
 	public void reset() {}
 	public void update(float dt) {}
 	public void show() {

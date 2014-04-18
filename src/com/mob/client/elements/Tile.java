@@ -24,6 +24,7 @@ public class Tile extends TileSprite {
 	private boolean mBlocked;
 	private boolean mHasTree;
 	private int mCharIndex;
+	private int mTrigger;
 
 	// ===========================================================
 	// Constructors
@@ -107,13 +108,35 @@ public class Tile extends TileSprite {
 		this.mHasTree = mHasTree;
 	}
 
+	/**
+	 * @return the mTrigger
+	 */
+	public int getTrigger() {
+		return mTrigger;
+	}
+
+	/**
+	 * @param mTrigger the mTrigger to set
+	 */
+	public void setTrigger(int mTrigger) {
+		this.mTrigger = mTrigger;
+	}
+	
+	/**
+	 * @return returns if we are a roof
+	 */
+	public boolean isRoof() {
+		if(this.mTrigger == 1 || this.mTrigger == 2 || this.mTrigger == 4) return true;
+		return false;
+	}
+
 	// ===========================================================
 	// Methods
 	// ===========================================================
 	public boolean isLegalPos() {
 		if(this.mBlocked) return false;
 		if(this.mCharIndex > 0) return false;
-		// checkear hayagua
+		// TODO : checkear hayagua
 		return true;
 	}
 

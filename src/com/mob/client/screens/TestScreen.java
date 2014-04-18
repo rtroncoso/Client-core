@@ -9,6 +9,7 @@ package com.mob.client.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.mob.client.Game;
 import com.mob.client.interfaces.IConstants;
@@ -38,17 +39,25 @@ public class TestScreen extends Screen implements IConstants {
 	// ===========================================================
 	@Override
 	public void createScreen() {
-		this.map = 34;
+		
+		// Load a map
+		this.map = 1;
 		this.mGame.getCurrentMap().setMap(this.map);
-		this.mGame.getCharacterHandler().makeChar(1, 50, 50, WALK_SOUTH, 64, 6, 1);
+		this.mGame.getCurrentMap().setTint(COLOR_DAWN);
+		
+		// Plot a character
+		this.mGame.getCharacterHandler().makeChar(1, 50, 50, Heading.SOUTH, 64, 4, 4);
 		
 		this.mInputMultiplexer = new InputMultiplexer();
 	}
 
 	@Override
 	public void update(float dt) {
-		Gdx.graphics.setTitle("FPS: " + String.valueOf(Gdx.graphics.getFramesPerSecond()));
+		Gdx.graphics.setTitle("FPS: " + String.valueOf(Gdx.graphics.getFramesPerSecond()
+				+ " X: " + this.mGame.getCharacterHandler().getPlayer().getUserPosX()
+				+ " Y: " + this.mGame.getCharacterHandler().getPlayer().getUserPosY()));
 		
+		// Input detection
 		if(Gdx.input.justTouched()) {
 			this.map += 1;
 			this.mGame.getCurrentMap().setMap(this.map);
@@ -76,7 +85,7 @@ public class TestScreen extends Screen implements IConstants {
 		this.mGame.getCharacterHandler().getPlayer().focusCamera();
 		this.mGame.getCamera().update();
 		
-		// Draw each component of the scene
+		// Send update to the map, it will handle the update of each element in it
 		Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		this.mGame.getSpriteBatch().setProjectionMatrix(this.mGame.getCamera().combined);

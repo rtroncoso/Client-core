@@ -69,18 +69,18 @@ public class MobClient extends Game implements IConstants {
     
     @Override  
     public void dispose() {  
-        if (currentScreen != null) currentScreen.dispose();  
+        if (mCurrentScreen != null) mCurrentScreen.dispose();  
     }  
   
     @Override  
     public void pause() {  
-        if (currentScreen != null) currentScreen.pause();  
+        if (mCurrentScreen != null) mCurrentScreen.pause();  
     }  
   
     @Override  
     public void render() {  
-        if (currentScreen != null) {  
-            currentScreen.update(Gdx.graphics.getDeltaTime());  
+        if (mCurrentScreen != null) {  
+            mCurrentScreen.update(Gdx.graphics.getDeltaTime());  
         } else {  
               
         	Gdx.gl.glClearColor(0, 0, 0, 1);  
@@ -95,7 +95,7 @@ public class MobClient extends Game implements IConstants {
   
     @Override  
     public void resume() {  
-        if (currentScreen != null) currentScreen.resume();  
+        if (mCurrentScreen != null) mCurrentScreen.resume();  
     }  
 
 	// ===========================================================

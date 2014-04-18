@@ -6,6 +6,7 @@
  */
 package com.mob.client.sprites;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.mob.client.Game;
@@ -42,40 +43,44 @@ public class CharacterSprite extends MovingSprite implements ISprite, IConstants
 	protected int mHeadOffsetY;
 
 	protected Rectangle mCharacter;
+	protected Color mColor;
 	
 	// ===========================================================
 	// Constructors
 	// ===========================================================
-	public CharacterSprite(Game _game, int x, int y, byte mHeading, int bodyIndex, int headIndex, int helmetIndex) {
+	public CharacterSprite(Game _game, int x, int y, Heading mHeading, int bodyIndex, int headIndex, int helmetIndex) {
 		super(_game, x , y);
 		
 		// Init class
+		this.mColor = this.mGame.getCurrentMap().getTint();
 		this.mHeading = mHeading;
 		this.mDeltaTime = 0.0f;
+		this.mBodyGrhIndex = 0;
+		this.mHeadGrhIndex = 0;
+		this.mHelmetGrhIndex = 0;
 		
 		// Check null indexes
 		if(helmetIndex == 0) helmetIndex = 2;
 		
 		// Load graphics
-		this.loadBody(this.mGame.getBodyData().get(bodyIndex));
-		this.loadHead(this.mGame.getHeadData().get(headIndex));
-		this.loadHelmet(this.mGame.getHelmetData().get(helmetIndex));
+		if(bodyIndex != 0) this.loadBody(this.mGame.getBodyData().get(bodyIndex));
+		if(headIndex != 0) this.loadHead(this.mGame.getHeadData().get(headIndex));
+		if(helmetIndex != 0) this.loadHelmet(this.mGame.getHelmetData().get(helmetIndex));
 		
 		// Calculate offsets
 		this.mHeadOffsetX = this.mGame.getBodyData().get(bodyIndex).getHeadOffsetX();
 		this.mHeadOffsetY = this.mGame.getBodyData().get(bodyIndex).getHeadOffsetY();
-		
-		// Update user pos
-		this.setUserPosX(x);
-		this.setUserPosY(y);
 	}
 	
 	// ===========================================================
 	// Methods for/from SuperClass/Interfaces
 	// ===========================================================
 	@Override
-	public void draw() {
+	public void dispose() {
 	}
+	
+	@Override
+	public void draw() {}
 	
 	/**
 	 * Sub CharRender()
@@ -84,17 +89,30 @@ public class CharacterSprite extends MovingSprite implements ISprite, IConstants
 	public void update(float dt) {
 		
 		// Vars
-		float bodyPixelOffsetX, bodyPixelOffsetY, headPixelOffsetX, headPixelOffsetY;
+		float bodyPixelOffsetX = 0, bodyPixelOffsetY = 0, headPixelOffsetX = 0, headPixelOffsetY = 0,
+				helmetPixelOffsetX = 0, helmetPixelOffsetY = 0;
+		Color oldColor = this.mGame.getSpriteBatch().getColor();
+		
+		// Set our sprite color
+		this.mGame.getSpriteBatch().setColor(this.mColor);
 		
 		// Update internal timer
 		this.mDeltaTime = dt;
-		this.mBodySkin[this.mHeading].setAnimationTime(this.mBodySkin[this.mHeading].getAnimationTime() + this.mDeltaTime);
+		this.mBodySkin[this.mHeading.toInt()].setAnimationTime(this.mBodySkin[this.getHeading()].getAnimationTime() + this.mDeltaTime);
 		
 		// Calculate offset to draw
-		bodyPixelOffsetX = this.mX - (this.getBody().getRegionWidth() / 2);
-		bodyPixelOffsetY = this.mY - (this.getBody().getRegionHeight());
-		headPixelOffsetX = this.mX + this.mHeadOffsetX - (this.getHead().getRegionWidth() / 4) - 4;
-		headPixelOffsetY = this.mY + this.mHeadOffsetY - this.getBody().getRegionHeight() - 4;
+		if(this.mBodyGrhIndex != 0) {
+			bodyPixelOffsetX = this.mX - (this.getBody().getRegionWidth() / 2);
+			bodyPixelOffsetY = this.mY - (this.getBody().getRegionHeight());
+		}
+		if(this.mHeadGrhIndex != 0) {
+			headPixelOffsetX = this.mX + this.mHeadOffsetX - (this.getHead().getRegionWidth() / 4) - 4;
+			headPixelOffsetY = this.mY + this.mHeadOffsetY - this.getBody().getRegionHeight() - 4;
+		}
+		if(this.mHelmetGrhIndex != 0) {
+			helmetPixelOffsetX = this.mX + this.mHeadOffsetX - (this.getHead().getRegionWidth() / 4) - 4;
+			helmetPixelOffsetY = this.mY + this.mHeadOffsetY - this.getBody().getRegionHeight() - OFFSET_HEAD - 4;
+		}
 		
 		// Draw our character
 		if(this.mHeadGrhIndex != 0) {
@@ -106,7 +124,7 @@ public class CharacterSprite extends MovingSprite implements ISprite, IConstants
 					this.mGame.getSpriteBatch().draw(this.getHead(), headPixelOffsetX, headPixelOffsetY);
 				
 					if(this.mHelmetGrhIndex != 0)
-						this.mGame.getSpriteBatch().draw(this.getHelmet(), headPixelOffsetX, headPixelOffsetY);
+						this.mGame.getSpriteBatch().draw(this.getHelmet(), helmetPixelOffsetX, helmetPixelOffsetY);
 				}
 			}
 		} else { // Draw only body
@@ -116,24 +134,41 @@ public class CharacterSprite extends MovingSprite implements ISprite, IConstants
 		
 		// Update sprite Position
 		this.place();
+		
+		// Replace old color
+		this.mGame.getSpriteBatch().setColor(oldColor);
 	}
-	
+
 	// ===========================================================
 	// Getter & Setter
 	// ===========================================================
 	public TextureRegion getBody() {
 		if(this.mMoving)
-			return this.mBodySkin[this.mHeading].getGraphic(true);
+			return this.mBodySkin[this.getHeading()].getGraphic(true);
 		else
-			return this.mBodySkin[this.mHeading].getGraphic();
+			return this.mBodySkin[this.getHeading()].getGraphic();
 	}
 	
 	public TextureRegion getHead() {
-		return this.mHeadSkin[this.mHeading].getGraphic();
+		return this.mHeadSkin[this.getHeading()].getGraphic();
 	}
 	
 	public TextureRegion getHelmet() {
-		return this.mHelmetSkin[this.mHeading].getGraphic();
+		return this.mHelmetSkin[this.getHeading()].getGraphic();
+	}
+	
+	/**
+	 * @return the mColor
+	 */
+	public Color getColor() {
+		return mColor;
+	}
+
+	/**
+	 * @param mColor the mColor to set
+	 */
+	public void setColor(Color mColor) {
+		this.mColor = mColor;
 	}
 
 	/**
@@ -170,30 +205,30 @@ public class CharacterSprite extends MovingSprite implements ISprite, IConstants
 	// Methods
 	// ===========================================================
 	public void loadBody(BodyData bodyData) {
-		this.mBodyGrhIndex = bodyData.getBodyArray()[WALK_NORTH].getGrhIndex();
+		this.mBodyGrhIndex = bodyData.getBodyArray()[Heading.NORTH.toInt()].getGrhIndex();
 		this.mBodySkin = new BundledTexture[4];
-		this.mBodySkin[WALK_NORTH] = new BundledTexture(this.mGame, bodyData.getBodyArray()[WALK_NORTH].getGrhIndex(), true);
-		this.mBodySkin[WALK_SOUTH] = new BundledTexture(this.mGame, bodyData.getBodyArray()[WALK_SOUTH].getGrhIndex(), true);
-		this.mBodySkin[WALK_WEST] = new BundledTexture(this.mGame, bodyData.getBodyArray()[WALK_WEST].getGrhIndex(), true);
-		this.mBodySkin[WALK_EAST] = new BundledTexture(this.mGame, bodyData.getBodyArray()[WALK_EAST].getGrhIndex(), true);
+		this.mBodySkin[Heading.NORTH.toInt()] = new BundledTexture(this.mGame, bodyData.getBodyArray()[Heading.NORTH.toInt()].getGrhIndex(), true);
+		this.mBodySkin[Heading.SOUTH.toInt()] = new BundledTexture(this.mGame, bodyData.getBodyArray()[Heading.SOUTH.toInt()].getGrhIndex(), true);
+		this.mBodySkin[Heading.WEST.toInt()] = new BundledTexture(this.mGame, bodyData.getBodyArray()[Heading.WEST.toInt()].getGrhIndex(), true);
+		this.mBodySkin[Heading.EAST.toInt()] = new BundledTexture(this.mGame, bodyData.getBodyArray()[Heading.EAST.toInt()].getGrhIndex(), true);
 	}
 	
 	public void loadHead(HeadData headData) {
 		this.mHeadSkin = new BundledTexture[4];
-		this.mHeadGrhIndex = headData.getHeadIndex()[WALK_NORTH];
-		this.mHeadSkin[WALK_NORTH] = new BundledTexture(this.mGame, headData.getHeadIndex()[WALK_NORTH]);
-		this.mHeadSkin[WALK_SOUTH] = new BundledTexture(this.mGame, headData.getHeadIndex()[WALK_SOUTH]);
-		this.mHeadSkin[WALK_WEST] = new BundledTexture(this.mGame, headData.getHeadIndex()[WALK_WEST]);
-		this.mHeadSkin[WALK_EAST] = new BundledTexture(this.mGame, headData.getHeadIndex()[WALK_EAST]);
+		this.mHeadGrhIndex = headData.getHeadIndex()[Heading.NORTH.toInt()];
+		this.mHeadSkin[Heading.NORTH.toInt()] = new BundledTexture(this.mGame, headData.getHeadIndex()[Heading.NORTH.toInt()]);
+		this.mHeadSkin[Heading.SOUTH.toInt()] = new BundledTexture(this.mGame, headData.getHeadIndex()[Heading.SOUTH.toInt()]);
+		this.mHeadSkin[Heading.WEST.toInt()] = new BundledTexture(this.mGame, headData.getHeadIndex()[Heading.WEST.toInt()]);
+		this.mHeadSkin[Heading.EAST.toInt()] = new BundledTexture(this.mGame, headData.getHeadIndex()[Heading.EAST.toInt()]);
 	}
 	
 	public void loadHelmet(HelmetData helmetData) {
 		this.mHelmetSkin = new BundledTexture[4];
-		this.mHelmetGrhIndex = helmetData.getHelmetIndex()[WALK_NORTH];
-		this.mHelmetSkin[WALK_NORTH] = new BundledTexture(this.mGame, helmetData.getHelmetIndex()[WALK_NORTH]);
-		this.mHelmetSkin[WALK_SOUTH] = new BundledTexture(this.mGame, helmetData.getHelmetIndex()[WALK_SOUTH]);
-		this.mHelmetSkin[WALK_WEST] = new BundledTexture(this.mGame, helmetData.getHelmetIndex()[WALK_WEST]);
-		this.mHelmetSkin[WALK_EAST] = new BundledTexture(this.mGame, helmetData.getHelmetIndex()[WALK_EAST]);
+		this.mHelmetGrhIndex = helmetData.getHelmetIndex()[Heading.NORTH.toInt()];
+		this.mHelmetSkin[Heading.NORTH.toInt()] = new BundledTexture(this.mGame, helmetData.getHelmetIndex()[Heading.NORTH.toInt()]);
+		this.mHelmetSkin[Heading.SOUTH.toInt()] = new BundledTexture(this.mGame, helmetData.getHelmetIndex()[Heading.SOUTH.toInt()]);
+		this.mHelmetSkin[Heading.WEST.toInt()] = new BundledTexture(this.mGame, helmetData.getHelmetIndex()[Heading.WEST.toInt()]);
+		this.mHelmetSkin[Heading.EAST.toInt()] = new BundledTexture(this.mGame, helmetData.getHelmetIndex()[Heading.EAST.toInt()]);
 	}
 
 	// ===========================================================

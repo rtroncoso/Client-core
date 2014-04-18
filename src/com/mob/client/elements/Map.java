@@ -6,6 +6,7 @@
  */
 package com.mob.client.elements;
 
+import com.badlogic.gdx.graphics.Color;
 import com.mob.client.Game;
 import com.mob.client.data.MapBlockData;
 import com.mob.client.data.MapData;
@@ -24,7 +25,9 @@ public class Map implements IConstants {
 	// ===========================================================
 	private Tile[][] mTiles;
 	private int mMapNumber;
+	private Color mTint;
 	private Game mGame;
+	private float mTechoAB;
 
 	// ===========================================================
 	// Constructors
@@ -40,6 +43,7 @@ public class Map implements IConstants {
 	 */
 	public Map(Game pGame, int pMapNumber) {
 		
+		this.mTint = new Color(Color.WHITE);
 		this.mMapNumber = pMapNumber;
 		this.mGame = pGame;
 		
@@ -78,6 +82,9 @@ public class Map implements IConstants {
 		if(screenMinY < MIN_MAP_SIZE_HEIGHT) screenMinY = MIN_MAP_SIZE_HEIGHT;
 		if(screenMaxY > MAX_MAP_SIZE_HEIGHT) screenMaxY = MAX_MAP_SIZE_HEIGHT;
 		
+		// Set map color and store it in memory
+		this.mGame.getSpriteBatch().setColor(this.mTint);
+		
 		// Start map render
 		/******************************************
 		 * Layer 1
@@ -89,6 +96,7 @@ public class Map implements IConstants {
 				BundledTexture layer = tile.getGraphic(0);
 
 				layer.setAnimationTime(layer.getAnimationTime() + dt);
+				
 				this.mGame.getSpriteBatch().draw(layer.getGraphic(true), layer.getX(), layer.getY());
 			}
 		}
@@ -120,8 +128,23 @@ public class Map implements IConstants {
 
 				// Layer 3
 				if(mapData.getTile(x, y).getGraphic()[2] != 0) {
+					
 					layer.setAnimationTime(layer.getAnimationTime() + dt);
-					this.mGame.getSpriteBatch().draw(layer.getGraphic(true), layer.getX(), layer.getY());
+					
+					// If user is behind a tree draw it with alpha blend
+					if(tile.hasTree()) {
+						if(Math.abs(this.mGame.getCharacterHandler().getPlayer().getUserPosX() - x) < 3 &&
+						   this.mGame.getCharacterHandler().getPlayer().getUserPosY() - y < 3) {
+							Color oldColor = this.mGame.getSpriteBatch().getColor();
+							this.mGame.getSpriteBatch().setColor(new Color(this.mTint.r, this.mTint.g, this.mTint.b, ALPHA_TREES));
+							this.mGame.getSpriteBatch().draw(layer.getGraphic(), layer.getX(), layer.getY());
+							this.mGame.getSpriteBatch().setColor(oldColor);
+						} else {
+							this.mGame.getSpriteBatch().draw(layer.getGraphic(true), layer.getX(), layer.getY());
+						}
+					} else {
+						this.mGame.getSpriteBatch().draw(layer.getGraphic(true), layer.getX(), layer.getY());
+					}
 				}
 				
 				// Character layer
@@ -134,6 +157,19 @@ public class Map implements IConstants {
 		/******************************************
 		 * Layer 4
 		 ******************************************/
+		// If user is under a roof we hide it
+		if(this.mGame.getCharacterHandler().getPlayer().isUnderRoof()) {
+			if(this.mTechoAB > 0) {
+				this.mTechoAB -= dt;
+			}
+			if(this.mTechoAB < 0.05f) this.mTechoAB = 0.0f;
+		} else {
+			if(this.mTechoAB < 255) {
+				this.mTechoAB += dt;
+			}
+			if(this.mTechoAB > 0.95f) this.mTechoAB = 1.0f;
+		}
+		
 		for(int y = minAreaY; y <= maxAreaY; y++) {
 			for(int x = minAreaX; x <= maxAreaX; x++) {
 				
@@ -142,11 +178,16 @@ public class Map implements IConstants {
 
 				if(mapData.getTile(x, y).getGraphic()[3] != 0) {
 					layer.setAnimationTime(layer.getAnimationTime() + dt);
+					
+					Color oldColor = this.mGame.getSpriteBatch().getColor();
+					this.mGame.getSpriteBatch().setColor(new Color(this.mTint.r, this.mTint.g, this.mTint.b, this.mTechoAB));
 					this.mGame.getSpriteBatch().draw(layer.getGraphic(true), layer.getX(), layer.getY());
+					this.mGame.getSpriteBatch().setColor(oldColor);
 				}
 			}
 		}
 	}
+	
 	public void reset() {}
 	public void show() {}
 	public void draw() {}
@@ -222,7 +263,7 @@ public class Map implements IConstants {
 
 		MapData mapData = this.mGame.getMapHandler().get(this.mMapNumber);
 		
-		// Fill tiles array
+		// Move MapData tiles into our array
 		this.mTiles = new Tile[MAX_MAP_SIZE_WIDTH + 1][MAX_MAP_SIZE_HEIGHT + 1];
 		for(int y = MIN_MAP_SIZE_HEIGHT; y <= MAX_MAP_SIZE_HEIGHT; y++) {
 			for(int x = MIN_MAP_SIZE_WIDTH; x <= MAX_MAP_SIZE_WIDTH; x++) {
@@ -231,13 +272,28 @@ public class Map implements IConstants {
 				this.mTiles[x][y] = new Tile(this.mGame, x, y, tile.getGraphic());
 				this.mTiles[x][y].setBlocked(tile.isBlocked());
 				this.mTiles[x][y].setCharacter(null);
+				this.mTiles[x][y].setTrigger(tile.getTrigger());
 				
-				// Check if there is a tree TODO : hardcoded
-				if(tile.getGraphic(3) == 735 || (tile.getGraphic(3) >= 6994 && tile.getGraphic(3) <= 7002)) {
+				// Check if there is a tree TODO : hardcoded -> do it inside the tile, that's why we are using OOP duh
+				if(tile.getGraphic(2) == 735 || (tile.getGraphic(2) >= 6994 && tile.getGraphic(2) <= 7002)) {
 					this.mTiles[x][y].setHasTree(true);
 				}
 			}
 		}
+	}
+
+	/**
+	 * @return the mTint
+	 */
+	public Color getTint() {
+		return mTint;
+	}
+
+	/**
+	 * @param mTint the mTint to set
+	 */
+	public void setTint(Color mTint) {
+		this.mTint = mTint;
 	}
 
 	// ===========================================================

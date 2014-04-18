@@ -24,20 +24,27 @@ public class Character extends CharacterSprite {
 	private int mCharIndex;
 	private boolean mDead;
 	private boolean mInvisible;
+	private boolean mSeesRoof;
 	private String mNombre;
 
 	// ===========================================================
 	// Constructors
 	// ===========================================================
-	public Character(Game _game, int charIndex, int x, int y, byte mHeading, int bodyIndex, int headIndex, int helmetIndex) {
+	public Character(Game _game, int charIndex, int x, int y, Heading mHeading, int bodyIndex, int headIndex, int helmetIndex) {
 		super(_game, x, y, mHeading, bodyIndex, headIndex, helmetIndex);
 		
-		this.mLastUserPosX = 0;
-		this.mLastUserPosY = 0;
+		
+		// Init object
+		this.mLastUserPosX = x;
+		this.mLastUserPosY = y;
 		this.mCharIndex = charIndex;
 		this.mDead = false;
 		this.mInvisible = false;
 		this.mNombre = "";
+		this.mSeesRoof = false;
+		
+		// Update user position
+		this.setUserPos(x, y);
 	}
 
 	// ===========================================================
@@ -48,8 +55,10 @@ public class Character extends CharacterSprite {
 		
 	}
 	
-	@Override
-	public void move(byte pHeading) {
+	//@Override
+	public void move(Heading pHeading) {
+		
+		// Vars
 		int nextX = 0, nextY = 0;
 		if(this.mMoving) return; // Check if we are already moving
 		
@@ -58,16 +67,16 @@ public class Character extends CharacterSprite {
 		
 		// Set up NextY (let place() handle)
 		switch(this.mHeading) {
-			case(WALK_NORTH):
+			case NORTH:
 				nextY = -1;
 				break;
-			case(WALK_EAST):
+			case EAST:
 				nextX = 1;
 				break;
-			case(WALK_SOUTH):
+			case SOUTH:
 				nextY = 1;
 				break;
-			case(WALK_WEST):
+			case WEST:
 				nextX = -1;
 				break;
 		}
@@ -93,6 +102,8 @@ public class Character extends CharacterSprite {
 	
 	@Override
 	public void place() {
+		
+		// Vars
 		float offsetCounterX = 0.0f, offsetCounterY = 0.0f;
 		
 		// This routine calculates user position if they are moving then plots it on the screen
@@ -211,6 +222,12 @@ public class Character extends CharacterSprite {
 		
 		// Plot on map
 		this.mGame.getCurrentMap().setCharacter(this.mUserPosX, this.mUserPosY, this);
+		
+		// Check if we see a roof
+		if(this.mGame.getCurrentMap().getTile(this.mUserPosX, this.mUserPosY).isRoof())
+			this.mSeesRoof = true;
+		else
+			this.mSeesRoof = false;
 	}
 	
 	/**
@@ -226,19 +243,33 @@ public class Character extends CharacterSprite {
 	}
 	
 	public void moveUp() {
-		this.move(WALK_NORTH);
+		this.move(Heading.NORTH);
 	}
 	
 	public void moveDown() {
-		this.move(WALK_SOUTH);
+		this.move(Heading.SOUTH);
 	}
 	
 	public void moveLeft() {
-		this.move(WALK_WEST);
+		this.move(Heading.WEST);
 	}
 	
 	public void moveRight() {
-		this.move(WALK_EAST);
+		this.move(Heading.EAST);
+	}
+
+	/**
+	 * @return the mSeesRoof
+	 */
+	public boolean isUnderRoof() {
+		return mSeesRoof;
+	}
+
+	/**
+	 * @param mSeesRoof the mSeesRoof to set
+	 */
+	public void setSeesRoof(boolean mSeesRoof) {
+		this.mSeesRoof = mSeesRoof;
 	}
 
 	// ===========================================================

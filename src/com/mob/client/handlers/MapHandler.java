@@ -8,7 +8,7 @@ package com.mob.client.handlers;
 
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.util.Vector;
+import java.util.HashMap;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
@@ -31,15 +31,14 @@ public class MapHandler implements IConstants {
 	// ===========================================================
 	private FileHandle mFileHandle;
 	private Game mGame;
-	private Vector<MapData> mMapData;
+	private HashMap<Integer, MapData> mMapData;
 
 	// ===========================================================
 	// Constructors
 	// ===========================================================
 	public MapHandler(Game pGame) {
 		this.setGame(pGame);
-		this.mMapData = new Vector<MapData>();
-		this.mMapData.setSize(MAX_MAPS);
+		this.mMapData = new HashMap<Integer, MapData>();
 	}
 
 	// ===========================================================
@@ -65,11 +64,12 @@ public class MapHandler implements IConstants {
 	}
 
 	public void set(MapData pMapData, int pMapNumber) {
-		this.mMapData.setElementAt(pMapData, pMapNumber);
+		if(this.mMapData.containsKey(pMapNumber)) return;
+		this.mMapData.put(pMapNumber, pMapData);
 	}
 	
 	public MapData get(int pMapNumber) {
-		if(this.mMapData.get(pMapNumber) == null) loadMap(pMapNumber);
+		if(!this.mMapData.containsKey(pMapNumber)) loadMap(pMapNumber);
 		return this.mMapData.get(pMapNumber);
 	}
 
@@ -125,7 +125,6 @@ public class MapHandler implements IConstants {
 			}
 			
 			this.set(mapData, pMapNumber);
-			mapData.setLoaded(true);
 			Gdx.app.log(this.getClass().getSimpleName(), "Mapa" + String.valueOf(pMapNumber) + ".map cargado con exito.");
 			return true;
 		} catch(IOException e) {

@@ -151,14 +151,14 @@ public class InitLoader implements IConstants {
 			for(int i = 1; i <= numCuerpos; i++) {
 				AnimationData[] tmpCuerpo = new AnimationData[4];
 				
-				grhArray[WALK_NORTH] = Util.leShort(file.readShort());
-				tmpCuerpo[WALK_NORTH] = this._game.initGrh(grhArray[WALK_NORTH], 0);
-				grhArray[WALK_EAST] = Util.leShort(file.readShort());
-				tmpCuerpo[WALK_EAST] = this._game.initGrh(grhArray[WALK_EAST], 0);
-				grhArray[WALK_SOUTH] = Util.leShort(file.readShort());
-				tmpCuerpo[WALK_SOUTH] = this._game.initGrh(grhArray[WALK_SOUTH], 0);
-				grhArray[WALK_WEST] = Util.leShort(file.readShort());
-				tmpCuerpo[WALK_WEST] = this._game.initGrh(grhArray[WALK_WEST], 0);
+				grhArray[Heading.NORTH.toInt()] = Util.leShort(file.readShort());
+				tmpCuerpo[Heading.NORTH.toInt()] = this._game.initGrh(grhArray[Heading.NORTH.toInt()], 0);
+				grhArray[Heading.EAST.toInt()] = Util.leShort(file.readShort());
+				tmpCuerpo[Heading.EAST.toInt()] = this._game.initGrh(grhArray[Heading.EAST.toInt()], 0);
+				grhArray[Heading.SOUTH.toInt()] = Util.leShort(file.readShort());
+				tmpCuerpo[Heading.SOUTH.toInt()] = this._game.initGrh(grhArray[Heading.SOUTH.toInt()], 0);
+				grhArray[Heading.WEST.toInt()] = Util.leShort(file.readShort());
+				tmpCuerpo[Heading.WEST.toInt()] = this._game.initGrh(grhArray[Heading.WEST.toInt()], 0);
 				
 				headOffSetX = Util.leShort(file.readShort());
 				headOffSetY = Util.leShort(file.readShort());
@@ -191,10 +191,10 @@ public class InitLoader implements IConstants {
 			for(int i = 1; i <= numHeads; i++) {
 				int headIndex[] = new int[4];
 				
-				headIndex[WALK_NORTH] = Util.leShort(file.readShort());
-				headIndex[WALK_EAST] = Util.leShort(file.readShort());
-				headIndex[WALK_SOUTH] = Util.leShort(file.readShort());
-				headIndex[WALK_WEST] = Util.leShort(file.readShort());
+				headIndex[Heading.NORTH.toInt()] = Util.leShort(file.readShort());
+				headIndex[Heading.EAST.toInt()] = Util.leShort(file.readShort());
+				headIndex[Heading.SOUTH.toInt()] = Util.leShort(file.readShort());
+				headIndex[Heading.WEST.toInt()] = Util.leShort(file.readShort());
 
 				heads.setElementAt(new HeadData(headIndex), i);
 			}
@@ -222,10 +222,10 @@ public class InitLoader implements IConstants {
 			for(int i = 1; i <= numHelmets; i++) {
 				int helmetIndex[] = new int[4];
 				
-				helmetIndex[WALK_NORTH] = Util.leShort(file.readShort());
-				helmetIndex[WALK_EAST] = Util.leShort(file.readShort());
-				helmetIndex[WALK_SOUTH] = Util.leShort(file.readShort());
-				helmetIndex[WALK_WEST] = Util.leShort(file.readShort());
+				helmetIndex[Heading.NORTH.toInt()] = Util.leShort(file.readShort());
+				helmetIndex[Heading.EAST.toInt()] = Util.leShort(file.readShort());
+				helmetIndex[Heading.SOUTH.toInt()] = Util.leShort(file.readShort());
+				helmetIndex[Heading.WEST.toInt()] = Util.leShort(file.readShort());
 				
 				helmets.setElementAt(new HelmetData(helmetIndex), i);
 			}

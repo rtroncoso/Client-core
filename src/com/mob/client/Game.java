@@ -46,7 +46,6 @@ public class Game implements ApplicationListener, IConstants {
     public GameData gameData;  
     public int screenWidth = 0;  
     public int screenHeight = 0;  
-    public Screen currentScreen;
 
     protected OrthographicCamera mCamera;  
     protected TileEngine mEngine;
@@ -65,6 +64,7 @@ public class Game implements ApplicationListener, IConstants {
     protected CharacterHandler mCharacterHandler;
 
 	protected Map mCurrentMap;
+    protected Screen mCurrentScreen;
 
 	// ===========================================================
 	// Constructors
@@ -88,26 +88,11 @@ public class Game implements ApplicationListener, IConstants {
     }
     
     public void update (float dt) {}  
-    
-    public void dispose() {  
-        // TODO Auto-generated method stub  
-    }  
-  
-    public void pause() {  
-        // TODO Auto-generated method stub  
-    }  
-  
-    public void render() {  
-        // TODO Auto-generated method stub  
-    }  
-  
-    public void resize(int arg0, int arg1) {  
-        // TODO Auto-generated method stub  
-    }  
-  
-    public void resume() {  
-        // TODO Auto-generated method stub  
-    }  
+    public void dispose() {}
+    public void pause() {}
+    public void render() {}
+    public void resize(int arg0, int arg1) {}  
+    public void resume() {}  
     
 	// ===========================================================
 	// Getter & Setter
@@ -297,12 +282,12 @@ public class Game implements ApplicationListener, IConstants {
           
         if (newScreen == null) return;  
           
-        if (this.currentScreen != null) {  
+        if (this.mCurrentScreen != null) {  
             //remove current screen!  
-            currentScreen.destroy();  
+            mCurrentScreen.destroy();  
         }  
-        this.currentScreen = newScreen;  
-        this.currentScreen.createScreen();  
+        this.mCurrentScreen = newScreen;  
+        this.mCurrentScreen.createScreen();  
 	}  
 
 	public AnimationData initGrh(int grhIndex, int started) {
