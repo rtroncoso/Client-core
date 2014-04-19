@@ -24,6 +24,7 @@ public class Tile extends TileSprite {
 	private boolean mBlocked;
 	private boolean mHasTree;
 	private boolean mHasWater;
+	private int mLightIndex;
 	private int mCharIndex;
 	private int mTrigger;
 
@@ -135,6 +136,20 @@ public class Tile extends TileSprite {
 		this.mTrigger = mTrigger;
 	}
 	
+	/**
+	 * @return the mLightIndex
+	 */
+	public int getLightIndex() {
+		return mLightIndex;
+	}
+
+	/**
+	 * @param mLightIndex the mLightIndex to set
+	 */
+	public void setLightIndex(int mLightIndex) {
+		this.mLightIndex = mLightIndex;
+	}
+
 	/**
 	 * @return the mHasWater
 	 */

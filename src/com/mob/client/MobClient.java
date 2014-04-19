@@ -99,7 +99,7 @@ public class MobClient extends Game implements IConstants {
   
     @Override  
     public void resize(int arg0, int arg1) {  
-          
+          if(mCurrentScreen != null) mCurrentScreen.resize(arg0, arg1);
     }  
   
     @Override  

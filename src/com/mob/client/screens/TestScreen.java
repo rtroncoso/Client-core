@@ -11,8 +11,14 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Pixmap.Format;
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.mob.client.Game;
+import com.mob.client.elements.Shader;
 import com.mob.client.interfaces.IConstants;
 
 
@@ -26,7 +32,16 @@ public class TestScreen extends Screen implements IConstants {
 	// ===========================================================
 	// Fields
 	// ===========================================================
+	private ShaderProgram mDefaultShader;
+	private ShaderProgram mLightShader;
+	private FrameBuffer mFbo;
 	private int map;
+	
+	// Encapsulate this
+	final String mDefaultShaderFile = new FileHandle("data/shaders/defaultPixelShader.glsl").readString();
+	final String mLightShaderFile =  new FileHandle("data/shaders/pixelShader.glsl").readString();
+	final String mVertexShader = new FileHandle("data/shaders/vertexShader.glsl").readString();
+	
 	
 	// ===========================================================
 	// Constructors
@@ -40,11 +55,22 @@ public class TestScreen extends Screen implements IConstants {
 	// ===========================================================
 	@Override
 	public void createScreen() {
+		// Load shaders
+		ShaderProgram.pedantic = false;
+		this.mFbo = new FrameBuffer(Format.RGBA8888, (int) this.mGame.getCamera().viewportWidth, (int) this.mGame.getCamera().viewportHeight, false);
+		this.mDefaultShader = new ShaderProgram(this.mVertexShader, this.mDefaultShaderFile);
+		this.mLightShader = new ShaderProgram(this.mVertexShader, this.mLightShaderFile);
 		
 		// Load a map
 		this.map = 1;
 		this.mGame.getEngine().setMap(this.map);
-		this.mGame.getEngine().setTint(COLOR_DAYLIGHT);
+		this.mGame.getEngine().setTint(COLOR_NIGHT);
+		this.mGame.getEngine().createLight(50, 50, COLOR_DAWN, 4, 10.0f);
+		
+		// Setup light shader
+		this.mLightShader.begin();
+		this.mLightShader.setUniformi("u_lightmap", 1);
+		this.mLightShader.end();
 		
 		// Plot a character
 		this.mGame.getCharacterHandler().makeChar(1, 51, 50, Heading.SOUTH, 1, 13, 6, 4, 6);
@@ -140,17 +166,53 @@ public class TestScreen extends Screen implements IConstants {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
-        // Focus camera on player
-		this.mGame.getCharacterHandler().getPlayer().focusCamera();
-		this.mGame.getCamera().update();
+		// Update shader light according to map tint
+		this.mLightShader.begin();
+			this.mLightShader.setUniformf("ambientColor", this.mGame.getEngine().getTint().r, this.mGame.getEngine().getTint().g, this.mGame.getEngine().getTint().b, .6f);
+		this.mLightShader.end();
+		
+		// Draw shaders into FBO
+		this.mFbo.begin();
+		
+			// Set up our spritebatch
+			this.mGame.getSpriteBatch().setProjectionMatrix(this.mGame.getCamera().combined);
+			this.mGame.getSpriteBatch().setShader(this.mDefaultShader);
+			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+			
+			// Draw all shaders in it
+			this.mGame.getSpriteBatch().begin();
+			for(Shader t : this.mGame.getEngine().getLights()) {
+				if(t.isActive()) t.update(dt);
+			}
+			this.mGame.getSpriteBatch().end();
+		this.mFbo.end();
+		
 		
 		// Send update to the map, it will handle the update of each element in it
 		Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		this.mGame.getSpriteBatch().setProjectionMatrix(this.mGame.getCamera().combined);
+		this.mGame.getSpriteBatch().setShader(this.mLightShader);
+		
 		this.mGame.getSpriteBatch().begin();
-        this.mGame.getEngine().update(dt);
+			this.mFbo.getColorBufferTexture().bind(1); // Our shader is rendered in the second texture unit
+			for(Shader t : this.mGame.getEngine().getLights()) {
+				if(t.isActive()) t.getTexture().bind(0); // This is to avoid artifacts
+			}
+        	this.mGame.getEngine().update(dt);
 		this.mGame.getSpriteBatch().end();
+		
+        // Focus camera on player
+		this.mGame.getCharacterHandler().getPlayer().focusCamera();
+		this.mGame.getCamera().update();
+	}
+	
+	@Override
+	public void resize(int arg0, int arg1) {
+
+		this.mLightShader.begin();
+		this.mLightShader.setUniformf("resolution", arg0, arg1);
+		this.mLightShader.end();
 	}
 
 	// ===========================================================

@@ -6,11 +6,14 @@
  */
 package com.mob.client.engine;
 
+import java.util.Vector;
+
 import com.badlogic.gdx.graphics.Color;
 import com.mob.client.Game;
 import com.mob.client.data.MapBlockData;
 import com.mob.client.data.MapData;
 import com.mob.client.elements.Character;
+import com.mob.client.elements.Shader;
 import com.mob.client.elements.Tile;
 import com.mob.client.interfaces.IConstants;
 import com.mob.client.textures.BundledTexture;
@@ -26,6 +29,7 @@ public class Engine implements IConstants {
 	// Fields
 	// ===========================================================
 	private Tile[][] mTiles;
+	private Vector<Shader> mLightShaders;
 	private int mMapNumber;
 	private Color mTint;
 	private Game mGame;
@@ -35,6 +39,9 @@ public class Engine implements IConstants {
 	// Constructors
 	// ===========================================================
 	public Engine(Game pGame) {
+		this.mTint = new Color(Color.WHITE);
+		this.setLights(new Vector<Shader>());
+		this.mTechoAB = 1.0f;
 		this.mMapNumber = 0;
 		this.mGame = pGame;
 	}
@@ -45,10 +52,8 @@ public class Engine implements IConstants {
 	 */
 	public Engine(Game pGame, int pMapNumber) {
 		
-		this.mTint = new Color(Color.WHITE);
 		this.mMapNumber = pMapNumber;
 		this.mGame = pGame;
-		this.mTechoAB = 1.0f;
 		
 		this.load();
 	}
@@ -89,8 +94,6 @@ public class Engine implements IConstants {
 		if(screenMinY < MIN_MAP_SIZE_HEIGHT) screenMinY = MIN_MAP_SIZE_HEIGHT;
 		if(screenMaxY > MAX_MAP_SIZE_HEIGHT) screenMaxY = MAX_MAP_SIZE_HEIGHT;
 		
-		// Set map color and store it in memory
-		this.mGame.getSpriteBatch().setColor(this.mTint);
 		
 		// Start map render
 		/******************************************
@@ -142,10 +145,10 @@ public class Engine implements IConstants {
 					if(tile.hasTree()) {
 						if(Math.abs(this.mGame.getCharacterHandler().getPlayer().getUserPosX() - x) < 4 &&
 						   Math.abs(this.mGame.getCharacterHandler().getPlayer().getUserPosY() - y) < 4) {
-							Color oldColor = this.mGame.getSpriteBatch().getColor();
-							this.mGame.getSpriteBatch().setColor(new Color(this.mTint.r, this.mTint.g, this.mTint.b, ALPHA_TREES));
+							//Color oldColor = this.mGame.getSpriteBatch().getColor();
+							//this.mGame.getSpriteBatch().setColor(new Color(this.mTint.r, this.mTint.g, this.mTint.b, ALPHA_TREES));
 							this.mGame.getSpriteBatch().draw(layer.getGraphic(), layer.getX(), layer.getY());
-							this.mGame.getSpriteBatch().setColor(oldColor);
+							//this.mGame.getSpriteBatch().setColor(oldColor);
 						} else {
 							this.mGame.getSpriteBatch().draw(layer.getGraphic(true), layer.getX(), layer.getY());
 						}
@@ -242,6 +245,63 @@ public class Engine implements IConstants {
 	public void setGame(Game mGame) {
 		this.mGame = mGame;
 	}
+
+	/**
+	 * @return the mTint
+	 */
+	public Color getTint() {
+		return mTint;
+	}
+
+	/**
+	 * @param mTint the mTint to set
+	 */
+	public void setTint(Color mTint) {
+		this.mTint = mTint;
+	}
+
+	/**
+	 * @return the mLightShaders
+	 */
+	public Vector<Shader> getLights() {
+		return mLightShaders;
+	}
+
+	/**
+	 * @param mLightShaders the mLightShaders to set
+	 */
+	public void setLights(Vector<Shader> mLightShaders) {
+		this.mLightShaders = mLightShaders;
+	}
+	
+	public int createLight(int pX, int pY, Color pColor, int pSize) {
+		return this.createLight(pX, pY, pColor, pSize, 0);
+	}
+	
+	public int createLight(int pX, int pY, Color pColor, int pSize, float pSpeed) {
+		this.mLightShaders.add(new Shader(this.mGame, pX, pY, GAME_SHADERS_LIGHT, pColor, pSize, pSpeed));
+		this.getTile(pX, pY).setLightIndex(this.mLightShaders.size() - 1);
+		return this.getTile(pX, pY).getLightIndex();
+	}
+	
+	public void moveLight(int pX, int pY, int pNewX, int pNewY) {
+		this.mLightShaders.get(this.getTile(pX, pY).getLightIndex()).setX(pNewX * TILE_PIXEL_WIDTH);
+		this.mLightShaders.get(this.getTile(pX, pY).getLightIndex()).setY(pNewY * TILE_PIXEL_WIDTH);
+	}
+	
+	public void moveLight(int pX, int pY, float pNewX, float pNewY) {
+		this.mLightShaders.get(this.getTile(pX, pY).getLightIndex()).setX(pNewX);
+		this.mLightShaders.get(this.getTile(pX, pY).getLightIndex()).setY(pNewY);
+	}
+	
+	public void moveLight(int pIndex, float pNewX, float pNewY) {
+		this.mLightShaders.get(pIndex).setX(pNewX);
+		this.mLightShaders.get(pIndex).setY(pNewY);
+	}
+	
+	public void deleteLight(int pIndex) {
+		this.mLightShaders.get(pIndex).setActive(false);
+	}
 	
 	public Tile getTile(int pX, int pY) {
 		return this.mTiles[pX][pY];
@@ -278,24 +338,9 @@ public class Engine implements IConstants {
 				MapBlockData tile = mapData.getTile(x, y);
 				this.mTiles[x][y] = new Tile(this.mGame, x, y, tile.getGraphic());
 				this.mTiles[x][y].setBlocked(tile.isBlocked());
-				//this.mTiles[x][y].setCharacter(null);
 				this.mTiles[x][y].setTrigger(tile.getTrigger());
 			}
 		}
-	}
-
-	/**
-	 * @return the mTint
-	 */
-	public Color getTint() {
-		return mTint;
-	}
-
-	/**
-	 * @param mTint the mTint to set
-	 */
-	public void setTint(Color mTint) {
-		this.mTint = mTint;
 	}
 
 	// ===========================================================

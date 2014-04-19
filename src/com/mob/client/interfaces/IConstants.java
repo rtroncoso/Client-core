@@ -9,7 +9,8 @@ package com.mob.client.interfaces;
 import com.badlogic.gdx.graphics.Color;
 
 public interface IConstants {
-    
+
+	public static final float PI2 = 3.1415926535897932384626433832795f * 2.0f;
     public static final int GAME_SCREEN_WIDTH = 1366;
     public static final int GAME_SCREEN_HEIGHT = 768;
 	public static final float GAME_SCREEN_ZOOM = 1.0f;
@@ -19,6 +20,8 @@ public interface IConstants {
 	public static final String GAME_MAPS_PATH = "data/mapas/";
 	public static final String GAME_FONTS_PATH = "data/fonts/";
 	public static final String GAME_INIT_PATH = "data/init/";
+	public static final String GAME_SHADERS_PATH = "data/shaders/";
+	public static final String GAME_SHADERS_LIGHT = "light.png";
     public static final int GAME_FILE_HEADER_SIZE = 263; 
     public static final int GAME_STATE_PLAY = 0;  
     public static final int GAME_STATE_PAUSE = 1;  
@@ -36,8 +39,8 @@ public interface IConstants {
     public static final int OFFSET_HEAD = 12;
     
     public static final Color COLOR_DAYLIGHT = new Color(0.9f, 0.9f, 0.9f, 1.0f);
-    public static final Color COLOR_DAWN = new Color(0.7f, 0.6f, 0.6f, 1.0f);
-    public static final Color COLOR_NIGHT = new Color(0.4f, 0.8f, 0.8f, 1.0f);
+    public static final Color COLOR_DAWN = new Color(0.7f, 0.7f, 0.7f, 1.0f);
+    public static final Color COLOR_NIGHT = new Color(0.5f, 0.5f, 0.7f, 1.0f);
     
     public static final float ALPHA_TREES = 1.0f;
     
@@ -54,5 +57,6 @@ public interface IConstants {
     		return this.mHeading;
     	}
     }
+    
     
 }

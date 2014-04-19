@@ -7,9 +7,10 @@
 package com.mob.client.elements;
 
 import com.mob.client.Game;
+import com.mob.client.interfaces.IConstants;
 import com.mob.client.sprites.CharacterSprite;
 
-public class Character extends CharacterSprite {
+public class Character extends CharacterSprite implements IConstants {
 
 	// ===========================================================
 	// Constants
@@ -244,7 +245,25 @@ public class Character extends CharacterSprite {
 	}
 	
 	public void focusCamera() {
-		this.mGame.getCamera().position.set(this.mX, this.mY, 0);
+		float halfWindowWidth = 0, halfWindowHeight = 0, newPosX = 0, newPosY = 0;
+		
+		// Fill vars
+		halfWindowWidth = this.mGame.getCamera().viewportWidth / 2;
+		halfWindowHeight = this.mGame.getCamera().viewportHeight / 2;
+		
+		// Do not move camera if in map bounds
+		if(this.mX - halfWindowWidth < TILE_PIXEL_WIDTH || this.mX + halfWindowWidth > MAX_MAP_SIZE_WIDTH * TILE_PIXEL_WIDTH)
+			newPosX = this.mGame.getCamera().position.x;
+		else
+			newPosX = this.mX;
+		
+		if(this.mY - halfWindowHeight < TILE_PIXEL_HEIGHT || this.mY + halfWindowHeight > MAX_MAP_SIZE_HEIGHT * TILE_PIXEL_HEIGHT)
+			newPosY = this.mGame.getCamera().position.y;
+		else
+			newPosY = this.mY;
+		
+		//Update position
+		this.mGame.getCamera().position.set(newPosX, newPosY, 0);
 		this.mGame.getCamera().update();
 	}
 	
