@@ -148,6 +148,9 @@ public class Character extends CharacterSprite implements IConstants {
 					this.mNextY = 0;
 				}
 			}
+			
+			// Update our camera
+			this.mGame.getCamera().update();
 		}
 		
 		// Update position

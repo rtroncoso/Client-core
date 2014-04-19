@@ -61,16 +61,16 @@ public class TestScreen extends Screen implements IConstants {
 		this.mDefaultShader = new ShaderProgram(this.mVertexShader, this.mDefaultShaderFile);
 		this.mLightShader = new ShaderProgram(this.mVertexShader, this.mLightShaderFile);
 		
-		// Load a map
-		this.map = 1;
-		this.mGame.getEngine().setMap(this.map);
-		this.mGame.getEngine().setTint(COLOR_NIGHT);
-		this.mGame.getEngine().createLight(50, 50, COLOR_DAWN, 4, 10.0f);
-		
 		// Setup light shader
 		this.mLightShader.begin();
 		this.mLightShader.setUniformi("u_lightmap", 1);
 		this.mLightShader.end();
+		
+		// Load a map
+		this.map = 1;
+		this.mGame.getEngine().setMap(this.map);
+		this.mGame.getEngine().setTint(COLOR_DAWN);
+		this.mGame.getEngine().createLight(50, 50, Color.WHITE, 6, 15.0f);
 		
 		// Plot a character
 		this.mGame.getCharacterHandler().makeChar(1, 51, 50, Heading.SOUTH, 1, 13, 6, 4, 6);
@@ -136,6 +136,7 @@ public class TestScreen extends Screen implements IConstants {
 			}
 			
 		});
+		Gdx.input.setInputProcessor(this.mInputMultiplexer);
 	}
 
 	@Override
@@ -147,19 +148,17 @@ public class TestScreen extends Screen implements IConstants {
 				+ " Y: " + this.mGame.getCharacterHandler().getPlayer().getUserPosY()));
 		
 		// Input detection
-		Gdx.input.setInputProcessor(this.mInputMultiplexer);
-		
-		if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-			this.mGame.getCharacterHandler().getPlayer().moveLeft();
-		}
-		if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-			this.mGame.getCharacterHandler().getPlayer().moveRight();
-		}
 		if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
 			this.mGame.getCharacterHandler().getPlayer().moveUp();
 		}
+		if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+			this.mGame.getCharacterHandler().getPlayer().moveLeft();
+		}
 		if(Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
 			this.mGame.getCharacterHandler().getPlayer().moveDown();
+		}
+		if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+			this.mGame.getCharacterHandler().getPlayer().moveRight();
 		}
 		
 		// Clean up Scene
@@ -168,7 +167,7 @@ public class TestScreen extends Screen implements IConstants {
 		
 		// Update shader light according to map tint
 		this.mLightShader.begin();
-			this.mLightShader.setUniformf("ambientColor", this.mGame.getEngine().getTint().r, this.mGame.getEngine().getTint().g, this.mGame.getEngine().getTint().b, .6f);
+			this.mLightShader.setUniformf("ambientColor", this.mGame.getEngine().getTint().r, this.mGame.getEngine().getTint().g, this.mGame.getEngine().getTint().b, .9f);
 		this.mLightShader.end();
 		
 		// Draw shaders into FBO
@@ -195,16 +194,19 @@ public class TestScreen extends Screen implements IConstants {
 		this.mGame.getSpriteBatch().setShader(this.mLightShader);
 		
 		this.mGame.getSpriteBatch().begin();
-			this.mFbo.getColorBufferTexture().bind(1); // Our shader is rendered in the second texture unit
+		
+		 	// Our shader is rendered in the second texture unit
+			this.mFbo.getColorBufferTexture().bind(1);
 			for(Shader t : this.mGame.getEngine().getLights()) {
 				if(t.isActive()) t.getTexture().bind(0); // This is to avoid artifacts
 			}
+			
+			// Update our engine
         	this.mGame.getEngine().update(dt);
 		this.mGame.getSpriteBatch().end();
 		
         // Focus camera on player
 		this.mGame.getCharacterHandler().getPlayer().focusCamera();
-		this.mGame.getCamera().update();
 	}
 	
 	@Override

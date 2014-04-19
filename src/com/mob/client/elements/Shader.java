@@ -168,13 +168,13 @@ public class Shader implements IConstants {
 			this.mAngle += dt * this.mSpeed;
 			while(this.mAngle > PI2)
 				this.mAngle -= PI2;
-			shaderSize = ((shaderSize - 15.0f) + 15.0f * (float)Math.sin(this.mAngle) + .2f * MathUtils.random());
+			shaderSize = ((shaderSize - (shaderSize * 0.1f)) + (shaderSize * 0.1f) * (float)Math.sin(this.mAngle) + .2f * MathUtils.random());
 		}
 		
 		// Render our shader into the lightmap
 		Color oldColor = this.mGame.getSpriteBatch().getColor();
 		this.mGame.getSpriteBatch().setColor(this.mColor);
-		this.mGame.getSpriteBatch().draw(this.mTexture, this.mX - (shaderSize * 0.5f), this.mY - (shaderSize * 0.5f), shaderSize, shaderSize);
+		this.mGame.getSpriteBatch().draw(this.mTexture, this.mX - (shaderSize * 0.5f), this.mY - (shaderSize * 0.5f) - (TILE_PIXEL_HEIGHT * 0.5f), shaderSize, shaderSize);
 		this.mGame.getSpriteBatch().setColor(oldColor);
 	}
 

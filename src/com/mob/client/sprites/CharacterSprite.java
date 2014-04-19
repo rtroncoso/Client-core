@@ -122,13 +122,10 @@ public class CharacterSprite extends MovingSprite implements ISprite, IConstants
 		// Vars
 		float bodyPixelOffsetX = 0, bodyPixelOffsetY = 0, weaponPixelOffsetX = 0, weaponPixelOffsetY = 0, headPixelOffsetX = 0, headPixelOffsetY = 0,
 				helmetPixelOffsetX = 0, helmetPixelOffsetY = 0, fxPixelOffsetX = 0, fxPixelOffsetY = 0, shieldPixelOffsetX = 0, shieldPixelOffsetY = 0;
-		Color oldColor = this.mGame.getSpriteBatch().getColor();
-		
-		// Update sprite Position
-		this.place();
 		
 		// Set our sprite color
-		//this.mGame.getSpriteBatch().setColor(this.mColor);
+		Color oldColor = this.mGame.getSpriteBatch().getColor();
+		this.mGame.getSpriteBatch().setColor(this.mColor);
 		
 		// Update internal timers
 		this.mDeltaTime = dt;
@@ -214,11 +211,15 @@ public class CharacterSprite extends MovingSprite implements ISprite, IConstants
 		
 		// Draw name
 		if(this.mName.length() != 0) {
-			
-			// To add new lines to our name just go \nNew Line (add clan, staff, etc)
-			String line = this.mName;// + "\n<Mob Staff>";
-			this.mFont.drawMultiLine(this.mGame.getSpriteBatch(), line, this.mX - ((this.mName.length() * 10) / 2), this.mY - 4, this.mName.length() * 10, HAlignment.CENTER);
+
+			String line = this.mName;
+			this.mFont.drawWrapped(this.mGame.getSpriteBatch(), line, this.mX - ((line.length() * 10) / 2), this.mY, line.length() * 10, HAlignment.CENTER);
+			//line = "<Mob Staff>";
+			//this.mFont.drawWrapped(this.mGame.getSpriteBatch(), line, this.mX - ((line.length() * 12) / 2), this.mY + 16, line.length() * 12, HAlignment.CENTER);
 		}
+		
+		// Update sprite Position
+		this.place();
 	}
 
 	// ===========================================================

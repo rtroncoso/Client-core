@@ -9,6 +9,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch; 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -70,6 +71,7 @@ public class MobClient extends Game implements IConstants {
         // Load font
         Texture text = new Texture(Gdx.files.internal(GAME_FONTS_PATH + "tahoma-bold.png"));
         this.mFont = new BitmapFont(Gdx.files.internal("data/fonts/tahoma-bold.fnt"), new TextureRegion(text), true);
+        this.mFont.getRegion().getTexture().setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
           
         // Load testing screen
         this.setScreen("TestScreen");  

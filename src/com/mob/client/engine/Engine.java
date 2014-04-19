@@ -94,6 +94,8 @@ public class Engine implements IConstants {
 		if(screenMinY < MIN_MAP_SIZE_HEIGHT) screenMinY = MIN_MAP_SIZE_HEIGHT;
 		if(screenMaxY > MAX_MAP_SIZE_HEIGHT) screenMaxY = MAX_MAP_SIZE_HEIGHT;
 		
+		// Set map color to ambient tint
+		this.mGame.getSpriteBatch().setColor(this.mTint);
 		
 		// Start map render
 		/******************************************
@@ -145,10 +147,10 @@ public class Engine implements IConstants {
 					if(tile.hasTree()) {
 						if(Math.abs(this.mGame.getCharacterHandler().getPlayer().getUserPosX() - x) < 4 &&
 						   Math.abs(this.mGame.getCharacterHandler().getPlayer().getUserPosY() - y) < 4) {
-							//Color oldColor = this.mGame.getSpriteBatch().getColor();
-							//this.mGame.getSpriteBatch().setColor(new Color(this.mTint.r, this.mTint.g, this.mTint.b, ALPHA_TREES));
+							Color oldColor = this.mGame.getSpriteBatch().getColor();
+							this.mGame.getSpriteBatch().setColor(new Color(this.mTint.r, this.mTint.g, this.mTint.b, ALPHA_TREES));
 							this.mGame.getSpriteBatch().draw(layer.getGraphic(), layer.getX(), layer.getY());
-							//this.mGame.getSpriteBatch().setColor(oldColor);
+							this.mGame.getSpriteBatch().setColor(oldColor);
 						} else {
 							this.mGame.getSpriteBatch().draw(layer.getGraphic(true), layer.getX(), layer.getY());
 						}
@@ -158,7 +160,7 @@ public class Engine implements IConstants {
 				}
 				
 				// Character layer
-				if(tile.getCharIndex() != 0) {
+				if(tile.getCharIndex() > 0) {
 					tile.getCharacter().update(dt);
 				}
 			}
