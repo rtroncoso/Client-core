@@ -47,8 +47,11 @@ public class TestScreen extends Screen implements IConstants {
 		this.mGame.getEngine().setTint(COLOR_DAYLIGHT);
 		
 		// Plot a character
-		this.mGame.getCharacterHandler().makeChar(1, 50, 50, Heading.SOUTH, 1, 0, 6, 4);
+		this.mGame.getCharacterHandler().makeChar(1, 51, 50, Heading.SOUTH, 1, 13, 6, 4, 6);
 		this.mGame.getCharacterHandler().getPlayer().setName("Froda");
+		
+		// Plot a npc
+		this.mGame.getCharacterHandler().makeChar(2, 50, 50, Heading.SOUTH, 17, 0, 0, 0, 0);
 		
 		this.mInputMultiplexer = new InputMultiplexer();
 		this.mInputMultiplexer.addProcessor(new InputProcessor() {
@@ -56,7 +59,6 @@ public class TestScreen extends Screen implements IConstants {
 			@Override
 			public boolean keyDown(int keycode) {
 				if(keycode == Keys.SPACE) mGame.getCharacterHandler().getPlayer().setFx(13);
-				if(keycode == Keys.E) mGame.getCharacterHandler().getPlayer().setWeapon(13);
 				return false;
 			}
 

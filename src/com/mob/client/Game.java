@@ -23,6 +23,7 @@ import com.mob.client.data.FxData;
 import com.mob.client.data.GrhData;
 import com.mob.client.data.HeadData;
 import com.mob.client.data.HelmetData;
+import com.mob.client.data.ShieldData;
 import com.mob.client.data.WeaponData;
 import com.mob.client.engine.Engine;
 import com.mob.client.handlers.CharacterHandler;
@@ -53,6 +54,7 @@ public class Game implements ApplicationListener, IConstants {
     protected Vector<HeadData> mHeadData;
     protected Vector<HelmetData> mHelmetData;
     protected Vector<WeaponData> mWeaponData;
+	protected Vector<ShieldData> mShieldData;
 	protected Vector<FxData> mFxData;
 
 	protected MapHandler mMapHandler;
@@ -82,6 +84,7 @@ public class Game implements ApplicationListener, IConstants {
         this.mHeadData = new Vector<HeadData>();
         this.mHelmetData = new Vector<HelmetData>();
         this.mWeaponData = new Vector<WeaponData>();
+        this.mShieldData = new Vector<ShieldData>();
         this.mFxData = new Vector<FxData>();
         this.mInitLoader = new InitLoader();
         this.mMapHandler = new MapHandler(this);
@@ -100,6 +103,19 @@ public class Game implements ApplicationListener, IConstants {
 	// ===========================================================
 	// Getter & Setter
 	// ===========================================================
+	/**
+	 * @return the mShieldData
+	 */
+	public Vector<ShieldData> getShieldData() {
+		return mShieldData;
+	}
+
+	/**
+	 * @param mShieldData the mShieldData to set
+	 */
+	public void setShieldData(Vector<ShieldData> mShieldData) {
+		this.mShieldData = mShieldData;
+	}
     /**
 	 * @return the mWeaponData
 	 */

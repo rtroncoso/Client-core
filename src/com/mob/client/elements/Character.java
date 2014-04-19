@@ -33,11 +33,11 @@ public class Character extends CharacterSprite {
 		this(_game, charIndex, x, y, mHeading, bodyIndex, weaponIndex, headIndex, 0, 0);
 	}
 	
-	public Character(Game _game, int charIndex, int x, int y, Heading mHeading, int bodyIndex, int weaponIndex, int headIndex, int helmetIndex) {
-		this(_game, charIndex, x, y, mHeading, bodyIndex, weaponIndex, headIndex, helmetIndex, 0);
+	public Character(Game _game, int charIndex, int x, int y, Heading mHeading, int bodyIndex, int weaponIndex, int headIndex, int helmetIndex, int shieldIndex) {
+		this(_game, charIndex, x, y, mHeading, bodyIndex, weaponIndex, headIndex, helmetIndex, shieldIndex, 0);
 	}
-	public Character(Game _game, int charIndex, int x, int y, Heading mHeading, int bodyIndex, int weaponIndex, int headIndex, int helmetIndex, int fxIndex) {
-		super(_game, x, y, mHeading, bodyIndex, weaponIndex, headIndex, helmetIndex, fxIndex);
+	public Character(Game _game, int charIndex, int x, int y, Heading mHeading, int bodyIndex, int weaponIndex, int headIndex, int helmetIndex, int shieldIndex, int fxIndex) {
+		super(_game, x, y, mHeading, bodyIndex, weaponIndex, headIndex, helmetIndex, shieldIndex, fxIndex);
 		
 		
 		// Init object

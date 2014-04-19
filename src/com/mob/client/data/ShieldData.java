@@ -1,12 +1,12 @@
 /**
- * Stores weapon data
+ * Stores shield data
  * @author Rodrigo Troncoso
  * @version 0.1
  * @since 2014-04-10
  */
 package com.mob.client.data;
 
-public class WeaponData {
+public class ShieldData {
 
 	// ===========================================================
 	// Constants
@@ -21,7 +21,7 @@ public class WeaponData {
 	// ===========================================================
 	// Constructors
 	// ===========================================================
-	public WeaponData(int[] pGraphic) {
+	public ShieldData(int[] pGraphic) {
 		this.setGraphicArray(pGraphic);
 	}
 

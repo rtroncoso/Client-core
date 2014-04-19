@@ -67,6 +67,7 @@ public class Engine implements IConstants {
 		int cameraPosY = (int) (this.mGame.getCamera().position.y / TILE_PIXEL_HEIGHT);
 		int halfWindowTileWidth = (int) ((this.mGame.getCamera().viewportWidth / TILE_PIXEL_WIDTH) / 2);
 		int halfWindowTileHeight = (int) ((this.mGame.getCamera().viewportHeight / TILE_PIXEL_HEIGHT) / 2);
+		
 		screenMinX = cameraPosX - halfWindowTileWidth - 1;
 		screenMaxX = cameraPosX + halfWindowTileWidth + 1;
 		screenMinY = cameraPosY - halfWindowTileHeight - 1;
@@ -277,7 +278,7 @@ public class Engine implements IConstants {
 				MapBlockData tile = mapData.getTile(x, y);
 				this.mTiles[x][y] = new Tile(this.mGame, x, y, tile.getGraphic());
 				this.mTiles[x][y].setBlocked(tile.isBlocked());
-				this.mTiles[x][y].setCharacter(null);
+				//this.mTiles[x][y].setCharacter(null);
 				this.mTiles[x][y].setTrigger(tile.getTrigger());
 			}
 		}

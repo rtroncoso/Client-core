@@ -78,7 +78,7 @@ public class MapHandler implements IConstants {
 	// ===========================================================
 	public boolean loadMap(int pMapNumber) {
 		
-		this.mFileHandle = new FileHandle(GAME_MAPS_PATH + "/Mapa" + String.valueOf(pMapNumber) + ".map");
+		this.mFileHandle = new FileHandle(GAME_MAPS_PATH + "Mapa" + String.valueOf(pMapNumber) + ".map");
 		
 		DataInputStream file = new DataInputStream(this.mFileHandle.read());
 		try {

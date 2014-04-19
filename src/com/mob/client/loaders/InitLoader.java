@@ -24,6 +24,7 @@ import com.mob.client.data.FxData;
 import com.mob.client.data.GrhData;
 import com.mob.client.data.HeadData;
 import com.mob.client.data.HelmetData;
+import com.mob.client.data.ShieldData;
 import com.mob.client.data.WeaponData;
 import com.mob.client.interfaces.IConstants;
 import com.mob.client.util.Util;
@@ -301,6 +302,50 @@ public class InitLoader implements IConstants {
 
 			Gdx.app.log(this.getClass().getSimpleName(), "Carga de " + initFileName + " con exito");
 			return weapons;
+		} catch (InvalidFileFormatException e) {
+			e.printStackTrace();
+			return null;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public Vector<ShieldData> loadShields(String initFileName) {
+		Vector<ShieldData> shields = new Vector<ShieldData>();
+		Ini iniFile = new Ini();
+		Config c = new Config();
+		c.setLowerCaseSection(true);
+		iniFile.setConfig(c);
+		
+		try {
+			iniFile.load(Gdx.files.internal(GAME_INIT_PATH + initFileName).file());
+			
+			int numShields = Integer.parseInt(iniFile.get("init", "NumEscudos"));
+			shields.setSize(numShields + 1);
+			
+			for(int i = 1; i <= numShields; i++) {
+				int[] shieldIndex = new int[4];
+				
+				if(iniFile.get("esc" + String.valueOf(i), "Dir1") == null) { 
+					shieldIndex[Heading.NORTH.toInt()] = 0;
+					shieldIndex[Heading.EAST.toInt()] = 0; 
+					shieldIndex[Heading.SOUTH.toInt()] = 0; 
+					shieldIndex[Heading.WEST.toInt()] = 0; 
+					shields.setElementAt(new ShieldData(shieldIndex), i);
+					continue; 
+				}
+				
+				shieldIndex[Heading.NORTH.toInt()] = Integer.parseInt(iniFile.get("esc" + String.valueOf(i), "Dir1"));
+				shieldIndex[Heading.EAST.toInt()] = Integer.parseInt(iniFile.get("esc" + String.valueOf(i), "Dir2"));
+				shieldIndex[Heading.SOUTH.toInt()] = Integer.parseInt(iniFile.get("esc" + String.valueOf(i), "Dir3"));
+				shieldIndex[Heading.WEST.toInt()] = Integer.parseInt(iniFile.get("esc" + String.valueOf(i), "Dir4"));
+				
+				shields.setElementAt(new ShieldData(shieldIndex), i);
+			}
+
+			Gdx.app.log(this.getClass().getSimpleName(), "Carga de " + initFileName + " con exito");
+			return shields;
 		} catch (InvalidFileFormatException e) {
 			e.printStackTrace();
 			return null;

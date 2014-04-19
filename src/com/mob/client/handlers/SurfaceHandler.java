@@ -82,7 +82,7 @@ public class SurfaceHandler implements IConstants {
 	 * @param fileName Name of the file found in the graphics folder
 	 */
 	public void loadTexture(String fileName) {
-		Texture texture = new Texture(this.mGraphicsPath + "/" + fileName + GAME_GRAPHICS_EXTENSION);
+		Texture texture = new Texture(this.mGraphicsPath + fileName + GAME_GRAPHICS_EXTENSION);
 		texture.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
 		this.add(fileName, texture);
 	}
