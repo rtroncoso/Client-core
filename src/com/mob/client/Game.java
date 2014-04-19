@@ -23,6 +23,7 @@ import com.mob.client.data.FxData;
 import com.mob.client.data.GrhData;
 import com.mob.client.data.HeadData;
 import com.mob.client.data.HelmetData;
+import com.mob.client.data.WeaponData;
 import com.mob.client.engine.Engine;
 import com.mob.client.handlers.CharacterHandler;
 import com.mob.client.handlers.MapHandler;
@@ -51,7 +52,8 @@ public class Game implements ApplicationListener, IConstants {
     protected Vector<BodyData> mBodyData;
     protected Vector<HeadData> mHeadData;
     protected Vector<HelmetData> mHelmetData;
-    protected Vector<FxData> mFxData;
+    protected Vector<WeaponData> mWeaponData;
+	protected Vector<FxData> mFxData;
 
 	protected MapHandler mMapHandler;
     protected SurfaceHandler mSurfaceHandler;
@@ -70,12 +72,16 @@ public class Game implements ApplicationListener, IConstants {
 	// ===========================================================
 	// Methods for/from SuperClass/Interfaces
 	// ===========================================================
+    /**
+     * Init everything
+     */
     public void create() {  
     	this.mScreens = new HashMap<String, Screen>();  
         this.mGrhData = new Vector<GrhData>();
         this.mBodyData = new Vector<BodyData>();
         this.mHeadData = new Vector<HeadData>();
         this.mHelmetData = new Vector<HelmetData>();
+        this.mWeaponData = new Vector<WeaponData>();
         this.mFxData = new Vector<FxData>();
         this.mInitLoader = new InitLoader();
         this.mMapHandler = new MapHandler(this);
@@ -94,6 +100,20 @@ public class Game implements ApplicationListener, IConstants {
 	// ===========================================================
 	// Getter & Setter
 	// ===========================================================
+    /**
+	 * @return the mWeaponData
+	 */
+	public Vector<WeaponData> getWeaponData() {
+		return mWeaponData;
+	}
+
+	/**
+	 * @param mWeaponData the mWeaponData to set
+	 */
+	public void setWeaponData(Vector<WeaponData> mWeaponData) {
+		this.mWeaponData = mWeaponData;
+	}
+	
 	/**
 	* @return the _grhData
 	*/

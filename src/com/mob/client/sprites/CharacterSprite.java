@@ -11,11 +11,13 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.BitmapFont.HAlignment;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.mob.client.Game;
 import com.mob.client.data.BodyData;
 import com.mob.client.data.FxData;
 import com.mob.client.data.HeadData;
 import com.mob.client.data.HelmetData;
+import com.mob.client.data.WeaponData;
 import com.mob.client.interfaces.IConstants;
 import com.mob.client.interfaces.ISprite;
 import com.mob.client.textures.BundledTexture;
@@ -32,6 +34,8 @@ public class CharacterSprite extends MovingSprite implements ISprite, IConstants
 	// ===========================================================
 	protected BundledTexture[] mBodySkin;
 	protected int mBodyGrhIndex;
+	protected BundledTexture[] mWeaponSkin;
+	protected int mWeaponGrhIndex;
 	protected BundledTexture[] mHeadSkin;
 	protected int mHeadGrhIndex;
 	protected BundledTexture[] mHelmetSkin;
@@ -40,6 +44,7 @@ public class CharacterSprite extends MovingSprite implements ISprite, IConstants
 	protected int mFxGrhIndex;
 	protected int mFxOffsetX;
 	protected int mFxOffsetY;
+	protected long mFxTimer;
 	
 	protected int mUserPosX;
 	protected int mUserPosY;
@@ -58,10 +63,7 @@ public class CharacterSprite extends MovingSprite implements ISprite, IConstants
 	// ===========================================================
 	// Constructors
 	// ===========================================================
-	public CharacterSprite(Game _game, int x, int y, Heading mHeading, int bodyIndex, int headIndex, int helmetIndex) {
-		this(_game, x, y, mHeading, bodyIndex, headIndex, helmetIndex, 0);
-	}
-	public CharacterSprite(Game _game, int x, int y, Heading mHeading, int bodyIndex, int headIndex, int helmetIndex, int fxIndex) {
+	public CharacterSprite(Game _game, int x, int y, Heading mHeading, int bodyIndex, int weaponIndex, int headIndex, int helmetIndex, int fxIndex) {
 		super(_game, x , y);
 		
 		// Init class
@@ -73,15 +75,19 @@ public class CharacterSprite extends MovingSprite implements ISprite, IConstants
 		this.mBodyGrhIndex = 0;
 		this.mHeadGrhIndex = 0;
 		this.mHelmetGrhIndex = 0;
+		this.mWeaponGrhIndex = 0;
 		this.mFxGrhIndex = 0;
 		this.mFxOffsetX = 0;
 		this.mFxOffsetY = 0;
+		this.mFxTimer = 0;
 		
 		// Check null indexes
 		if(helmetIndex == 0) helmetIndex = 2;
+		if(weaponIndex == 0) weaponIndex = 2;
 		
 		// Load graphics
 		if(bodyIndex != 0) this.loadBody(this.mGame.getBodyData().get(bodyIndex));
+		if(weaponIndex != 0) this.loadWeapon(this.mGame.getWeaponData().get(weaponIndex));
 		if(headIndex != 0) this.loadHead(this.mGame.getHeadData().get(headIndex));
 		if(helmetIndex != 0) this.loadHelmet(this.mGame.getHelmetData().get(helmetIndex));
 		if(fxIndex != 0) this.loadFx(this.mGame.getFxData().get(fxIndex));
@@ -108,8 +114,8 @@ public class CharacterSprite extends MovingSprite implements ISprite, IConstants
 	public void update(float dt) {
 		
 		// Vars
-		float bodyPixelOffsetX = 0, bodyPixelOffsetY = 0, headPixelOffsetX = 0, headPixelOffsetY = 0,
-				helmetPixelOffsetX = 0, helmetPixelOffsetY = 0;
+		float bodyPixelOffsetX = 0, bodyPixelOffsetY = 0, weaponPixelOffsetX = 0, weaponPixelOffsetY = 0, headPixelOffsetX = 0, headPixelOffsetY = 0,
+				helmetPixelOffsetX = 0, helmetPixelOffsetY = 0, fxPixelOffsetX = 0, fxPixelOffsetY = 0;
 		Color oldColor = this.mGame.getSpriteBatch().getColor();
 		
 		
@@ -125,6 +131,11 @@ public class CharacterSprite extends MovingSprite implements ISprite, IConstants
 			bodyPixelOffsetX = this.mX - (this.getBody().getRegionWidth() / 2);
 			bodyPixelOffsetY = this.mY - (this.getBody().getRegionHeight());
 		}
+		if(this.mWeaponGrhIndex > 0) {
+			this.mWeaponSkin[this.mHeading.toInt()].setAnimationTime(this.mWeaponSkin[this.getHeading()].getAnimationTime() + this.mDeltaTime);
+			weaponPixelOffsetX = this.mX - (this.getWeapon().getRegionWidth() / 2);
+			weaponPixelOffsetY = this.mY - (this.getWeapon().getRegionHeight());
+		}
 		if(this.mHeadGrhIndex > 0) {
 			headPixelOffsetX = this.mX + this.mHeadOffsetX - (this.getHead().getRegionWidth() / 4) - 4;
 			headPixelOffsetY = this.mY + this.mHeadOffsetY - this.getBody().getRegionHeight() - 5;
@@ -133,6 +144,18 @@ public class CharacterSprite extends MovingSprite implements ISprite, IConstants
 			helmetPixelOffsetX = this.mX + this.mHeadOffsetX - (this.getHead().getRegionWidth() / 4) - 4;
 			helmetPixelOffsetY = this.mY + this.mHeadOffsetY - this.getBody().getRegionHeight() - OFFSET_HEAD - 4;
 		}
+		if(this.mFxGrhIndex > 0) {
+
+			// Make fxs only last 1 second
+			if(TimeUtils.timeSinceMillis(this.mFxTimer) >= 1000) { 
+				this.setFx(0);
+			}
+			
+			// Update fx data
+			this.mFxSkin.setAnimationTime(this.mFxSkin.getAnimationTime() + this.mDeltaTime * 6.0f);
+			fxPixelOffsetX = this.mX - (this.mFxSkin.getGraphic().getRegionWidth() / 2) - this.mFxOffsetX;
+			fxPixelOffsetY = this.mY - this.mFxSkin.getGraphic().getRegionHeight() - this.mFxOffsetY;
+		}
 		
 		// Draw our character
 		if(this.mHeadGrhIndex > 0) {
@@ -140,12 +163,14 @@ public class CharacterSprite extends MovingSprite implements ISprite, IConstants
 				if(this.mBodyGrhIndex > 0) 
 					this.mGame.getSpriteBatch().draw(this.getBody(), bodyPixelOffsetX, bodyPixelOffsetY);
 						
-				if(this.mHeadGrhIndex > 0) {
+				if(this.mHeadGrhIndex > 0)
 					this.mGame.getSpriteBatch().draw(this.getHead(), headPixelOffsetX, headPixelOffsetY);
 				
-					if(this.mHelmetGrhIndex > 0)
-						this.mGame.getSpriteBatch().draw(this.getHelmet(), helmetPixelOffsetX, helmetPixelOffsetY);
-				}
+				if(this.mWeaponGrhIndex > 0)
+					this.mGame.getSpriteBatch().draw(this.getWeapon(), weaponPixelOffsetX, weaponPixelOffsetY);
+				
+				if(this.mHelmetGrhIndex > 0)
+					this.mGame.getSpriteBatch().draw(this.getHelmet(), helmetPixelOffsetX, helmetPixelOffsetY);
 			}
 		} else { // Draw only body
 			if(this.mBodyGrhIndex != 0) 
@@ -155,7 +180,7 @@ public class CharacterSprite extends MovingSprite implements ISprite, IConstants
 		// Replace old color
 		this.mGame.getSpriteBatch().setColor(oldColor);
 		
-		// Draw name over our head
+		// Draw name
 		if(this.mName.length() != 0) {
 			
 			// To add new lines to our name just go \nNew Line (add clan, staff, etc)
@@ -165,9 +190,9 @@ public class CharacterSprite extends MovingSprite implements ISprite, IConstants
 		
 		// Draw Fx
 		if(this.mFxGrhIndex > 0) {
-			this.mFxSkin.setAnimationTime(this.mFxSkin.getAnimationTime() + this.mDeltaTime * 6.0f);
-			this.mGame.getSpriteBatch().setColor(1.0f, 1.0f, 1.0f, 0.5f);
-			this.mGame.getSpriteBatch().draw(this.getFx(), this.mX - (this.mFxSkin.getGraphic().getRegionWidth() / 2) - this.mFxOffsetX, this.mY - this.mFxSkin.getGraphic().getRegionHeight() - this.mFxOffsetY);
+			// Draw fx
+			this.mGame.getSpriteBatch().setColor(1.0f, 1.0f, 1.0f, 0.7f);
+			this.mGame.getSpriteBatch().draw(this.getFx(), fxPixelOffsetX, fxPixelOffsetY);
 			this.mGame.getSpriteBatch().setColor(oldColor);
 		}
 		
@@ -183,6 +208,13 @@ public class CharacterSprite extends MovingSprite implements ISprite, IConstants
 			return this.mBodySkin[this.getHeading()].getGraphic(true);
 		else
 			return this.mBodySkin[this.getHeading()].getGraphic();
+	}
+	
+	public TextureRegion getWeapon() {
+		if(this.mMoving)
+			return this.mWeaponSkin[this.getHeading()].getGraphic(true);
+		else
+			return this.mWeaponSkin[this.getHeading()].getGraphic();
 	}
 	
 	public TextureRegion getHead() {
@@ -205,6 +237,14 @@ public class CharacterSprite extends MovingSprite implements ISprite, IConstants
 		}
 	}
 	
+	public void setWeapon(int weaponIndex) {
+		if(weaponIndex > 0) {
+			loadWeapon(this.mGame.getWeaponData().get(weaponIndex));
+		} else {
+			this.mWeaponGrhIndex = 0;
+		}
+	}
+	
 	public void setHead(int headIndex) {
 		if(headIndex > 0) {
 			loadHead(this.mGame.getHeadData().get(headIndex));
@@ -224,8 +264,10 @@ public class CharacterSprite extends MovingSprite implements ISprite, IConstants
 	public void setFx(int fxIndex) {
 		if(fxIndex > 0) {
 			loadFx(this.mGame.getFxData().get(fxIndex));
+			this.mFxTimer = TimeUtils.millis();
 		} else {
 			this.mFxGrhIndex = 0;
+			this.mFxTimer = 0;
 		}
 	}
 	
@@ -283,6 +325,15 @@ public class CharacterSprite extends MovingSprite implements ISprite, IConstants
 		this.mBodySkin[Heading.SOUTH.toInt()] = new BundledTexture(this.mGame, bodyData.getGraphic(Heading.SOUTH.toInt()), true);
 		this.mBodySkin[Heading.WEST.toInt()] = new BundledTexture(this.mGame, bodyData.getGraphic(Heading.WEST.toInt()), true);
 		this.mBodySkin[Heading.EAST.toInt()] = new BundledTexture(this.mGame, bodyData.getGraphic(Heading.EAST.toInt()), true);
+	}
+	
+	public void loadWeapon(WeaponData weaponData) {
+		this.mWeaponGrhIndex = weaponData.getGraphic(Heading.NORTH.toInt());
+		this.mWeaponSkin = new BundledTexture[4];
+		this.mWeaponSkin[Heading.NORTH.toInt()] = new BundledTexture(this.mGame, weaponData.getGraphic(Heading.NORTH.toInt()), true);
+		this.mWeaponSkin[Heading.SOUTH.toInt()] = new BundledTexture(this.mGame, weaponData.getGraphic(Heading.SOUTH.toInt()), true);
+		this.mWeaponSkin[Heading.WEST.toInt()] = new BundledTexture(this.mGame, weaponData.getGraphic(Heading.WEST.toInt()), true);
+		this.mWeaponSkin[Heading.EAST.toInt()] = new BundledTexture(this.mGame, weaponData.getGraphic(Heading.EAST.toInt()), true);
 	}
 	
 	public void loadHead(HeadData headData) {

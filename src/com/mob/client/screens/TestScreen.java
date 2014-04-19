@@ -10,6 +10,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL20;
 import com.mob.client.Game;
 import com.mob.client.interfaces.IConstants;
@@ -46,16 +47,16 @@ public class TestScreen extends Screen implements IConstants {
 		this.mGame.getEngine().setTint(COLOR_DAYLIGHT);
 		
 		// Plot a character
-		this.mGame.getCharacterHandler().makeChar(1, 50, 50, Heading.SOUTH, 1, 6, 4);
+		this.mGame.getCharacterHandler().makeChar(1, 50, 50, Heading.SOUTH, 1, 0, 6, 4);
 		this.mGame.getCharacterHandler().getPlayer().setName("Froda");
-		this.mGame.getCharacterHandler().getPlayer().setFx(13);
 		
 		this.mInputMultiplexer = new InputMultiplexer();
 		this.mInputMultiplexer.addProcessor(new InputProcessor() {
 
 			@Override
 			public boolean keyDown(int keycode) {
-				// TODO Auto-generated method stub
+				if(keycode == Keys.SPACE) mGame.getCharacterHandler().getPlayer().setFx(13);
+				if(keycode == Keys.E) mGame.getCharacterHandler().getPlayer().setWeapon(13);
 				return false;
 			}
 

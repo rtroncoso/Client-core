@@ -29,8 +29,15 @@ public class Character extends CharacterSprite {
 	// ===========================================================
 	// Constructors
 	// ===========================================================
-	public Character(Game _game, int charIndex, int x, int y, Heading mHeading, int bodyIndex, int headIndex, int helmetIndex) {
-		super(_game, x, y, mHeading, bodyIndex, headIndex, helmetIndex);
+	public Character(Game _game, int charIndex, int x, int y, Heading mHeading, int bodyIndex, int weaponIndex, int headIndex) {
+		this(_game, charIndex, x, y, mHeading, bodyIndex, weaponIndex, headIndex, 0, 0);
+	}
+	
+	public Character(Game _game, int charIndex, int x, int y, Heading mHeading, int bodyIndex, int weaponIndex, int headIndex, int helmetIndex) {
+		this(_game, charIndex, x, y, mHeading, bodyIndex, weaponIndex, headIndex, helmetIndex, 0);
+	}
+	public Character(Game _game, int charIndex, int x, int y, Heading mHeading, int bodyIndex, int weaponIndex, int headIndex, int helmetIndex, int fxIndex) {
+		super(_game, x, y, mHeading, bodyIndex, weaponIndex, headIndex, helmetIndex, fxIndex);
 		
 		
 		// Init object

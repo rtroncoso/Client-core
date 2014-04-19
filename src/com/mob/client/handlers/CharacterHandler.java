@@ -123,10 +123,10 @@ public class CharacterHandler {
 	// ===========================================================
 	// Methods
 	// ===========================================================
-	public void makeChar(int charIndex, int x, int y, Heading heading, int bodyIndex, int headIndex, int helmetIndex) {
+	public void makeChar(int charIndex, int x, int y, Heading heading, int bodyIndex, int weaponIndex, int headIndex, int helmetIndex) {
 		
 		// Make character
-		Character character = new Character(this.mGame, charIndex, x, y, heading, bodyIndex, headIndex, helmetIndex);
+		Character character = new Character(this.mGame, charIndex, x, y, heading, bodyIndex, weaponIndex, headIndex, helmetIndex);
 		
 		// Add to hashmap
 		this.add(charIndex, character);

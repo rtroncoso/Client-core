@@ -54,6 +54,7 @@ public class MobClient extends Game implements IConstants {
         // Load INIT files
         this.mGrhData = this.mInitLoader.loadGrhData("Graficos.ind");
         this.mBodyData = this.mInitLoader.loadCuerpos("Personajes.ind");
+        this.mWeaponData = this.mInitLoader.loadWeapons("Armas.dat");
         this.mHeadData = this.mInitLoader.loadCabezas("Cabezas.ind");
         this.mHelmetData = this.mInitLoader.loadCascos("Cascos.ind");
         this.mFxData = this.mInitLoader.loadFxs("Fxs.ind");
