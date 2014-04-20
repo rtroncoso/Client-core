@@ -6,15 +6,13 @@
  */
 package com.mob.client.engine;
 
-import java.util.Vector;
-
 import com.badlogic.gdx.graphics.Color;
 import com.mob.client.Game;
 import com.mob.client.data.MapBlockData;
 import com.mob.client.data.MapData;
 import com.mob.client.elements.Character;
-import com.mob.client.elements.Shader;
 import com.mob.client.elements.Tile;
+import com.mob.client.handlers.LightHandler;
 import com.mob.client.interfaces.IConstants;
 import com.mob.client.textures.BundledTexture;
 
@@ -28,22 +26,22 @@ public class Engine implements IConstants {
 	// ===========================================================
 	// Fields
 	// ===========================================================
+	private LightHandler mLightHandler;
 	private Tile[][] mTiles;
-	private Vector<Shader> mLightShaders;
+	private float mTechoAB;
 	private int mMapNumber;
 	private Color mTint;
 	private Game mGame;
-	private float mTechoAB;
 
 	// ===========================================================
 	// Constructors
 	// ===========================================================
 	public Engine(Game pGame) {
+		this.mGame = pGame;
+		this.setLightHandler(new LightHandler(this.mGame));
 		this.mTint = new Color(Color.WHITE);
-		this.setLights(new Vector<Shader>());
 		this.mTechoAB = 1.0f;
 		this.mMapNumber = 0;
-		this.mGame = pGame;
 	}
 	
 	/**
@@ -261,49 +259,6 @@ public class Engine implements IConstants {
 	public void setTint(Color mTint) {
 		this.mTint = mTint;
 	}
-
-	/**
-	 * @return the mLightShaders
-	 */
-	public Vector<Shader> getLights() {
-		return mLightShaders;
-	}
-
-	/**
-	 * @param mLightShaders the mLightShaders to set
-	 */
-	public void setLights(Vector<Shader> mLightShaders) {
-		this.mLightShaders = mLightShaders;
-	}
-	
-	public int createLight(int pX, int pY, Color pColor, int pSize) {
-		return this.createLight(pX, pY, pColor, pSize, 0);
-	}
-	
-	public int createLight(int pX, int pY, Color pColor, int pSize, float pSpeed) {
-		this.mLightShaders.add(new Shader(this.mGame, pX, pY, GAME_SHADERS_LIGHT, pColor, pSize, pSpeed));
-		this.getTile(pX, pY).setLightIndex(this.mLightShaders.size() - 1);
-		return this.getTile(pX, pY).getLightIndex();
-	}
-	
-	public void moveLight(int pX, int pY, int pNewX, int pNewY) {
-		this.mLightShaders.get(this.getTile(pX, pY).getLightIndex()).setX(pNewX * TILE_PIXEL_WIDTH);
-		this.mLightShaders.get(this.getTile(pX, pY).getLightIndex()).setY(pNewY * TILE_PIXEL_WIDTH);
-	}
-	
-	public void moveLight(int pX, int pY, float pNewX, float pNewY) {
-		this.mLightShaders.get(this.getTile(pX, pY).getLightIndex()).setX(pNewX);
-		this.mLightShaders.get(this.getTile(pX, pY).getLightIndex()).setY(pNewY);
-	}
-	
-	public void moveLight(int pIndex, float pNewX, float pNewY) {
-		this.mLightShaders.get(pIndex).setX(pNewX);
-		this.mLightShaders.get(pIndex).setY(pNewY);
-	}
-	
-	public void deleteLight(int pIndex) {
-		this.mLightShaders.get(pIndex).setActive(false);
-	}
 	
 	public Tile getTile(int pX, int pY) {
 		return this.mTiles[pX][pY];
@@ -320,6 +275,20 @@ public class Engine implements IConstants {
 	public void setCharacter(int pX, int pY, Character pCharacter) {
 		this.mTiles[pX][pY].setCharIndex(pCharacter.getCharIndex());
 		this.mTiles[pX][pY].setCharacter(pCharacter);
+	}
+
+	/**
+	 * @return the mLightHandler
+	 */
+	public LightHandler getLightHandler() {
+		return mLightHandler;
+	}
+
+	/**
+	 * @param mLightHandler the mLightHandler to set
+	 */
+	public void setLightHandler(LightHandler mLightHandler) {
+		this.mLightHandler = mLightHandler;
 	}
 
 	// ===========================================================

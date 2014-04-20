@@ -6,6 +6,8 @@
  */
 package com.mob.client.screens;
 
+import java.util.Iterator;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
@@ -55,6 +57,7 @@ public class TestScreen extends Screen implements IConstants {
 	// ===========================================================
 	@Override
 	public void createScreen() {
+		
 		// Load shaders
 		ShaderProgram.pedantic = false;
 		this.mFbo = new FrameBuffer(Format.RGBA8888, (int) this.mGame.getCamera().viewportWidth, (int) this.mGame.getCamera().viewportHeight, false);
@@ -69,12 +72,13 @@ public class TestScreen extends Screen implements IConstants {
 		// Load a map
 		this.map = 1;
 		this.mGame.getEngine().setMap(this.map);
-		this.mGame.getEngine().setTint(COLOR_DAWN);
-		this.mGame.getEngine().createLight(50, 50, Color.WHITE, 6, 15.0f);
+		this.mGame.getEngine().setTint(COLOR_NIGHT);
 		
 		// Plot a character
 		this.mGame.getCharacterHandler().makeChar(1, 51, 50, Heading.SOUTH, 1, 13, 6, 4, 6);
-		this.mGame.getCharacterHandler().getPlayer().setName("Froda");
+		this.mGame.getCharacterHandler().getPlayer().setName("BetaTester");
+		this.mGame.getCharacterHandler().getPlayer().createLight(Color.WHITE, 6, 10.0f);
+		this.mGame.getCharacterHandler().getPlayer().setFocus();
 		
 		// Plot a npc
 		this.mGame.getCharacterHandler().makeChar(2, 50, 50, Heading.SOUTH, 17, 0, 0, 0, 0);
@@ -84,7 +88,30 @@ public class TestScreen extends Screen implements IConstants {
 
 			@Override
 			public boolean keyDown(int keycode) {
-				if(keycode == Keys.SPACE) mGame.getCharacterHandler().getPlayer().setFx(13);
+				switch(keycode) {
+				case(Keys.SPACE):
+					mGame.getCharacterHandler().getPlayer().setFx(13);
+					break;
+				case(Keys.NUM_1):
+					mGame.getEngine().setTint(COLOR_NIGHT);
+					break;
+				case(Keys.NUM_2):
+					mGame.getEngine().setTint(COLOR_DAWN);
+					break;
+				case(Keys.NUM_3):
+					mGame.getEngine().setTint(COLOR_DAYLIGHT);
+					break;
+				case(Keys.PLUS):
+					map += 1;
+					mGame.getEngine().setMap(map);
+					mGame.getCharacterHandler().getPlayer().updateUserPos();
+					break;
+				case(Keys.MINUS):
+					map -= 1;
+					mGame.getEngine().setMap(map);
+					mGame.getCharacterHandler().getPlayer().updateUserPos();
+					break;
+				}
 				return false;
 			}
 
@@ -103,10 +130,10 @@ public class TestScreen extends Screen implements IConstants {
 			@Override
 			public boolean touchDown(int screenX, int screenY, int pointer,
 					int button) {
-				if(button == Input.Buttons.LEFT) map += 1;
-				else if(button == Input.Buttons.RIGHT) map -= 1;
-				mGame.getEngine().setMap(map);
-				mGame.getCharacterHandler().getPlayer().updateUserPos();
+				if(button == Input.Buttons.LEFT) {
+					mGame.getEngine().getLightHandler().createLight((int) ((mGame.getCamera().position.x - (mGame.getCamera().viewportWidth / 2)) / TILE_PIXEL_WIDTH) + (screenX / TILE_PIXEL_WIDTH), 
+							(int) ((mGame.getCamera().position.y  - (mGame.getCamera().viewportHeight / 2)) / TILE_PIXEL_HEIGHT) + (screenY / TILE_PIXEL_HEIGHT), Color.GREEN, 4);
+				}
 				return false;
 			}
 
@@ -142,6 +169,9 @@ public class TestScreen extends Screen implements IConstants {
 	@Override
 	public void update(float dt) {
 		
+		// Fixed step (testing)
+		//dt = 1.0f/60.0f;
+		
 		Gdx.graphics.setTitle("FPS: " + String.valueOf(Gdx.graphics.getFramesPerSecond()
 				+ " Map: " + map
 				+ " X: " + this.mGame.getCharacterHandler().getPlayer().getUserPosX()
@@ -163,11 +193,12 @@ public class TestScreen extends Screen implements IConstants {
 		
 		// Clean up Scene
 		Gdx.gl.glClearColor(0, 0, 0, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		
 		// Update shader light according to map tint
 		this.mLightShader.begin();
-			this.mLightShader.setUniformf("ambientColor", this.mGame.getEngine().getTint().r, this.mGame.getEngine().getTint().g, this.mGame.getEngine().getTint().b, .9f);
+			this.mLightShader.setUniformf("ambientColor", this.mGame.getEngine().getTint().r, this.mGame.getEngine().getTint().g, this.mGame.getEngine().getTint().b, .7f);
 		this.mLightShader.end();
 		
 		// Draw shaders into FBO
@@ -180,33 +211,34 @@ public class TestScreen extends Screen implements IConstants {
 			
 			// Draw all shaders in it
 			this.mGame.getSpriteBatch().begin();
-			for(Shader t : this.mGame.getEngine().getLights()) {
-				if(t.isActive()) t.update(dt);
-			}
+				Iterator<Integer> it = this.mGame.getEngine().getLightHandler().getLights().keySet().iterator();
+				while(it.hasNext()) {
+					Integer i = (Integer) it.next();
+					Shader s = this.mGame.getEngine().getLightHandler().getLights().get(i);
+					if(s.isActive()) s.update(dt);
+				}
 			this.mGame.getSpriteBatch().end();
 		this.mFbo.end();
 		
-		
-		// Send update to the map, it will handle the update of each element in it
-		Gdx.gl.glEnable(GL20.GL_BLEND);
-        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-		this.mGame.getSpriteBatch().setProjectionMatrix(this.mGame.getCamera().combined);
-		this.mGame.getSpriteBatch().setShader(this.mLightShader);
-		
 		this.mGame.getSpriteBatch().begin();
-		
+
+			// Setup spritebatch
+			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+			this.mGame.getSpriteBatch().setProjectionMatrix(this.mGame.getCamera().combined);
+			this.mGame.getSpriteBatch().setShader(this.mLightShader);
+			
 		 	// Our shader is rendered in the second texture unit
 			this.mFbo.getColorBufferTexture().bind(1);
-			for(Shader t : this.mGame.getEngine().getLights()) {
-				if(t.isActive()) t.getTexture().bind(0); // This is to avoid artifacts
+			it = this.mGame.getEngine().getLightHandler().getLights().keySet().iterator();
+			while(it.hasNext()) {
+				int i = (Integer) it.next();
+				Shader s = this.mGame.getEngine().getLightHandler().getLights().get(i);
+				if(s.isActive()) s.getTexture().bind(0); // This is to avoid artifacts
 			}
 			
 			// Update our engine
         	this.mGame.getEngine().update(dt);
 		this.mGame.getSpriteBatch().end();
-		
-        // Focus camera on player
-		this.mGame.getCharacterHandler().getPlayer().focusCamera();
 	}
 	
 	@Override

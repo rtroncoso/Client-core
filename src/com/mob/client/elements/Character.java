@@ -6,6 +6,7 @@
  */
 package com.mob.client.elements;
 
+import com.badlogic.gdx.graphics.Color;
 import com.mob.client.Game;
 import com.mob.client.interfaces.IConstants;
 import com.mob.client.sprites.CharacterSprite;
@@ -20,12 +21,14 @@ public class Character extends CharacterSprite implements IConstants {
 	// ===========================================================
 	// Fields
 	// ===========================================================
-	private int mLastUserPosX;
-	private int mLastUserPosY;
-	private int mCharIndex;
 	private boolean mDead;
 	private boolean mInvisible;
 	private boolean mSeesRoof;
+	private boolean mFocused;
+	private int mLastUserPosX;
+	private int mLastUserPosY;
+	private int mCharIndex;
+	private int mLightIndex;
 
 	// ===========================================================
 	// Constructors
@@ -47,8 +50,10 @@ public class Character extends CharacterSprite implements IConstants {
 		this.mCharIndex = charIndex;
 		this.mDead = false;
 		this.mInvisible = false;
-		this.mName = "";
 		this.mSeesRoof = false;
+		this.mFocused = false;
+		this.mLightIndex = 0;
+		this.mName = "";
 		
 		// Update user position
 		this.setUserPos(x, y);
@@ -62,7 +67,19 @@ public class Character extends CharacterSprite implements IConstants {
 		
 	}
 	
-	//@Override
+	@Override
+	public void update(float dt) {
+
+		// Update internal timers
+		this.mDeltaTime = dt;
+
+		// Render sprite
+		super.update(dt);
+		
+		// Update sprite Position
+		this.place();
+	}
+	
 	public void move(Heading pHeading) {
 		
 		// Vars
@@ -113,10 +130,14 @@ public class Character extends CharacterSprite implements IConstants {
 		// Vars
 		float offsetCounterX = 0.0f, offsetCounterY = 0.0f;
 		
-		// This routine calculates user position if they are moving then plots it on the screen
+		// Calculate next user position and finish momvement if we reached destination
 		if(this.mNextX != 0) {
-			offsetCounterX += this.mNextX * this.mSpeed * this.mDeltaTime; 
+
+			// Calculate moving offset
+			offsetCounterX = this.mNextX * this.mSpeed * this.mDeltaTime; 
 			this.mX += offsetCounterX;
+
+			// Check if we reached destination
 			if(this.mNextX == 1) {
 				if(this.mX >= (this.mUserPosX) * TILE_PIXEL_WIDTH) {
 					this.updateUserPos();
@@ -133,8 +154,12 @@ public class Character extends CharacterSprite implements IConstants {
 		}
 		
 		if(this.mNextY != 0) {
-			offsetCounterY += this.mNextY * this.mSpeed * this.mDeltaTime; 
+			
+			// Calculate moving offset
+			offsetCounterY = this.mNextY * this.mSpeed * this.mDeltaTime; 
 			this.mY += offsetCounterY;
+			
+			// Check if we reached destination
 			if(this.mNextY == 1) {
 				if(this.mY >= (this.mUserPosY) * TILE_PIXEL_HEIGHT) {
 					this.updateUserPos();
@@ -148,12 +173,13 @@ public class Character extends CharacterSprite implements IConstants {
 					this.mNextY = 0;
 				}
 			}
-			
-			// Update our camera
-			this.mGame.getCamera().update();
 		}
 		
-		// Update position
+		// Update light position
+		this.updateLight(this.mX, this.mY);
+
+		// If moving and focused we set camera position to ourselves
+		if(this.mFocused && this.mMoving) this.focusCamera();
 	}
 
 	// ===========================================================
@@ -215,6 +241,67 @@ public class Character extends CharacterSprite implements IConstants {
 		this.mDead = mDead;
 	}
 
+	/**
+	 * @return the mSeesRoof
+	 */
+	public boolean isUnderRoof() {
+		return mSeesRoof;
+	}
+
+	/**
+	 * @param mSeesRoof the mSeesRoof to set
+	 */
+	public void setSeesRoof(boolean mSeesRoof) {
+		this.mSeesRoof = mSeesRoof;
+	}
+
+	/**
+	 * @return the mFocused
+	 */
+	public boolean isFocused() {
+		return mFocused;
+	}
+
+	/**
+	 * @param mFocused the mFocused to set
+	 */
+	public void setFocused(boolean mFocused) {
+		
+		// Set our focus
+		this.mFocused = mFocused;
+		
+		// Fix for new focused characters not drawing (wasn't in old camera offset)
+		if(this.mFocused) this.focusCamera();
+	}
+	
+	/**
+	 * @return the mLightIndex
+	 */
+	public int getLight() {
+		return mLightIndex;
+	}
+
+	/**
+	 * @param mLightIndex the mLightIndex to set
+	 */
+	public void setLight(int mLightIndex) {
+		this.mLightIndex = mLightIndex;
+	}
+
+	/**
+	 * Set focus to this character
+	 */
+	public void setFocus() {
+		this.setFocused(true);
+	}
+	
+	/**
+	 * Unset focus
+	 */
+	public void unsetFocus() {
+		this.mFocused = false;
+	}
+
 	// ===========================================================
 	// Methods
 	// ===========================================================
@@ -248,6 +335,8 @@ public class Character extends CharacterSprite implements IConstants {
 	}
 	
 	public void focusCamera() {
+		
+		// Vars
 		float halfWindowWidth = 0, halfWindowHeight = 0, newPosX = 0, newPosY = 0;
 		
 		// Fill vars
@@ -285,19 +374,13 @@ public class Character extends CharacterSprite implements IConstants {
 	public void moveRight() {
 		this.move(Heading.EAST);
 	}
-
-	/**
-	 * @return the mSeesRoof
-	 */
-	public boolean isUnderRoof() {
-		return mSeesRoof;
+	
+	public void createLight(Color pColor, int pSize, float pSpeed) {
+		this.mLightIndex = this.mGame.getEngine().getLightHandler().createLight(this.mUserPosY, this.mUserPosX, pColor, pSize, pSpeed);
 	}
-
-	/**
-	 * @param mSeesRoof the mSeesRoof to set
-	 */
-	public void setSeesRoof(boolean mSeesRoof) {
-		this.mSeesRoof = mSeesRoof;
+	
+	public void updateLight(float pX, float pY) {
+		if(this.mLightIndex != 0) this.mGame.getEngine().getLightHandler().moveLight(this.mLightIndex, pX, pY);
 	}
 
 	// ===========================================================

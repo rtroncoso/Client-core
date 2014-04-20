@@ -125,10 +125,7 @@ public class CharacterSprite extends MovingSprite implements ISprite, IConstants
 		
 		// Set our sprite color
 		Color oldColor = this.mGame.getSpriteBatch().getColor();
-		this.mGame.getSpriteBatch().setColor(this.mColor);
-		
-		// Update internal timers
-		this.mDeltaTime = dt;
+		//this.mGame.getSpriteBatch().setColor(this.mColor);
 		
 		// Calculate offset to draw and update internal timers
 		if(this.mBodyGrhIndex > 0) {
@@ -162,12 +159,12 @@ public class CharacterSprite extends MovingSprite implements ISprite, IConstants
 		if(this.mFxGrhIndex > 0) {
 
 			// Make fxs only last 1 second
-			if(TimeUtils.timeSinceMillis(this.mFxTimer) >= 1000) { 
+			if(TimeUtils.timeSinceMillis(this.mFxTimer) >= 1500) { 
 				this.setFx(0);
 			}
 			
 			// Update fx data
-			this.mFxSkin.setAnimationTime(this.mFxSkin.getAnimationTime() + this.mDeltaTime * 6.0f);
+			this.mFxSkin.setAnimationTime(this.mFxSkin.getAnimationTime() + this.mDeltaTime * 9.0f);
 			fxPixelOffsetX = this.mX - (this.mFxSkin.getGraphic().getRegionWidth() / 2) - this.mFxOffsetX;
 			fxPixelOffsetY = this.mY - this.mFxSkin.getGraphic().getRegionHeight() - this.mFxOffsetY;
 		}
@@ -204,7 +201,7 @@ public class CharacterSprite extends MovingSprite implements ISprite, IConstants
 		// Draw Fx
 		if(this.mFxGrhIndex > 0) {
 			// Draw fx
-			this.mGame.getSpriteBatch().setColor(1.0f, 1.0f, 1.0f, 0.7f);
+			this.mGame.getSpriteBatch().setColor(1.0f, 1.0f, 1.0f, .6f);
 			this.mGame.getSpriteBatch().draw(this.getFx(), fxPixelOffsetX, fxPixelOffsetY);
 			this.mGame.getSpriteBatch().setColor(oldColor);
 		}
@@ -212,14 +209,10 @@ public class CharacterSprite extends MovingSprite implements ISprite, IConstants
 		// Draw name
 		if(this.mName.length() != 0) {
 
-			String line = this.mName;
-			this.mFont.drawWrapped(this.mGame.getSpriteBatch(), line, this.mX - ((line.length() * 10) / 2), this.mY, line.length() * 10, HAlignment.CENTER);
-			//line = "<Mob Staff>";
-			//this.mFont.drawWrapped(this.mGame.getSpriteBatch(), line, this.mX - ((line.length() * 12) / 2), this.mY + 16, line.length() * 12, HAlignment.CENTER);
+			String line = this.mName + "\n<Clan>";
+			float textWidth = this.mFont.getMultiLineBounds(line).width;
+			this.mFont.drawMultiLine(this.mGame.getSpriteBatch(), line, this.mX - (textWidth * 0.5f), this.mY, textWidth, HAlignment.CENTER);
 		}
-		
-		// Update sprite Position
-		this.place();
 	}
 
 	// ===========================================================

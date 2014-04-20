@@ -154,29 +154,6 @@ public class Shader implements IConstants {
 	public void setTexture(Texture mTexture) {
 		this.mTexture = mTexture;
 	}
-	
-	// ===========================================================
-	// Methods
-	// ===========================================================
-	public void update(float dt) {
-		
-		// Store our drawing size
-		float shaderSize = this.mSize;
-		
-		 // Animate shader size
-		if(this.mSpeed > 0) {
-			this.mAngle += dt * this.mSpeed;
-			while(this.mAngle > PI2)
-				this.mAngle -= PI2;
-			shaderSize = ((shaderSize - (shaderSize * 0.1f)) + (shaderSize * 0.1f) * (float)Math.sin(this.mAngle) + .2f * MathUtils.random());
-		}
-		
-		// Render our shader into the lightmap
-		Color oldColor = this.mGame.getSpriteBatch().getColor();
-		this.mGame.getSpriteBatch().setColor(this.mColor);
-		this.mGame.getSpriteBatch().draw(this.mTexture, this.mX - (shaderSize * 0.5f), this.mY - (shaderSize * 0.5f) - (TILE_PIXEL_HEIGHT * 0.5f), shaderSize, shaderSize);
-		this.mGame.getSpriteBatch().setColor(oldColor);
-	}
 
 	/**
 	 * @return the mActive
@@ -190,6 +167,29 @@ public class Shader implements IConstants {
 	 */
 	public void setActive(boolean mActive) {
 		this.mActive = mActive;
+	}
+	
+	// ===========================================================
+	// Methods
+	// ===========================================================
+	public void update(float dt) {
+		
+		// Store our drawing size
+		float shaderSize = this.mSize;
+		
+		// Animate shader size
+		if(this.mSpeed > 0) {
+			this.mAngle += dt * this.mSpeed;
+			while(this.mAngle > PI2)
+				this.mAngle -= PI2;
+			shaderSize = ((shaderSize - (shaderSize * 0.1f)) + (shaderSize * 0.1f) * (float)Math.sin(this.mAngle) + .2f * MathUtils.random());
+		}
+		
+		// Render our shader into the lightmap
+		Color oldColor = this.mGame.getSpriteBatch().getColor();
+		this.mGame.getSpriteBatch().setColor(this.mColor);
+		this.mGame.getSpriteBatch().draw(this.mTexture, this.mX - (shaderSize * 0.5f), this.mY - (shaderSize * 0.5f), shaderSize, shaderSize);
+		this.mGame.getSpriteBatch().setColor(oldColor);
 	}
 
 	// ===========================================================
