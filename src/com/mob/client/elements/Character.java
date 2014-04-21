@@ -72,6 +72,12 @@ public class Character extends CharacterSprite implements IConstants {
 
 		// Update internal timers
 		this.mDeltaTime = dt;
+		
+		// Turn off light if under roof
+		if(this.isUnderRoof() && this.mLightIndex > 0) 
+			this.mGame.getEngine().getLightHandler().getLight(this.mLightIndex).setActive(false);
+		else if(!this.isUnderRoof() && this.mLightIndex > 0)
+			this.mGame.getEngine().getLightHandler().getLight(this.mLightIndex).setActive(true);
 
 		// Render sprite
 		super.update(dt);

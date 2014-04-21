@@ -298,6 +298,20 @@ public class Game implements ApplicationListener, IConstants {
 		this.mFxData = mFxData;
 	}
 	
+	/**
+	 * @return the mCurrentScreen
+	 */
+	public Screen getCurrentScreen() {
+		return mCurrentScreen;
+	}
+
+	/**
+	 * @param mCurrentScreen the mCurrentScreen to set
+	 */
+	public void setCurrentScreen(Screen mCurrentScreen) {
+		this.mCurrentScreen = mCurrentScreen;
+	}
+
 	// ===========================================================
 	// Methods
 	// ===========================================================

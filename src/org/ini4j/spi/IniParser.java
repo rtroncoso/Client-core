@@ -28,7 +28,7 @@ import java.util.Locale;
 
 public class IniParser extends AbstractParser
 {
-    private static final String COMMENTS = ";#";
+    private static final String COMMENTS = ";#'";
     private static final String OPERATORS = ":=";
     static final char SECTION_BEGIN = '[';
     static final char SECTION_END = ']';

@@ -100,6 +100,13 @@ public class LightHandler implements IConstants {
 	public void setLights(HashMap<Integer, Shader> mLights) {
 		this.mLights = mLights;
 	}
+	
+	public Shader getLight(int pIndex) {
+		if(this.mLights.containsKey(pIndex))
+			return this.mLights.get(pIndex);
+		else
+			return null;
+	}
 
 	// ===========================================================
 	// Inner and Anonymous Classes

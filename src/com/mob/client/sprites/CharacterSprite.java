@@ -70,7 +70,6 @@ public class CharacterSprite extends MovingSprite implements ISprite, IConstants
 		super(_game, x , y);
 		
 		// Init class
-		this.mColor = this.mGame.getEngine().getTint();
 		this.mFont = this.mGame.getFont();
 		this.mFont.setColor(0.0f, 0.6f, 0.0f, 1.0f);
 		this.mHeading = mHeading;
@@ -194,7 +193,7 @@ public class CharacterSprite extends MovingSprite implements ISprite, IConstants
 			if(this.mBodyGrhIndex > 0) 
 				this.mGame.getSpriteBatch().draw(this.getBody(), bodyPixelOffsetX, bodyPixelOffsetY);
 		}
-		
+
 		// Replace old color
 		this.mGame.getSpriteBatch().setColor(oldColor);
 		

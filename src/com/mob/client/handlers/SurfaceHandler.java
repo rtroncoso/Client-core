@@ -12,6 +12,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.Texture.TextureWrap;
 import com.mob.client.Game;
 import com.mob.client.interfaces.IConstants;
 
@@ -84,6 +85,7 @@ public class SurfaceHandler implements IConstants {
 	public void loadTexture(String fileName) {
 		Texture texture = new Texture(this.mGraphicsPath + fileName + GAME_GRAPHICS_EXTENSION);
 		texture.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
+		texture.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
 		this.add(fileName, texture);
 	}
 

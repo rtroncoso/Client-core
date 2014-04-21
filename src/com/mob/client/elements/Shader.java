@@ -174,6 +174,9 @@ public class Shader implements IConstants {
 	// ===========================================================
 	public void update(float dt) {
 		
+		// Check if active
+		if(!this.mActive) return;
+		
 		// Store our drawing size
 		float shaderSize = this.mSize;
 		

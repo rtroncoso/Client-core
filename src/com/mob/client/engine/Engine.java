@@ -93,7 +93,7 @@ public class Engine implements IConstants {
 		if(screenMaxY > MAX_MAP_SIZE_HEIGHT) screenMaxY = MAX_MAP_SIZE_HEIGHT;
 		
 		// Set map color to ambient tint
-		this.mGame.getSpriteBatch().setColor(this.mTint);
+		//this.mGame.getSpriteBatch().setColor(this.mTint);
 		
 		// Start map render
 		/******************************************
@@ -106,8 +106,10 @@ public class Engine implements IConstants {
 				BundledTexture layer = tile.getGraphic(0);
 
 				layer.setAnimationTime(layer.getAnimationTime() + dt);
-				
-				this.mGame.getSpriteBatch().draw(layer.getGraphic(true), layer.getX(), layer.getY());
+
+				if(mapData.getTile(x, y).getGraphic()[0] != 0) {
+					this.mGame.getSpriteBatch().draw(layer.getGraphic(true), layer.getX(), layer.getY());
+				}
 			}
 		}
 
@@ -146,7 +148,7 @@ public class Engine implements IConstants {
 						if(Math.abs(this.mGame.getCharacterHandler().getPlayer().getUserPosX() - x) < 4 &&
 						   Math.abs(this.mGame.getCharacterHandler().getPlayer().getUserPosY() - y) < 4) {
 							Color oldColor = this.mGame.getSpriteBatch().getColor();
-							this.mGame.getSpriteBatch().setColor(new Color(this.mTint.r, this.mTint.g, this.mTint.b, ALPHA_TREES));
+							this.mGame.getSpriteBatch().setColor(new Color(oldColor.r, oldColor.g, oldColor.b, ALPHA_TREES));
 							this.mGame.getSpriteBatch().draw(layer.getGraphic(), layer.getX(), layer.getY());
 							this.mGame.getSpriteBatch().setColor(oldColor);
 						} else {
@@ -174,10 +176,10 @@ public class Engine implements IConstants {
 			}
 			if(this.mTechoAB < 0.05f) this.mTechoAB = 0.0f;
 		} else {
-			if(this.mTechoAB < 1.0f) {
+			if(this.mTechoAB < 1) {
 				this.mTechoAB += dt;
 			}
-			if(this.mTechoAB > 0.95f) this.mTechoAB = 1.0f;
+			if(this.mTechoAB > .95f) this.mTechoAB = 1.0f;
 		}
 		
 		for(int y = minAreaY; y <= maxAreaY; y++) {
@@ -189,8 +191,9 @@ public class Engine implements IConstants {
 				if(mapData.getTile(x, y).getGraphic()[3] != 0) {
 					layer.setAnimationTime(layer.getAnimationTime() + dt);
 					
+					// Don't draw the shader above roofs
 					Color oldColor = this.mGame.getSpriteBatch().getColor();
-					this.mGame.getSpriteBatch().setColor(new Color(this.mTint.r, this.mTint.g, this.mTint.b, this.mTechoAB));
+					this.mGame.getSpriteBatch().setColor(new Color(oldColor.r, oldColor.g, oldColor.b, this.mTechoAB));
 					this.mGame.getSpriteBatch().draw(layer.getGraphic(true), layer.getX(), layer.getY());
 					this.mGame.getSpriteBatch().setColor(oldColor);
 				}

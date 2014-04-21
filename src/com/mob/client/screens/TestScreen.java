@@ -17,6 +17,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap.Format;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.mob.client.Game;
@@ -34,8 +35,6 @@ public class TestScreen extends Screen implements IConstants {
 	// ===========================================================
 	// Fields
 	// ===========================================================
-	private ShaderProgram mDefaultShader;
-	private ShaderProgram mLightShader;
 	private FrameBuffer mFbo;
 	private int map;
 	
@@ -61,13 +60,13 @@ public class TestScreen extends Screen implements IConstants {
 		// Load shaders
 		ShaderProgram.pedantic = false;
 		this.mFbo = new FrameBuffer(Format.RGBA8888, (int) this.mGame.getCamera().viewportWidth, (int) this.mGame.getCamera().viewportHeight, false);
-		this.mDefaultShader = new ShaderProgram(this.mVertexShader, this.mDefaultShaderFile);
-		this.mLightShader = new ShaderProgram(this.mVertexShader, this.mLightShaderFile);
+		this.setDefaultShader(SpriteBatch.createDefaultShader());
+		this.setLightShader(new ShaderProgram(this.mVertexShader, this.mLightShaderFile));
 		
 		// Setup light shader
-		this.mLightShader.begin();
-		this.mLightShader.setUniformi("u_lightmap", 1);
-		this.mLightShader.end();
+		this.getLightShader().begin();
+		this.getLightShader().setUniformi("u_lightmap", 1);
+		this.getLightShader().end();
 		
 		// Load a map
 		this.map = 1;
@@ -112,18 +111,16 @@ public class TestScreen extends Screen implements IConstants {
 					mGame.getCharacterHandler().getPlayer().updateUserPos();
 					break;
 				}
-				return false;
+				return true;
 			}
 
 			@Override
 			public boolean keyUp(int keycode) {
-				// TODO Auto-generated method stub
 				return false;
 			}
 
 			@Override
 			public boolean keyTyped(char character) {
-				// TODO Auto-generated method stub
 				return false;
 			}
 
@@ -133,32 +130,28 @@ public class TestScreen extends Screen implements IConstants {
 				if(button == Input.Buttons.LEFT) {
 					mGame.getEngine().getLightHandler().createLight((int) ((mGame.getCamera().position.x - (mGame.getCamera().viewportWidth / 2)) / TILE_PIXEL_WIDTH) + (screenX / TILE_PIXEL_WIDTH), 
 							(int) ((mGame.getCamera().position.y  - (mGame.getCamera().viewportHeight / 2)) / TILE_PIXEL_HEIGHT) + (screenY / TILE_PIXEL_HEIGHT), Color.GREEN, 4);
-				}
-				return false;
+				} 
+				return true;
 			}
 
 			@Override
 			public boolean touchUp(int screenX, int screenY, int pointer,
 					int button) {
-				// TODO Auto-generated method stub
 				return false;
 			}
 
 			@Override
 			public boolean touchDragged(int screenX, int screenY, int pointer) {
-				// TODO Auto-generated method stub
 				return false;
 			}
 
 			@Override
 			public boolean mouseMoved(int screenX, int screenY) {
-				// TODO Auto-generated method stub
 				return false;
 			}
 
 			@Override
 			public boolean scrolled(int amount) {
-				// TODO Auto-generated method stub
 				return false;
 			}
 			
@@ -193,29 +186,28 @@ public class TestScreen extends Screen implements IConstants {
 		
 		// Clean up Scene
 		Gdx.gl.glClearColor(0, 0, 0, 1);
-		Gdx.gl.glEnable(GL20.GL_BLEND);
-        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		
 		// Update shader light according to map tint
-		this.mLightShader.begin();
-			this.mLightShader.setUniformf("ambientColor", this.mGame.getEngine().getTint().r, this.mGame.getEngine().getTint().g, this.mGame.getEngine().getTint().b, .7f);
-		this.mLightShader.end();
+		this.getLightShader().begin();
+			this.getLightShader().setUniformf("ambientColor", this.mGame.getEngine().getTint().r, this.mGame.getEngine().getTint().g, this.mGame.getEngine().getTint().b, .8f);
+		this.getLightShader().end();
 		
 		// Draw shaders into FBO
 		this.mFbo.begin();
 		
 			// Set up our spritebatch
 			this.mGame.getSpriteBatch().setProjectionMatrix(this.mGame.getCamera().combined);
-			this.mGame.getSpriteBatch().setShader(this.mDefaultShader);
+			this.mGame.getSpriteBatch().setShader(this.getDefaultShader());
 			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 			
 			// Draw all shaders in it
 			this.mGame.getSpriteBatch().begin();
+			
 				Iterator<Integer> it = this.mGame.getEngine().getLightHandler().getLights().keySet().iterator();
 				while(it.hasNext()) {
 					Integer i = (Integer) it.next();
-					Shader s = this.mGame.getEngine().getLightHandler().getLights().get(i);
-					if(s.isActive()) s.update(dt);
+					Shader s = this.mGame.getEngine().getLightHandler().getLight(i);
+					s.update(dt);
 				}
 			this.mGame.getSpriteBatch().end();
 		this.mFbo.end();
@@ -224,16 +216,18 @@ public class TestScreen extends Screen implements IConstants {
 
 			// Setup spritebatch
 			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+			Gdx.gl.glEnable(GL20.GL_BLEND);
+	        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
 			this.mGame.getSpriteBatch().setProjectionMatrix(this.mGame.getCamera().combined);
-			this.mGame.getSpriteBatch().setShader(this.mLightShader);
+			this.mGame.getSpriteBatch().setShader(this.getLightShader());
 			
 		 	// Our shader is rendered in the second texture unit
 			this.mFbo.getColorBufferTexture().bind(1);
 			it = this.mGame.getEngine().getLightHandler().getLights().keySet().iterator();
 			while(it.hasNext()) {
 				int i = (Integer) it.next();
-				Shader s = this.mGame.getEngine().getLightHandler().getLights().get(i);
-				if(s.isActive()) s.getTexture().bind(0); // This is to avoid artifacts
+				Shader s = this.mGame.getEngine().getLightHandler().getLight(i);
+				s.getTexture().bind(0); // This is to avoid artifacts
 			}
 			
 			// Update our engine
@@ -244,9 +238,9 @@ public class TestScreen extends Screen implements IConstants {
 	@Override
 	public void resize(int arg0, int arg1) {
 
-		this.mLightShader.begin();
-		this.mLightShader.setUniformf("resolution", arg0, arg1);
-		this.mLightShader.end();
+		this.getLightShader().begin();
+		this.getLightShader().setUniformf("resolution", arg0, arg1);
+		this.getLightShader().end();
 	}
 
 	// ===========================================================

@@ -7,6 +7,7 @@
 package com.mob.client.screens;
 
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.mob.client.Game;
 import com.mob.client.engine.Engine;
 
@@ -21,6 +22,8 @@ public abstract class Screen  implements com.badlogic.gdx.Screen {
 	// Fields
 	// ===========================================================
 	protected InputMultiplexer mInputMultiplexer;
+	private ShaderProgram mDefaultShader;
+	private ShaderProgram mLightShader;
 	protected Game mGame;
 	protected Engine mMap;
 
@@ -51,10 +54,37 @@ public abstract class Screen  implements com.badlogic.gdx.Screen {
 	@Override
 	public void resize(int arg0, int arg1) {
 	}
-
+	
 	// ===========================================================
 	// Getter & Setter
 	// ===========================================================
+	/**
+	 * @return the mDefaultShader
+	 */
+	public ShaderProgram getDefaultShader() {
+		return mDefaultShader;
+	}
+
+	/**
+	 * @param mDefaultShader the mDefaultShader to set
+	 */
+	public void setDefaultShader(ShaderProgram mDefaultShader) {
+		this.mDefaultShader = mDefaultShader;
+	}
+
+	/**
+	 * @return the mLightShader
+	 */
+	public ShaderProgram getLightShader() {
+		return mLightShader;
+	}
+
+	/**
+	 * @param mLightShader the mLightShader to set
+	 */
+	public void setLightShader(ShaderProgram mLightShader) {
+		this.mLightShader = mLightShader;
+	}
 
 	// ===========================================================
 	// Methods

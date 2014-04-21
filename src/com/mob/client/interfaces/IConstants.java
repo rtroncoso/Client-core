@@ -38,9 +38,9 @@ public interface IConstants {
     
     public static final int OFFSET_HEAD = 12;
     
-    public static final Color COLOR_DAYLIGHT = new Color(0.9f, 0.9f, 0.9f, 1.0f);
-    public static final Color COLOR_DAWN = new Color(0.7f, 0.7f, 0.7f, 1.0f);
-    public static final Color COLOR_NIGHT = new Color(0.5f, 0.5f, 0.7f, 1.0f);
+    public static final Color COLOR_DAYLIGHT = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+    public static final Color COLOR_DAWN = new Color(0.5f, 0.5f, 0.5f, 1.0f);
+    public static final Color COLOR_NIGHT = new Color(0.3f, 0.3f, 0.3f, 1.0f);
     
     public static final float ALPHA_TREES = 1.0f;
     
