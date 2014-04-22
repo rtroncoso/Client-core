@@ -73,17 +73,14 @@ public class Character extends CharacterSprite implements IConstants {
 		// Update internal timers
 		this.mDeltaTime = dt;
 		
-		// Turn off light if under roof
-		if(this.isUnderRoof() && this.mLightIndex > 0) 
-			this.mGame.getEngine().getLightHandler().getLight(this.mLightIndex).setActive(false);
-		else if(!this.isUnderRoof() && this.mLightIndex > 0)
-			this.mGame.getEngine().getLightHandler().getLight(this.mLightIndex).setActive(true);
-
 		// Render sprite
 		super.update(dt);
-		
+
 		// Update sprite Position
 		this.place();
+
+		// If moving and focused we set camera position to ourselves
+		if(this.mFocused) this.focusCamera();
 	}
 	
 	public void move(Heading pHeading) {
@@ -183,9 +180,6 @@ public class Character extends CharacterSprite implements IConstants {
 		
 		// Update light position
 		this.updateLight(this.mX, this.mY);
-
-		// If moving and focused we set camera position to ourselves
-		if(this.mFocused && this.mMoving) this.focusCamera();
 	}
 
 	// ===========================================================
@@ -346,8 +340,8 @@ public class Character extends CharacterSprite implements IConstants {
 		float halfWindowWidth = 0, halfWindowHeight = 0, newPosX = 0, newPosY = 0;
 		
 		// Fill vars
-		halfWindowWidth = this.mGame.getCamera().viewportWidth / 2;
-		halfWindowHeight = this.mGame.getCamera().viewportHeight / 2;
+		halfWindowWidth = this.mGame.getCamera().viewportWidth * 0.5f;
+		halfWindowHeight = this.mGame.getCamera().viewportHeight * 0.5f;
 		
 		// Do not move camera if in map bounds
 		if(this.mX - halfWindowWidth < TILE_PIXEL_WIDTH || this.mX + halfWindowWidth > MAX_MAP_SIZE_WIDTH * TILE_PIXEL_WIDTH)
@@ -362,6 +356,7 @@ public class Character extends CharacterSprite implements IConstants {
 		
 		//Update position
 		this.mGame.getCamera().position.set(newPosX, newPosY, 0);
+		this.mGame.getSpriteBatch().setProjectionMatrix(this.mGame.getCamera().combined);
 		this.mGame.getCamera().update();
 	}
 	
@@ -381,12 +376,12 @@ public class Character extends CharacterSprite implements IConstants {
 		this.move(Heading.EAST);
 	}
 	
-	public void createLight(Color pColor, int pSize, float pSpeed) {
-		this.mLightIndex = this.mGame.getEngine().getLightHandler().createLight(this.mUserPosY, this.mUserPosX, pColor, pSize, pSpeed);
+	public void createLight(Color pColor, float pSize, float pSpeed) {
+		this.mLightIndex = this.mGame.getBox2DEngine().getLightHandler().createLight(this.mUserPosY, this.mUserPosX, pColor, pSize, pSpeed);
 	}
 	
 	public void updateLight(float pX, float pY) {
-		if(this.mLightIndex != 0) this.mGame.getEngine().getLightHandler().moveLight(this.mLightIndex, pX, pY);
+		if(this.mLightIndex != 0) this.mGame.getBox2DEngine().getLightHandler().moveLight(this.mLightIndex, pX, pY);
 	}
 
 	// ===========================================================

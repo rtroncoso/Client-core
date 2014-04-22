@@ -25,6 +25,7 @@ import com.mob.client.data.HeadData;
 import com.mob.client.data.HelmetData;
 import com.mob.client.data.ShieldData;
 import com.mob.client.data.WeaponData;
+import com.mob.client.engine.Box2DEngine;
 import com.mob.client.engine.Engine;
 import com.mob.client.handlers.CharacterHandler;
 import com.mob.client.handlers.MapHandler;
@@ -62,7 +63,9 @@ public class Game implements ApplicationListener, IConstants {
     protected CharacterHandler mCharacterHandler;
 
 	protected Engine mEngine;
-    protected Screen mCurrentScreen;
+	protected Box2DEngine mBox2DEngine;
+
+	protected Screen mCurrentScreen;
     
     protected BitmapFont mFont;
 
@@ -89,6 +92,7 @@ public class Game implements ApplicationListener, IConstants {
         this.mInitLoader = new InitLoader();
         this.mMapHandler = new MapHandler(this);
         this.mEngine = new Engine(this);
+        this.mBox2DEngine = new Box2DEngine(this);
         this.mCharacterHandler = new CharacterHandler(this);
         this.mFont = new BitmapFont();
     }
@@ -310,6 +314,20 @@ public class Game implements ApplicationListener, IConstants {
 	 */
 	public void setCurrentScreen(Screen mCurrentScreen) {
 		this.mCurrentScreen = mCurrentScreen;
+	}
+
+    /**
+	 * @return the mBox2DEngine
+	 */
+	public Box2DEngine getBox2DEngine() {
+		return mBox2DEngine;
+	}
+
+	/**
+	 * @param mBox2DEngine the mBox2DEngine to set
+	 */
+	public void setBox2DEngine(Box2DEngine mBox2DEngine) {
+		this.mBox2DEngine = mBox2DEngine;
 	}
 
 	// ===========================================================

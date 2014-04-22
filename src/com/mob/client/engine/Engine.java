@@ -12,7 +12,6 @@ import com.mob.client.data.MapBlockData;
 import com.mob.client.data.MapData;
 import com.mob.client.elements.Character;
 import com.mob.client.elements.Tile;
-import com.mob.client.handlers.LightHandler;
 import com.mob.client.interfaces.IConstants;
 import com.mob.client.textures.BundledTexture;
 
@@ -26,7 +25,6 @@ public class Engine implements IConstants {
 	// ===========================================================
 	// Fields
 	// ===========================================================
-	private LightHandler mLightHandler;
 	private Tile[][] mTiles;
 	private float mTechoAB;
 	private int mMapNumber;
@@ -38,7 +36,6 @@ public class Engine implements IConstants {
 	// ===========================================================
 	public Engine(Game pGame) {
 		this.mGame = pGame;
-		this.setLightHandler(new LightHandler(this.mGame));
 		this.mTint = new Color(Color.WHITE);
 		this.mTechoAB = 1.0f;
 		this.mMapNumber = 0;
@@ -68,8 +65,8 @@ public class Engine implements IConstants {
 		// Calculate visible part of the map
 		int cameraPosX = (int) (this.mGame.getCamera().position.x / TILE_PIXEL_WIDTH);
 		int cameraPosY = (int) (this.mGame.getCamera().position.y / TILE_PIXEL_HEIGHT);
-		int halfWindowTileWidth = (int) ((this.mGame.getCamera().viewportWidth / TILE_PIXEL_WIDTH) / 2);
-		int halfWindowTileHeight = (int) ((this.mGame.getCamera().viewportHeight / TILE_PIXEL_HEIGHT) / 2);
+		int halfWindowTileWidth = (int) ((this.mGame.getCamera().viewportWidth / TILE_PIXEL_WIDTH) / 2f);
+		int halfWindowTileHeight = (int) ((this.mGame.getCamera().viewportHeight / TILE_PIXEL_HEIGHT) / 2f);
 		
 		screenMinX = cameraPosX - halfWindowTileWidth - 1;
 		screenMaxX = cameraPosX + halfWindowTileWidth + 1;
@@ -91,9 +88,6 @@ public class Engine implements IConstants {
 		if(screenMaxX > MAX_MAP_SIZE_WIDTH) screenMaxX = MAX_MAP_SIZE_WIDTH;
 		if(screenMinY < MIN_MAP_SIZE_HEIGHT) screenMinY = MIN_MAP_SIZE_HEIGHT;
 		if(screenMaxY > MAX_MAP_SIZE_HEIGHT) screenMaxY = MAX_MAP_SIZE_HEIGHT;
-		
-		// Set map color to ambient tint
-		//this.mGame.getSpriteBatch().setColor(this.mTint);
 		
 		// Start map render
 		/******************************************
@@ -280,20 +274,6 @@ public class Engine implements IConstants {
 		this.mTiles[pX][pY].setCharacter(pCharacter);
 	}
 
-	/**
-	 * @return the mLightHandler
-	 */
-	public LightHandler getLightHandler() {
-		return mLightHandler;
-	}
-
-	/**
-	 * @param mLightHandler the mLightHandler to set
-	 */
-	public void setLightHandler(LightHandler mLightHandler) {
-		this.mLightHandler = mLightHandler;
-	}
-
 	// ===========================================================
 	// Methods
 	// ===========================================================
@@ -302,7 +282,11 @@ public class Engine implements IConstants {
 	 */
 	public void load() {
 
+		// Get mapData
 		MapData mapData = this.mGame.getMapHandler().get(this.mMapNumber);
+		
+		// Clear box2d world
+		this.mGame.getBox2DEngine().getWorld();
 		
 		// Move MapData tiles into our array
 		this.mTiles = new Tile[MAX_MAP_SIZE_WIDTH + 1][MAX_MAP_SIZE_HEIGHT + 1];
@@ -315,6 +299,13 @@ public class Engine implements IConstants {
 				this.mTiles[x][y].setTrigger(tile.getTrigger());
 			}
 		}
+	}
+	
+	/**
+	 * Dispose everything
+	 */
+	public void dispose() {
+		
 	}
 
 	// ===========================================================

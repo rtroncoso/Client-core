@@ -6,6 +6,7 @@
  */
 package com.mob.client.elements;
 
+import com.badlogic.gdx.graphics.Color;
 import com.mob.client.Game;
 import com.mob.client.sprites.TileSprite;
 
@@ -35,6 +36,7 @@ public class Tile extends TileSprite {
 	public Tile(Game _game, int x, int y, int[] pGraphic, Character pCharacter) {
 		super(_game, x, y, pGraphic);
 		
+		// Plot a character in this tile
 		this.setCharacter(pCharacter);
 		
 		// Check if there is a tree
@@ -48,6 +50,17 @@ public class Tile extends TileSprite {
 		   (this.getGrhIndex(0) >= 13547 && this.getGrhIndex(0) <= 13562)) {
 			if(this.getGrhIndex(1) == 0) this.mHasWater = true;
 		}
+		
+		// Create static bodys for layer 3
+		if(this.getGrhIndex(2) > 0) {
+			if(!this.hasTree())
+				this.mGame.getBox2DEngine().createObject(x, y, this.getGraphic(2).getGraphic().getRegionWidth(), this.getGraphic(2).getGraphic().getRegionHeight());
+			else
+				this.mGame.getBox2DEngine().createObject(x, y, TILE_PIXEL_WIDTH, TILE_PIXEL_HEIGHT);
+		}
+		
+		// Null light
+		this.mLightIndex = 0;
 	}
 	
 	public Tile(Game _game, int x, int y, int[] pGraphic) {
@@ -178,8 +191,16 @@ public class Tile extends TileSprite {
 	 * @return returns if we are a roof
 	 */
 	public boolean isRoof() {
-		if(this.mTrigger == 1 || this.mTrigger == 2 || this.mTrigger == 4) return true;
+		if(this.mTrigger == 1 || this.mTrigger == 2 || this.mTrigger == 4 || this.mTrigger == 21) return true;
 		return false;
+	}
+	
+	/**
+	 * Creates a new light in this tile
+	 * @return the new light index
+	 */
+	public int createLight(Color pColor, float pSize, float pSpeed) {
+		return this.mGame.getBox2DEngine().getLightHandler().createLight(this.getX(), this.getY(), pColor, pSize);
 	}
 
 	// ===========================================================

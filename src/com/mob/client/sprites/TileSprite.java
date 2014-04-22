@@ -42,7 +42,7 @@ public class TileSprite extends GameSprite implements IConstants {
 				this.mGraphic[i] = new BundledTexture(_game, pGraphic[i]);
 			
 			// Correctly plot graphic position
-			this.mGraphic[i].setX((x * TILE_PIXEL_WIDTH) - (this.mGraphic[i].getGraphic().getRegionWidth() / 2));
+			this.mGraphic[i].setX((x * TILE_PIXEL_WIDTH) - (this.mGraphic[i].getGraphic().getRegionWidth() / 2f));
 			this.mGraphic[i].setY((y * TILE_PIXEL_HEIGHT) - this.mGraphic[i].getGraphic().getRegionHeight());
 		}
 	}

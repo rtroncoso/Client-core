@@ -20,10 +20,9 @@ import com.mob.client.data.HelmetData;
 import com.mob.client.data.ShieldData;
 import com.mob.client.data.WeaponData;
 import com.mob.client.interfaces.IConstants;
-import com.mob.client.interfaces.ISprite;
 import com.mob.client.textures.BundledTexture;
 
-public class CharacterSprite extends MovingSprite implements ISprite, IConstants {
+public class CharacterSprite extends MovingSprite implements IConstants {
 
 	// ===========================================================
 	// Constants
@@ -83,6 +82,7 @@ public class CharacterSprite extends MovingSprite implements ISprite, IConstants
 		this.mFxOffsetX = 0;
 		this.mFxOffsetY = 0;
 		this.mFxTimer = 0;
+		this.mColor = Color.WHITE;
 		
 		// Check null indexes
 		if(helmetIndex == 0) helmetIndex = 2;
@@ -124,34 +124,34 @@ public class CharacterSprite extends MovingSprite implements ISprite, IConstants
 		
 		// Set our sprite color
 		Color oldColor = this.mGame.getSpriteBatch().getColor();
-		//this.mGame.getSpriteBatch().setColor(this.mColor);
+		this.mGame.getSpriteBatch().setColor(this.mColor);
 		
 		// Calculate offset to draw and update internal timers
 		if(this.mBodyGrhIndex > 0) {
 			this.mBodySkin[this.mHeading.toInt()].setAnimationTime(this.mBodySkin[this.getHeading()].getAnimationTime() + this.mDeltaTime);
-			bodyPixelOffsetX = this.mX - (this.getBody().getRegionWidth() / 2);
+			bodyPixelOffsetX = this.mX - (this.getBody().getRegionWidth() / 2f);
 			bodyPixelOffsetY = this.mY - (this.getBody().getRegionHeight());
 		}
 		
 		if(this.mWeaponGrhIndex > 0) {
 			this.mWeaponSkin[this.mHeading.toInt()].setAnimationTime(this.mWeaponSkin[this.getHeading()].getAnimationTime() + this.mDeltaTime);
-			weaponPixelOffsetX = this.mX - (this.getWeapon().getRegionWidth() / 2);
+			weaponPixelOffsetX = this.mX - (this.getWeapon().getRegionWidth() / 2f);
 			weaponPixelOffsetY = this.mY - this.getWeapon().getRegionHeight();
 		}
 		
 		if(this.mShieldGrhIndex > 0) {
 			this.mShieldSkin[this.mHeading.toInt()].setAnimationTime(this.mShieldSkin[this.getHeading()].getAnimationTime() + this.mDeltaTime);
-			shieldPixelOffsetX = this.mX - (this.getShield().getRegionWidth() / 2);
+			shieldPixelOffsetX = this.mX - (this.getShield().getRegionWidth() / 2f);
 			shieldPixelOffsetY = this.mY - this.getBody().getRegionHeight() - 5;
 		}
 		
 		if(this.mHeadGrhIndex > 0) {
-			headPixelOffsetX = this.mX + this.mHeadOffsetX - (this.getHead().getRegionWidth() / 4) - 4;
+			headPixelOffsetX = this.mX + this.mHeadOffsetX - (this.getHead().getRegionWidth() / 4f) - 4;
 			headPixelOffsetY = this.mY + this.mHeadOffsetY - this.getBody().getRegionHeight() - 5;
 		}
 		
 		if(this.mHelmetGrhIndex > 0) {
-			helmetPixelOffsetX = this.mX + this.mHeadOffsetX - (this.getHead().getRegionWidth() / 4) - 4;
+			helmetPixelOffsetX = this.mX + this.mHeadOffsetX - (this.getHead().getRegionWidth() / 4f) - 4;
 			helmetPixelOffsetY = this.mY + this.mHeadOffsetY - this.getBody().getRegionHeight() - OFFSET_HEAD - 4;
 		}
 		
@@ -164,7 +164,7 @@ public class CharacterSprite extends MovingSprite implements ISprite, IConstants
 			
 			// Update fx data
 			this.mFxSkin.setAnimationTime(this.mFxSkin.getAnimationTime() + this.mDeltaTime * 9.0f);
-			fxPixelOffsetX = this.mX - (this.mFxSkin.getGraphic().getRegionWidth() / 2) - this.mFxOffsetX;
+			fxPixelOffsetX = this.mX - (this.mFxSkin.getGraphic().getRegionWidth() * 0.5f) - this.mFxOffsetX;
 			fxPixelOffsetY = this.mY - this.mFxSkin.getGraphic().getRegionHeight() - this.mFxOffsetY;
 		}
 		

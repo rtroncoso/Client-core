@@ -6,12 +6,10 @@
  */
 package com.mob.client.sprites;
 
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 import com.mob.client.Game;
-import com.mob.client.interfaces.ISprite;
 
-public class GameSprite extends Sprite implements ISprite {
+public class GameSprite {
 	// ===========================================================
 	// Constants
 	// ===========================================================
