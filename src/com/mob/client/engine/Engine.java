@@ -286,7 +286,7 @@ public class Engine implements IConstants {
 		MapData mapData = this.mGame.getMapHandler().get(this.mMapNumber);
 		
 		// Clear box2d world
-		this.mGame.getBox2DEngine().getWorld();
+		this.mGame.getBox2DEngine().reset();
 		
 		// Move MapData tiles into our array
 		this.mTiles = new Tile[MAX_MAP_SIZE_WIDTH + 1][MAX_MAP_SIZE_HEIGHT + 1];

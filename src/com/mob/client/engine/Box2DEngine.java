@@ -6,8 +6,10 @@
  */
 package com.mob.client.engine;
 
+import box2dLight.DirectionalLight;
 import box2dLight.RayHandler;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -16,6 +18,7 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
 import com.mob.client.Game;
 import com.mob.client.handlers.LightHandler;
 import com.mob.client.interfaces.IConstants;
@@ -50,13 +53,14 @@ public class Box2DEngine implements IConstants {
 		// Init box2d world
 		this.mWorld = new World(new Vector2(), true);
 		this.mDebugRenderer = new Box2DDebugRenderer();
+		this.mDebugRenderer.setDrawBodies(false);
 		
 		// RayHandler setup
 		RayHandler.setGammaCorrection(true);
 		RayHandler.useDiffuseLight(true);
 		this.mRayHandler = new RayHandler(this.mWorld);
 		this.mRayHandler.setCulling(true);
-		this.mRayHandler.setBlurNum(1);
+		this.mRayHandler.setBlurNum(5);
 		this.mGame.getCamera().update(true);
 		
 		// LightHandler setup
@@ -103,13 +107,21 @@ public class Box2DEngine implements IConstants {
 		fixtureDef.filter.groupIndex = 0;
 
 		// Create box2d bodies for all layer 3 objects
-	    float bodyX = x * TILE_PIXEL_WIDTH - 1;// + halfBodyWidth / 2f;
-	    float bodyY = y * TILE_PIXEL_HEIGHT - halfBodyHeight;
+	    float bodyX = x * TILE_PIXEL_WIDTH - 2;// + halfBodyWidth / 2f;
+	    float bodyY = y * TILE_PIXEL_HEIGHT - halfBodyHeight - 1;
 	    tileBodyDef.position.set(bodyX, bodyY);
 	    Body tileBody = this.mWorld.createBody(tileBodyDef);
 	    tileBody.createFixture(fixtureDef);
 	    
 	    tileShape.dispose();
+	}
+	
+	public void reset() {
+		Array<Body> tmpBodies = new Array<Body>();
+		this.mWorld.getBodies(tmpBodies);
+		for(int i = 0; i < tmpBodies.size; i++) {
+			tmpBodies.get(i).setActive(false);
+		}
 	}
 
 	// ===========================================================
