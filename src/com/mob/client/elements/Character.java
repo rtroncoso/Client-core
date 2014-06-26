@@ -72,12 +72,12 @@ public class Character extends CharacterSprite implements IConstants {
 
 		// Update internal timers
 		this.mDeltaTime = dt;
-		
-		// Render sprite
-		super.update(dt);
 
 		// Update sprite Position
 		this.place();
+		
+		// Render sprite
+		super.update(dt);
 
 		// If moving and focused we set camera position to ourselves
 		if(this.mFocused) this.focusCamera();
@@ -377,11 +377,11 @@ public class Character extends CharacterSprite implements IConstants {
 	}
 	
 	public void createLight(Color pColor, float pSize, float pSpeed) {
-		this.mLightIndex = this.mGame.getBox2DEngine().getLightHandler().createLight(this.mUserPosY, this.mUserPosX, pColor, pSize, pSpeed);
+		this.mLightIndex = this.mGame.getEngine().getLightHandler().createLight(this.mUserPosY, this.mUserPosX, pColor, pSize, pSpeed);
 	}
 	
 	public void updateLight(float pX, float pY) {
-		if(this.mLightIndex != 0) this.mGame.getBox2DEngine().getLightHandler().moveLight(this.mLightIndex, pX, pY);
+		if(this.mLightIndex != 0) this.mGame.getEngine().getLightHandler().moveLight(this.mLightIndex, pX, pY);
 	}
 
 	// ===========================================================

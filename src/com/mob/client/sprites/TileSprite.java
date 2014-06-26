@@ -10,7 +10,7 @@ import com.mob.client.Game;
 import com.mob.client.interfaces.IConstants;
 import com.mob.client.textures.BundledTexture;
 
-public class TileSprite extends GameSprite implements IConstants {
+public abstract class TileSprite extends GameSprite implements IConstants {
 
 	// ===========================================================
 	// Constants

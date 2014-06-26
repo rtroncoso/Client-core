@@ -25,16 +25,16 @@ import com.mob.client.data.HeadData;
 import com.mob.client.data.HelmetData;
 import com.mob.client.data.ShieldData;
 import com.mob.client.data.WeaponData;
-import com.mob.client.engine.Box2DEngine;
+import com.mob.client.engine.PhysicsEngine;
 import com.mob.client.engine.Engine;
 import com.mob.client.handlers.CharacterHandler;
 import com.mob.client.handlers.MapHandler;
 import com.mob.client.handlers.SurfaceHandler;
 import com.mob.client.interfaces.IConstants;
-import com.mob.client.loaders.InitLoader;
+import com.mob.client.loaders.Loader;
 import com.mob.client.screens.Screen;  
   
-public class Game implements ApplicationListener, IConstants {  
+public abstract class Game implements ApplicationListener, IConstants {  
 
 	// ===========================================================
 	// Constants
@@ -48,7 +48,7 @@ public class Game implements ApplicationListener, IConstants {
     protected HashMap<String, Screen> mScreens;  
     protected SpriteBatch mSpriteBatch;  
     
-    protected InitLoader mInitLoader;
+    protected Loader mInitLoader;
     
     protected Vector<GrhData> mGrhData;
     protected Vector<BodyData> mBodyData;
@@ -62,8 +62,7 @@ public class Game implements ApplicationListener, IConstants {
     protected SurfaceHandler mSurfaceHandler;
     protected CharacterHandler mCharacterHandler;
 
-	protected Engine mEngine;
-	protected Box2DEngine mBox2DEngine;
+	protected PhysicsEngine mEngine;
 
 	protected Screen mCurrentScreen;
     
@@ -89,10 +88,9 @@ public class Game implements ApplicationListener, IConstants {
         this.mWeaponData = new Vector<WeaponData>();
         this.mShieldData = new Vector<ShieldData>();
         this.mFxData = new Vector<FxData>();
-        this.mInitLoader = new InitLoader();
+        this.mInitLoader = new Loader();
         this.mMapHandler = new MapHandler(this);
-        this.mEngine = new Engine(this);
-        this.mBox2DEngine = new Box2DEngine(this);
+        this.mEngine = new PhysicsEngine(this);
         this.mCharacterHandler = new CharacterHandler(this);
         this.mFont = new BitmapFont();
     }
@@ -249,14 +247,14 @@ public class Game implements ApplicationListener, IConstants {
 	/**
 	 * @return the mCurrentMap
 	 */
-	public Engine getEngine() {
+	public PhysicsEngine getEngine() {
 		return mEngine;
 	}
 
 	/**
 	 * @param mCurrentMap the mCurrentMap to set
 	 */
-	public void setEngine(Engine mCurrentMap) {
+	public void setEngine(PhysicsEngine mCurrentMap) {
 		this.mEngine = mCurrentMap;
 	}    
 	
@@ -315,21 +313,7 @@ public class Game implements ApplicationListener, IConstants {
 	public void setCurrentScreen(Screen mCurrentScreen) {
 		this.mCurrentScreen = mCurrentScreen;
 	}
-
-    /**
-	 * @return the mBox2DEngine
-	 */
-	public Box2DEngine getBox2DEngine() {
-		return mBox2DEngine;
-	}
-
-	/**
-	 * @param mBox2DEngine the mBox2DEngine to set
-	 */
-	public void setBox2DEngine(Box2DEngine mBox2DEngine) {
-		this.mBox2DEngine = mBox2DEngine;
-	}
-
+	
 	// ===========================================================
 	// Methods
 	// ===========================================================

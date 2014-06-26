@@ -15,7 +15,7 @@ import com.mob.client.elements.Tile;
 import com.mob.client.interfaces.IConstants;
 import com.mob.client.textures.BundledTexture;
 
-public class Engine implements IConstants {
+public abstract class Engine implements IConstants {
 
 	// ===========================================================
 	// Constants
@@ -25,11 +25,11 @@ public class Engine implements IConstants {
 	// ===========================================================
 	// Fields
 	// ===========================================================
-	private Tile[][] mTiles;
-	private float mTechoAB;
-	private int mMapNumber;
-	private Color mTint;
-	private Game mGame;
+	protected Tile[][] mTiles;
+	protected float mTechoAB;
+	protected int mMapNumber;
+	protected Color mTint;
+	protected Game mGame;
 
 	// ===========================================================
 	// Constructors
@@ -56,148 +56,12 @@ public class Engine implements IConstants {
 	// ===========================================================
 	// Methods for/from SuperClass/Interfaces
 	// ===========================================================
-	public void update(float dt) {
-		
-		// Vars
-		int screenMinX, screenMaxX, screenMinY, screenMaxY, minAreaX, minAreaY, maxAreaX, maxAreaY;
-		MapData mapData = this.mGame.getMapHandler().get(this.mMapNumber);
-		
-		// Calculate visible part of the map
-		int cameraPosX = (int) (this.mGame.getCamera().position.x / TILE_PIXEL_WIDTH);
-		int cameraPosY = (int) (this.mGame.getCamera().position.y / TILE_PIXEL_HEIGHT);
-		int halfWindowTileWidth = (int) ((this.mGame.getCamera().viewportWidth / TILE_PIXEL_WIDTH) / 2f);
-		int halfWindowTileHeight = (int) ((this.mGame.getCamera().viewportHeight / TILE_PIXEL_HEIGHT) / 2f);
-		
-		screenMinX = cameraPosX - halfWindowTileWidth - 1;
-		screenMaxX = cameraPosX + halfWindowTileWidth + 1;
-		screenMinY = cameraPosY - halfWindowTileHeight - 1;
-		screenMaxY = cameraPosY + halfWindowTileHeight + 1;
-		
-		minAreaX = screenMinX - TILE_BUFFER_SIZE;
-		maxAreaX = screenMaxX + TILE_BUFFER_SIZE;
-		minAreaY = screenMinY - TILE_BUFFER_SIZE;
-		maxAreaY = screenMaxY + TILE_BUFFER_SIZE;
-		
-		// Make sure it is between map bounds
-		if(minAreaX < MIN_MAP_SIZE_WIDTH) minAreaX = MIN_MAP_SIZE_WIDTH;
-		if(maxAreaX > MAX_MAP_SIZE_WIDTH) maxAreaX = MAX_MAP_SIZE_WIDTH;
-		if(minAreaY < MIN_MAP_SIZE_HEIGHT) minAreaY = MIN_MAP_SIZE_HEIGHT;
-		if(maxAreaY > MAX_MAP_SIZE_HEIGHT) maxAreaY = MAX_MAP_SIZE_HEIGHT;
-		
-		if(screenMinX < MIN_MAP_SIZE_WIDTH) screenMinX = MIN_MAP_SIZE_WIDTH;
-		if(screenMaxX > MAX_MAP_SIZE_WIDTH) screenMaxX = MAX_MAP_SIZE_WIDTH;
-		if(screenMinY < MIN_MAP_SIZE_HEIGHT) screenMinY = MIN_MAP_SIZE_HEIGHT;
-		if(screenMaxY > MAX_MAP_SIZE_HEIGHT) screenMaxY = MAX_MAP_SIZE_HEIGHT;
-		
-		// Start map render
-		/******************************************
-		 * Layer 1
-		 ******************************************/
-		for(int y = screenMinY; y <= screenMaxY; y++) {
-			for(int x = screenMinX; x <= screenMaxX; x++) {
-				
-				Tile tile = this.getTile(x, y);
-				BundledTexture layer = tile.getGraphic(0);
-
-				layer.setAnimationTime(layer.getAnimationTime() + dt);
-
-				if(mapData.getTile(x, y).getGraphic()[0] != 0) {
-					this.mGame.getSpriteBatch().draw(layer.getGraphic(true), layer.getX(), layer.getY());
-				}
-			}
-		}
-
-		/******************************************
-		 * Layer 2
-		 ******************************************/
-		for(int y = minAreaY; y <= maxAreaY; y++) {
-			for(int x = minAreaX; x <= maxAreaX; x++) {
-				
-				Tile tile = this.getTile(x, y);
-				BundledTexture layer = tile.getGraphic(1);
-				
-				if(mapData.getTile(x, y).getGraphic()[1] != 0) {
-					layer.setAnimationTime(layer.getAnimationTime() + dt);
-					this.mGame.getSpriteBatch().draw(layer.getGraphic(true), layer.getX(), layer.getY());
-				}
-			}
-		}
-
-		/******************************************
-		 * Layer 3
-		 ******************************************/
-		for(int y = minAreaY; y <= maxAreaY; y++) {
-			for(int x = minAreaX; x <= maxAreaX; x++) {
-				
-				Tile tile = this.getTile(x, y);
-				BundledTexture layer = tile.getGraphic(2);
-
-				// Layer 3
-				if(mapData.getTile(x, y).getGraphic()[2] != 0) {
-					
-					layer.setAnimationTime(layer.getAnimationTime() + dt);
-					
-					// If user is behind a tree draw it with alpha blend
-					if(tile.hasTree()) {
-						if(Math.abs(this.mGame.getCharacterHandler().getPlayer().getUserPosX() - x) < 4 &&
-						   Math.abs(this.mGame.getCharacterHandler().getPlayer().getUserPosY() - y) < 4) {
-							Color oldColor = this.mGame.getSpriteBatch().getColor();
-							this.mGame.getSpriteBatch().setColor(new Color(oldColor.r, oldColor.g, oldColor.b, ALPHA_TREES));
-							this.mGame.getSpriteBatch().draw(layer.getGraphic(), layer.getX(), layer.getY());
-							this.mGame.getSpriteBatch().setColor(oldColor);
-						} else {
-							this.mGame.getSpriteBatch().draw(layer.getGraphic(true), layer.getX(), layer.getY());
-						}
-					} else {
-						this.mGame.getSpriteBatch().draw(layer.getGraphic(true), layer.getX(), layer.getY());
-					}
-				}
-				
-				// Character layer
-				if(tile.getCharIndex() > 0) {
-					tile.getCharacter().update(dt);
-				}
-			}
-		}
-		
-		/******************************************
-		 * Layer 4
-		 ******************************************/
-		// If user is under a roof we hide it
-		if(this.mGame.getCharacterHandler().getPlayer().isUnderRoof()) {
-			if(this.mTechoAB > 0) {
-				this.mTechoAB -= dt;
-			}
-			if(this.mTechoAB < 0.05f) this.mTechoAB = 0.0f;
-		} else {
-			if(this.mTechoAB < 1) {
-				this.mTechoAB += dt;
-			}
-			if(this.mTechoAB > .95f) this.mTechoAB = 1.0f;
-		}
-		
-		for(int y = minAreaY; y <= maxAreaY; y++) {
-			for(int x = minAreaX; x <= maxAreaX; x++) {
-				
-				Tile tile = this.getTile(x, y);
-				BundledTexture layer = tile.getGraphic(3);
-
-				if(mapData.getTile(x, y).getGraphic()[3] != 0) {
-					layer.setAnimationTime(layer.getAnimationTime() + dt);
-					
-					// Don't draw the shader above roofs
-					Color oldColor = this.mGame.getSpriteBatch().getColor();
-					this.mGame.getSpriteBatch().setColor(new Color(oldColor.r, oldColor.g, oldColor.b, this.mTechoAB));
-					this.mGame.getSpriteBatch().draw(layer.getGraphic(true), layer.getX(), layer.getY());
-					this.mGame.getSpriteBatch().setColor(oldColor);
-				}
-			}
-		}
-	}
-	
-	public void reset() {}
-	public void show() {}
-	public void draw() {}
+	public abstract void update(float dt);
+	public abstract void reset();
+	public abstract void show();
+	public abstract void draw();
+	public abstract void load();
+	public abstract void dispose();
 
 	// ===========================================================
 	// Getter & Setter
@@ -277,36 +141,6 @@ public class Engine implements IConstants {
 	// ===========================================================
 	// Methods
 	// ===========================================================
-	/**
-	 * Initializes current map (Call setMap for MapChange)
-	 */
-	public void load() {
-
-		// Get mapData
-		MapData mapData = this.mGame.getMapHandler().get(this.mMapNumber);
-		
-		// Clear box2d world
-		this.mGame.getBox2DEngine().reset();
-		
-		// Move MapData tiles into our array
-		this.mTiles = new Tile[MAX_MAP_SIZE_WIDTH + 1][MAX_MAP_SIZE_HEIGHT + 1];
-		for(int y = MIN_MAP_SIZE_HEIGHT; y <= MAX_MAP_SIZE_HEIGHT; y++) {
-			for(int x = MIN_MAP_SIZE_WIDTH; x <= MAX_MAP_SIZE_WIDTH; x++) {
-				
-				MapBlockData tile = mapData.getTile(x, y);
-				this.mTiles[x][y] = new Tile(this.mGame, x, y, tile.getGraphic());
-				this.mTiles[x][y].setBlocked(tile.isBlocked());
-				this.mTiles[x][y].setTrigger(tile.getTrigger());
-			}
-		}
-	}
-	
-	/**
-	 * Dispose everything
-	 */
-	public void dispose() {
-		
-	}
 
 	// ===========================================================
 	// Inner and Anonymous Classes

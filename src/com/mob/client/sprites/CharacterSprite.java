@@ -213,6 +213,10 @@ public class CharacterSprite extends MovingSprite implements IConstants {
 			this.mFont.drawMultiLine(this.mGame.getSpriteBatch(), line, this.mX - (textWidth * 0.5f), this.mY, textWidth, HAlignment.CENTER);
 		}
 	}
+	
+
+	@Override
+	public void reset() {}
 
 	// ===========================================================
 	// Getter & Setter

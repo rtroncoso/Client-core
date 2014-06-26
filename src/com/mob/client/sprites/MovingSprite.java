@@ -9,7 +9,7 @@ package com.mob.client.sprites;
 import com.mob.client.Game;
 import com.mob.client.interfaces.IConstants;
 
-public class MovingSprite extends GameSprite implements IConstants {
+public abstract class MovingSprite extends GameSprite implements IConstants {
 	// ===========================================================
 	// Constants
 	// ===========================================================

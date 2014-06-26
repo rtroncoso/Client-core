@@ -47,7 +47,7 @@ public class LightHandler implements IConstants {
 		
 		// Allocate our light on the last index
 		int index = this.mLights.size() + 1;
-		this.mLights.put(index, new PointLight(this.mGame.getBox2DEngine().getRayHandler(), DEFAULT_NUM_RAYS, 
+		this.mLights.put(index, new PointLight(this.mGame.getEngine().getRayHandler(), DEFAULT_NUM_RAYS, 
 				new Color(pColor.r, pColor.g, pColor.b, ALPHA_LIGHTS), pSize, 
 				(pX * TILE_PIXEL_WIDTH) - (TILE_PIXEL_WIDTH / 2f), 
 				(pY * TILE_PIXEL_HEIGHT) - (TILE_PIXEL_HEIGHT / 2f)));

@@ -7,9 +7,15 @@
 package com.mob.client.sprites;
 
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.mob.client.Game;
+import com.mob.client.interfaces.IConstants;
 
-public class GameSprite {
+public abstract class GameSprite implements IConstants {
 	// ===========================================================
 	// Constants
 	// ===========================================================
@@ -26,6 +32,8 @@ public class GameSprite {
 	
 	protected float mX;
 	protected float mY;
+	
+	protected Body mBody;
 	
 	protected Game mGame;
 
@@ -45,16 +53,16 @@ public class GameSprite {
 	// ===========================================================
 	// Methods for/from SuperClass/Interfaces
 	// ===========================================================
-	public void dispose() {}
-	public void reset() {}
-	public void update(float dt) {}
+	public abstract void dispose();
+	public abstract void reset();
+	public abstract void update(float dt);
+	public abstract void draw();
 	public void show() {
 		this.mVisible = true;
 	}
 	public void hide() {
 		this.mVisible = false;
 	}
-	public void draw() {}
 	
 	// ===========================================================
 	// Getter & Setter
@@ -122,6 +130,20 @@ public class GameSprite {
 		this.mY = _y;
 	}
 
+	/**
+	 * @return the mBody
+	 */
+	public Body getPhysicsBody() {
+		return mBody;
+	}
+
+	/**
+	 * @param mBody the mBody to set
+	 */
+	public void setPhysicsBody(Body mBody) {
+		this.mBody = mBody;
+	}
+
 	// ===========================================================
 	// Methods
 	// ===========================================================
@@ -143,6 +165,39 @@ public class GameSprite {
 	
 	public Rectangle bounds () {
 		return new Rectangle(mX + mWidth * 0.2f, mY + mHeight * 0.2f, mWidth * 0.8f, mHeight * 0.8f);
+	}
+	
+	public void createBody(float tilePixelWidth, float tilePixelHeight) {
+
+		// Calculate half tile
+		float halfBodyWidth = TILE_PIXEL_WIDTH / 2f, halfBodyHeight = TILE_PIXEL_HEIGHT /2f;
+		
+		// Create polygonShap
+		PolygonShape tileShape = new PolygonShape();
+		tileShape.setAsBox(halfBodyWidth, halfBodyHeight);
+		
+		// Make this body static
+		BodyDef tileBodyDef = new BodyDef();
+		tileBodyDef.type = BodyType.StaticBody;
+		
+		// Hold fixturedef
+		FixtureDef fixtureDef = new FixtureDef();
+		fixtureDef.shape = tileShape;
+		fixtureDef.filter.groupIndex = 0;
+
+		// Create box2d bodies for all layer 3 objects
+	    float bodyX = this.mX * TILE_PIXEL_WIDTH - 2;// + halfBodyWidth / 2f;
+	    float bodyY = this.mY * TILE_PIXEL_HEIGHT - halfBodyHeight - 1;
+	    tileBodyDef.position.set(bodyX, bodyY);
+	    Body tileBody = this.mGame.getEngine().getWorld().createBody(tileBodyDef);
+	    tileBody.createFixture(fixtureDef);
+	    
+	    tileShape.dispose();
+	}
+
+	
+	public void createBody() {
+		createBody(this.mWidth, this.mHeight);
 	}
 
 	// ===========================================================

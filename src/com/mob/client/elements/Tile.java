@@ -54,9 +54,9 @@ public class Tile extends TileSprite {
 		// Create static bodys for layer 3
 		if(this.getGrhIndex(2) > 0) {
 			if(!this.hasTree())
-				this.mGame.getBox2DEngine().createObject(x, y, this.getGraphic(2).getGraphic().getRegionWidth(), this.getGraphic(2).getGraphic().getRegionHeight());
+				this.createBody();
 			else
-				this.mGame.getBox2DEngine().createObject(x, y, TILE_PIXEL_WIDTH, TILE_PIXEL_HEIGHT);
+				this.createBody(TILE_PIXEL_WIDTH, TILE_PIXEL_HEIGHT);
 		}
 		
 		// Null light
@@ -191,8 +191,7 @@ public class Tile extends TileSprite {
 	 * @return returns if we are a roof
 	 */
 	public boolean isRoof() {
-		if(this.mTrigger == 1 || this.mTrigger == 2 || this.mTrigger == 4 || this.mTrigger == 21) return true;
-		return false;
+		return (this.mTrigger == 1 || this.mTrigger == 2 || this.mTrigger == 4 || this.mTrigger == 21);
 	}
 	
 	/**
@@ -200,7 +199,31 @@ public class Tile extends TileSprite {
 	 * @return the new light index
 	 */
 	public int createLight(Color pColor, float pSize, float pSpeed) {
-		return this.mGame.getBox2DEngine().getLightHandler().createLight(this.getX(), this.getY(), pColor, pSize);
+		return this.mGame.getEngine().getLightHandler().createLight(this.getX(), this.getY(), pColor, pSize);
+	}
+
+	@Override
+	public void dispose() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void reset() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void update(float dt) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void draw() {
+		// TODO Auto-generated method stub
+		
 	}
 
 	// ===========================================================

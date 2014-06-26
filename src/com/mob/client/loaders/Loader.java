@@ -29,7 +29,7 @@ import com.mob.client.data.WeaponData;
 import com.mob.client.interfaces.IConstants;
 import com.mob.client.util.Util;
 
-public class InitLoader implements IConstants {
+public class Loader implements IConstants {
 	
 	// ===========================================================
 	// Constants
@@ -49,7 +49,8 @@ public class InitLoader implements IConstants {
 	// ===========================================================
 	// Methods for/from SuperClass/Interfaces
 	// ===========================================================
-
+	public void load(String initFileName) {
+	}
 
 	// ===========================================================
 	// Getter & Setter

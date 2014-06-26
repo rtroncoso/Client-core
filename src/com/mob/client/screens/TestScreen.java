@@ -49,7 +49,7 @@ public class TestScreen extends Screen implements IConstants {
 	public void createScreen() {
 		
 		// Init box2d Engine
-		this.mGame.getBox2DEngine().initEngine();
+		this.mGame.getEngine().initEngine();
 		
 		// Load a map
 		this.map = 1;
@@ -182,7 +182,7 @@ public class TestScreen extends Screen implements IConstants {
 		this.mGame.getSpriteBatch().end();
 		
 		// Render Box2D Engine
-		this.mGame.getBox2DEngine().update(dt);
+		this.mGame.getEngine().updatePhysics(dt);
 	}
 	
 	@Override
@@ -193,6 +193,32 @@ public class TestScreen extends Screen implements IConstants {
 	@Override
 	public void dispose() {
 		this.mGame.getEngine().dispose();
+	}
+
+	@Override
+	public void show() {
+	}
+
+	@Override
+	public void hide() {
+	}
+
+	@Override
+	public void pause() {
+	}
+
+	@Override
+	public void resume() {
+	}
+
+	@Override
+	public void render(float delta) {
+	}
+
+	@Override
+	public void destroy() {
+		// TODO Auto-generated method stub
+		
 	}
 
 	// ===========================================================
