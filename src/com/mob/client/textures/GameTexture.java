@@ -9,9 +9,9 @@ package com.mob.client.textures;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.mob.client.Game;
 import com.mob.client.data.GrhData;
-import com.mob.client.interfaces.IConstants;
+import com.mob.client.interfaces.Constants;
 
-public class GameTexture implements IConstants {
+public class GameTexture implements Constants {
 	// ===========================================================
 	// Constants
 	// ===========================================================
@@ -37,7 +37,9 @@ public class GameTexture implements IConstants {
 	// ===========================================================
 	// Methods for/from SuperClass/Interfaces
 	// ===========================================================
-
+	public void dispose() {
+		this.mTextureRegion.getTexture().dispose();
+	}
 
 	// ===========================================================
 	// Getter & Setter

@@ -10,7 +10,7 @@ import java.util.HashMap;
 
 import com.mob.client.Game;
 import com.mob.client.elements.Character;
-import com.mob.client.interfaces.IConstants.Heading;
+import com.mob.client.interfaces.Constants.Heading;
 
 public class CharacterHandler {
 

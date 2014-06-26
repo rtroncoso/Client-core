@@ -61,6 +61,14 @@ public class BundledTexture {
 	// ===========================================================
 	// Methods for/from SuperClass/Interfaces
 	// ===========================================================
+	public void dispose() {
+		
+		// Dispose all our frames
+		for(GameTexture t : this.mFrames) {
+			t.dispose();
+		}
+	}
+	
 	
 	// ===========================================================
 	// Getter & Setter

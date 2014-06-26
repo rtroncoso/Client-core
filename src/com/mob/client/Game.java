@@ -5,19 +5,15 @@
  */
 package com.mob.client;
 
-import java.lang.reflect.Constructor;  
-import java.lang.reflect.InvocationTargetException;  
-import java.util.HashMap;  
-  
-
-
-
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
 import java.util.Vector;
 
-import com.badlogic.gdx.ApplicationListener;  
-import com.badlogic.gdx.graphics.OrthographicCamera;  
+import com.badlogic.gdx.ApplicationListener;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;  
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mob.client.data.BodyData;
 import com.mob.client.data.FxData;
 import com.mob.client.data.GrhData;
@@ -26,15 +22,14 @@ import com.mob.client.data.HelmetData;
 import com.mob.client.data.ShieldData;
 import com.mob.client.data.WeaponData;
 import com.mob.client.engine.PhysicsEngine;
-import com.mob.client.engine.Engine;
 import com.mob.client.handlers.CharacterHandler;
+import com.mob.client.handlers.DataHandler;
 import com.mob.client.handlers.MapHandler;
 import com.mob.client.handlers.SurfaceHandler;
-import com.mob.client.interfaces.IConstants;
-import com.mob.client.loaders.Loader;
-import com.mob.client.screens.Screen;  
+import com.mob.client.interfaces.Constants;
+import com.mob.client.screens.Screen;
   
-public abstract class Game implements ApplicationListener, IConstants {  
+public abstract class Game implements ApplicationListener, Constants {  
 
 	// ===========================================================
 	// Constants
@@ -48,19 +43,10 @@ public abstract class Game implements ApplicationListener, IConstants {
     protected HashMap<String, Screen> mScreens;  
     protected SpriteBatch mSpriteBatch;  
     
-    protected Loader mInitLoader;
-    
-    protected Vector<GrhData> mGrhData;
-    protected Vector<BodyData> mBodyData;
-    protected Vector<HeadData> mHeadData;
-    protected Vector<HelmetData> mHelmetData;
-    protected Vector<WeaponData> mWeaponData;
-	protected Vector<ShieldData> mShieldData;
-	protected Vector<FxData> mFxData;
-
 	protected MapHandler mMapHandler;
     protected SurfaceHandler mSurfaceHandler;
     protected CharacterHandler mCharacterHandler;
+    protected DataHandler mDataHandler;
 
 	protected PhysicsEngine mEngine;
 
@@ -71,7 +57,14 @@ public abstract class Game implements ApplicationListener, IConstants {
 	// ===========================================================
 	// Constructors
 	// ===========================================================
-    
+    public Game() {
+
+        this.mMapHandler = new MapHandler(this);
+        this.mCharacterHandler = new CharacterHandler(this);
+
+    	this.mScreens = new HashMap<String, Screen>();  
+        this.mEngine = new PhysicsEngine(this);
+    }
 
 	// ===========================================================
 	// Methods for/from SuperClass/Interfaces
@@ -79,28 +72,13 @@ public abstract class Game implements ApplicationListener, IConstants {
     /**
      * Init everything
      */
-    public void create() {  
-    	this.mScreens = new HashMap<String, Screen>();  
-        this.mGrhData = new Vector<GrhData>();
-        this.mBodyData = new Vector<BodyData>();
-        this.mHeadData = new Vector<HeadData>();
-        this.mHelmetData = new Vector<HelmetData>();
-        this.mWeaponData = new Vector<WeaponData>();
-        this.mShieldData = new Vector<ShieldData>();
-        this.mFxData = new Vector<FxData>();
-        this.mInitLoader = new Loader();
-        this.mMapHandler = new MapHandler(this);
-        this.mEngine = new PhysicsEngine(this);
-        this.mCharacterHandler = new CharacterHandler(this);
-        this.mFont = new BitmapFont();
-    }
-    
-    public void update (float dt) {}  
-    public void dispose() {}
-    public void pause() {}
-    public void render() {}
-    public void resize(int arg0, int arg1) {}  
-    public void resume() {}  
+    public abstract void create();
+    public abstract void update (float dt);
+    public abstract void dispose();
+    public abstract void pause();
+    public abstract void render();
+    public abstract void resize(int arg0, int arg1);
+    public abstract void resume();
     
 	// ===========================================================
 	// Getter & Setter
@@ -109,83 +87,97 @@ public abstract class Game implements ApplicationListener, IConstants {
 	 * @return the mShieldData
 	 */
 	public Vector<ShieldData> getShieldData() {
-		return mShieldData;
+		return this.mDataHandler.getShieldData();
 	}
 
 	/**
 	 * @param mShieldData the mShieldData to set
 	 */
 	public void setShieldData(Vector<ShieldData> mShieldData) {
-		this.mShieldData = mShieldData;
+		this.mDataHandler.setShieldData(mShieldData);
 	}
     /**
 	 * @return the mWeaponData
 	 */
 	public Vector<WeaponData> getWeaponData() {
-		return mWeaponData;
+		return this.mDataHandler.getWeaponData();
 	}
 
 	/**
 	 * @param mWeaponData the mWeaponData to set
 	 */
 	public void setWeaponData(Vector<WeaponData> mWeaponData) {
-		this.mWeaponData = mWeaponData;
+		this.mDataHandler.setWeaponData(mWeaponData);
 	}
 	
 	/**
 	* @return the _grhData
 	*/
 	public Vector<GrhData> getGrhData() {
-		return mGrhData;
+		return this.mDataHandler.getGrhData();
 	}
 	
 	/**
 	* @param _grhData the _grhData to set
 	*/
 	public void setGrhData(Vector<GrhData> _grhData) {
-		this.mGrhData = _grhData;
+		this.mDataHandler.setGrhData(_grhData);
 	}
 	
 	/**
 	* @return the _bodyData
 	*/
 	public Vector<BodyData> getBodyData() {
-		return mBodyData;
+		return this.mDataHandler.getBodyData();
 	}
 	
 	/**
 	* @param _bodyData the _bodyData to set
 	*/
 	public void setBodyData(Vector<BodyData> _bodyData) {
-		this.mBodyData = _bodyData;
+		this.mDataHandler.setBodyData(_bodyData);
 	}
 
 	/**
 	 * @return the _headData
 	 */
 	public Vector<HeadData> getHeadData() {
-		return mHeadData;
+		return this.mDataHandler.getHeadData();
 	}
 
 	/**
 	 * @param _headData the _headData to set
 	 */
 	public void setHeadData(Vector<HeadData> _headData) {
-		this.mHeadData = _headData;
+		this.mDataHandler.setHeadData(_headData);
 	}
 
 	/**
 	 * @return the _helmetData
 	 */
 	public Vector<HelmetData> getHelmetData() {
-		return mHelmetData;
+		return this.mDataHandler.getHelmetData();
 	}
 
 	/**
 	 * @param _helmetData the _helmetData to set
 	 */
 	public void setHelmetData(Vector<HelmetData> _helmetData) {
-		this.mHelmetData = _helmetData;
+		this.mDataHandler.setHelmetData(_helmetData);
+	}
+	
+	/**
+	 * @return the mFxData
+	 */
+	public Vector<FxData> getFxData() {
+		return this.mDataHandler.getFxData();
+	}
+
+	/**
+	 * @param mFxData the mFxData to set
+	 */
+	public void setFxData(Vector<FxData> mFxData) {
+		this.mDataHandler.setFxData(mFxData);
 	}
 
 	/**
@@ -284,20 +276,6 @@ public abstract class Game implements ApplicationListener, IConstants {
 	 */
 	public void setFont(BitmapFont mFont) {
 		this.mFont = mFont;
-	}
-	
-	/**
-	 * @return the mFxData
-	 */
-	public Vector<FxData> getFxData() {
-		return mFxData;
-	}
-
-	/**
-	 * @param mFxData the mFxData to set
-	 */
-	public void setFxData(Vector<FxData> mFxData) {
-		this.mFxData = mFxData;
 	}
 	
 	/**

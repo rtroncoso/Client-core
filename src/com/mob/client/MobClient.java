@@ -5,6 +5,7 @@
  * @version 0.1
  */
 package com.mob.client;
+
 import com.badlogic.gdx.Gdx;  
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -14,10 +15,11 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch; 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.mob.client.handlers.SurfaceHandler;
-import com.mob.client.interfaces.IConstants;
+import com.mob.client.interfaces.Constants;
+import com.mob.client.handlers.DataHandler;
   
   
-public class MobClient extends Game implements IConstants {  
+public class MobClient extends Game implements Constants {  
 
 	// ===========================================================
 	// Constants
@@ -39,27 +41,20 @@ public class MobClient extends Game implements IConstants {
 	// ===========================================================
     @Override  
     public void create() {  
-          
-        super.create();  
         
         // We render using YDown instead of YUp
         this.mCamera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());  
         this.mCamera.setToOrtho(true, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()); 
-        this.mCamera.position.set(Gdx.graphics.getWidth() * 0.5f, Gdx.graphics.getHeight() * 0.5f, 0);  
+        //this.mCamera.position.set(Gdx.graphics.getWidth() * 0.5f, Gdx.graphics.getHeight() * 0.5f, 0);  
         
         // Calculate camera zoom according to aspect ratio
 		this.mCamera.zoom = (Gdx.graphics.getWidth() / Gdx.graphics.getHeight()) * (GAME_SCREEN_ZOOM / ((Gdx.graphics.getWidth() / Gdx.graphics.getHeight()))); 
         
+		// Set loading screen
         this.setScreen("LoadingScreen");  
 
-        // Load INIT files
-        this.mGrhData = this.mInitLoader.loadGrhData("Graficos.ind");
-        this.mBodyData = this.mInitLoader.loadCuerpos("Personajes.ind");
-        this.mWeaponData = this.mInitLoader.loadWeapons("Armas.dat");
-        this.mShieldData = this.mInitLoader.loadShields("Escudos.dat");
-        this.mHeadData = this.mInitLoader.loadCabezas("Cabezas.ind");
-        this.mHelmetData = this.mInitLoader.loadCascos("Cascos.ind");
-        this.mFxData = this.mInitLoader.loadFxs("Fxs.ind");
+        // Load INITs
+        this.mDataHandler = new DataHandler();
         
         // Init texture engine
         this.setSurfaceHandler(new SurfaceHandler(this));
@@ -107,7 +102,13 @@ public class MobClient extends Game implements IConstants {
     @Override  
     public void resume() {  
         if (mCurrentScreen != null) mCurrentScreen.resume();  
-    }  
+    }
+
+	@Override
+	public void update(float dt) {
+		// TODO Auto-generated method stub
+		
+	}  
 
 	// ===========================================================
 	// Getter & Setter

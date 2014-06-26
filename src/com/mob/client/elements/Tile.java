@@ -53,10 +53,7 @@ public class Tile extends TileSprite {
 		
 		// Create static bodys for layer 3
 		if(this.getGrhIndex(2) > 0) {
-			if(!this.hasTree())
-				this.createBody();
-			else
-				this.createBody(TILE_PIXEL_WIDTH, TILE_PIXEL_HEIGHT);
+			this.createBody(TILE_PIXEL_WIDTH, TILE_PIXEL_HEIGHT);
 		}
 		
 		// Null light
@@ -71,6 +68,54 @@ public class Tile extends TileSprite {
 	// Methods for/from SuperClass/Interfaces
 	// ===========================================================
 
+	@Override
+	public void dispose() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void reset() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void update(float dt) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void draw() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	// ===========================================================
+	// Methods
+	// ===========================================================
+	public boolean isLegalPos() {
+		if(this.mBlocked) return false;
+		if(this.mCharIndex > 0) return false;
+		if(this.mHasWater) return false;
+		return true;
+	}
+
+	/**
+	 * @return returns if we are a roof
+	 */
+	public boolean isRoof() {
+		return (this.mTrigger == 1 || this.mTrigger == 2 || this.mTrigger == 4 || this.mTrigger == 21);
+	}
+	
+	/**
+	 * Creates a new light in this tile
+	 * @return the new light index
+	 */
+	public int createLight(Color pColor, float pSize, float pSpeed) {
+		return this.mGame.getEngine().getLightHandler().createLight(this.getX(), this.getY(), pColor, pSize);
+	}
 
 	// ===========================================================
 	// Getter & Setter
@@ -175,55 +220,6 @@ public class Tile extends TileSprite {
 	 */
 	public void setWater(boolean mHasWater) {
 		this.mHasWater = mHasWater;
-	}
-
-	// ===========================================================
-	// Methods
-	// ===========================================================
-	public boolean isLegalPos() {
-		if(this.mBlocked) return false;
-		if(this.mCharIndex > 0) return false;
-		if(this.mHasWater) return false;
-		return true;
-	}
-
-	/**
-	 * @return returns if we are a roof
-	 */
-	public boolean isRoof() {
-		return (this.mTrigger == 1 || this.mTrigger == 2 || this.mTrigger == 4 || this.mTrigger == 21);
-	}
-	
-	/**
-	 * Creates a new light in this tile
-	 * @return the new light index
-	 */
-	public int createLight(Color pColor, float pSize, float pSpeed) {
-		return this.mGame.getEngine().getLightHandler().createLight(this.getX(), this.getY(), pColor, pSize);
-	}
-
-	@Override
-	public void dispose() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void reset() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void update(float dt) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void draw() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	// ===========================================================

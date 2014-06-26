@@ -12,11 +12,7 @@ import box2dLight.RayHandler;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.mob.client.Game;
@@ -24,10 +20,10 @@ import com.mob.client.data.MapBlockData;
 import com.mob.client.data.MapData;
 import com.mob.client.elements.Tile;
 import com.mob.client.handlers.LightHandler;
-import com.mob.client.interfaces.IConstants;
+import com.mob.client.interfaces.Constants;
 import com.mob.client.textures.BundledTexture;
 
-public class PhysicsEngine extends Engine implements IConstants {
+public class PhysicsEngine extends Engine implements Constants {
 	// ===========================================================
 	// Constants
 	// ===========================================================
@@ -58,7 +54,7 @@ public class PhysicsEngine extends Engine implements IConstants {
 		// Init box2d world
 		this.mWorld = new World(new Vector2(), true);
 		this.mDebugRenderer = new Box2DDebugRenderer();
-		this.mDebugRenderer.setDrawBodies(false);
+		this.mDebugRenderer.setDrawBodies(true);
 		
 		// RayHandler setup
 		RayHandler.setGammaCorrection(true);
@@ -262,7 +258,6 @@ public class PhysicsEngine extends Engine implements IConstants {
 				this.mTiles[x][y] = new Tile(this.mGame, x, y, tile.getGraphic());
 				this.mTiles[x][y].setBlocked(tile.isBlocked());
 				this.mTiles[x][y].setTrigger(tile.getTrigger());
-				this.mTiles[x][y].createBody();
 			}
 		}
 	}

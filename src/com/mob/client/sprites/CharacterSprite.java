@@ -8,7 +8,6 @@ package com.mob.client.sprites;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.BitmapFont.HAlignment;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.TimeUtils;
@@ -19,10 +18,10 @@ import com.mob.client.data.HeadData;
 import com.mob.client.data.HelmetData;
 import com.mob.client.data.ShieldData;
 import com.mob.client.data.WeaponData;
-import com.mob.client.interfaces.IConstants;
+import com.mob.client.interfaces.Constants;
 import com.mob.client.textures.BundledTexture;
 
-public class CharacterSprite extends MovingSprite implements IConstants {
+public abstract class CharacterSprite extends MovingSprite implements Constants {
 
 	// ===========================================================
 	// Constants
@@ -105,118 +104,7 @@ public class CharacterSprite extends MovingSprite implements IConstants {
 	// ===========================================================
 	// Methods for/from SuperClass/Interfaces
 	// ===========================================================
-	@Override
-	public void dispose() {
-	}
 	
-	@Override
-	public void draw() {}
-	
-	/**
-	 * Sub CharRender()
-	 */
-	@Override
-	public void update(float dt) {
-		
-		// Vars
-		float bodyPixelOffsetX = 0, bodyPixelOffsetY = 0, weaponPixelOffsetX = 0, weaponPixelOffsetY = 0, headPixelOffsetX = 0, headPixelOffsetY = 0,
-				helmetPixelOffsetX = 0, helmetPixelOffsetY = 0, fxPixelOffsetX = 0, fxPixelOffsetY = 0, shieldPixelOffsetX = 0, shieldPixelOffsetY = 0;
-		
-		// Set our sprite color
-		Color oldColor = this.mGame.getSpriteBatch().getColor();
-		this.mGame.getSpriteBatch().setColor(this.mColor);
-		
-		// Calculate offset to draw and update internal timers
-		if(this.mBodyGrhIndex > 0) {
-			this.mBodySkin[this.mHeading.toInt()].setAnimationTime(this.mBodySkin[this.getHeading()].getAnimationTime() + this.mDeltaTime);
-			bodyPixelOffsetX = this.mX - (this.getBody().getRegionWidth() / 2f);
-			bodyPixelOffsetY = this.mY - (this.getBody().getRegionHeight());
-		}
-		
-		if(this.mWeaponGrhIndex > 0) {
-			this.mWeaponSkin[this.mHeading.toInt()].setAnimationTime(this.mWeaponSkin[this.getHeading()].getAnimationTime() + this.mDeltaTime);
-			weaponPixelOffsetX = this.mX - (this.getWeapon().getRegionWidth() / 2f);
-			weaponPixelOffsetY = this.mY - this.getWeapon().getRegionHeight();
-		}
-		
-		if(this.mShieldGrhIndex > 0) {
-			this.mShieldSkin[this.mHeading.toInt()].setAnimationTime(this.mShieldSkin[this.getHeading()].getAnimationTime() + this.mDeltaTime);
-			shieldPixelOffsetX = this.mX - (this.getShield().getRegionWidth() / 2f);
-			shieldPixelOffsetY = this.mY - this.getBody().getRegionHeight() - 5;
-		}
-		
-		if(this.mHeadGrhIndex > 0) {
-			headPixelOffsetX = this.mX + this.mHeadOffsetX - (this.getHead().getRegionWidth() / 4f) - 4;
-			headPixelOffsetY = this.mY + this.mHeadOffsetY - this.getBody().getRegionHeight() - 5;
-		}
-		
-		if(this.mHelmetGrhIndex > 0) {
-			helmetPixelOffsetX = this.mX + this.mHeadOffsetX - (this.getHead().getRegionWidth() / 4f) - 4;
-			helmetPixelOffsetY = this.mY + this.mHeadOffsetY - this.getBody().getRegionHeight() - OFFSET_HEAD - 4;
-		}
-		
-		if(this.mFxGrhIndex > 0) {
-
-			// Make fxs only last 1 second
-			if(TimeUtils.timeSinceMillis(this.mFxTimer) >= 1500) { 
-				this.setFx(0);
-			}
-			
-			// Update fx data
-			this.mFxSkin.setAnimationTime(this.mFxSkin.getAnimationTime() + this.mDeltaTime * 9.0f);
-			fxPixelOffsetX = this.mX - (this.mFxSkin.getGraphic().getRegionWidth() * 0.5f) - this.mFxOffsetX;
-			fxPixelOffsetY = this.mY - this.mFxSkin.getGraphic().getRegionHeight() - this.mFxOffsetY;
-		}
-		
-		// Draw our character
-		if(this.mHeadGrhIndex > 0) {
-			if(this.mVisible) {
-				if(this.mShieldGrhIndex > 0 && this.mHeading == Heading.EAST)
-					this.mGame.getSpriteBatch().draw(this.getShield(), shieldPixelOffsetX, shieldPixelOffsetY);
-				
-				if(this.mBodyGrhIndex > 0) 
-					this.mGame.getSpriteBatch().draw(this.getBody(), bodyPixelOffsetX, bodyPixelOffsetY);
-						
-				if(this.mHeadGrhIndex > 0)
-					this.mGame.getSpriteBatch().draw(this.getHead(), headPixelOffsetX, headPixelOffsetY);
-				
-				if(this.mWeaponGrhIndex > 0)
-					this.mGame.getSpriteBatch().draw(this.getWeapon(), weaponPixelOffsetX, weaponPixelOffsetY);
-				
-				if(this.mHelmetGrhIndex > 0)
-					this.mGame.getSpriteBatch().draw(this.getHelmet(), helmetPixelOffsetX, helmetPixelOffsetY);
-				
-				if(this.mShieldGrhIndex > 0 && this.mHeading != Heading.EAST)
-					this.mGame.getSpriteBatch().draw(this.getShield(), shieldPixelOffsetX, shieldPixelOffsetY);
-			}
-		} else { // Draw only body
-			if(this.mBodyGrhIndex > 0) 
-				this.mGame.getSpriteBatch().draw(this.getBody(), bodyPixelOffsetX, bodyPixelOffsetY);
-		}
-
-		// Replace old color
-		this.mGame.getSpriteBatch().setColor(oldColor);
-		
-		// Draw Fx
-		if(this.mFxGrhIndex > 0) {
-			// Draw fx
-			this.mGame.getSpriteBatch().setColor(1.0f, 1.0f, 1.0f, .6f);
-			this.mGame.getSpriteBatch().draw(this.getFx(), fxPixelOffsetX, fxPixelOffsetY);
-			this.mGame.getSpriteBatch().setColor(oldColor);
-		}
-		
-		// Draw name
-		if(this.mName.length() != 0) {
-
-			String line = this.mName + "\n<Clan>";
-			float textWidth = this.mFont.getMultiLineBounds(line).width;
-			this.mFont.drawMultiLine(this.mGame.getSpriteBatch(), line, this.mX - (textWidth * 0.5f), this.mY, textWidth, HAlignment.CENTER);
-		}
-	}
-	
-
-	@Override
-	public void reset() {}
 
 	// ===========================================================
 	// Getter & Setter

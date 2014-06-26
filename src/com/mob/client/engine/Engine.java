@@ -8,14 +8,11 @@ package com.mob.client.engine;
 
 import com.badlogic.gdx.graphics.Color;
 import com.mob.client.Game;
-import com.mob.client.data.MapBlockData;
-import com.mob.client.data.MapData;
 import com.mob.client.elements.Character;
 import com.mob.client.elements.Tile;
-import com.mob.client.interfaces.IConstants;
-import com.mob.client.textures.BundledTexture;
+import com.mob.client.interfaces.Constants;
 
-public abstract class Engine implements IConstants {
+public abstract class Engine implements Constants {
 
 	// ===========================================================
 	// Constants

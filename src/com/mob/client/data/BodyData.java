@@ -29,7 +29,6 @@ public class BodyData {
 	 * @param headOffsetY
 	 */
 	public BodyData(int[] grhIndex, int headOffsetX, int headOffsetY) {
-		super();
 		this.mGrhCuerpo = grhIndex;
 		this.mHeadOffsetX = headOffsetX;
 		this.mHeadOffsetY = headOffsetY;

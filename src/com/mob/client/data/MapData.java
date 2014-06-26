@@ -6,9 +6,9 @@
  */
 package com.mob.client.data;
 
-import com.mob.client.interfaces.IConstants;
+import com.mob.client.interfaces.Constants;
 
-public class MapData implements IConstants {
+public class MapData implements Constants {
 
 	// ===========================================================
 	// Constants

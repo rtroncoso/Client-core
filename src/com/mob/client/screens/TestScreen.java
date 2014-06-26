@@ -15,10 +15,10 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.mob.client.Game;
-import com.mob.client.interfaces.IConstants;
+import com.mob.client.interfaces.Constants;
 
 
-public class TestScreen extends Screen implements IConstants {
+public class TestScreen extends Screen implements Constants {
 	
 	// Constants
 	// ===========================================================
@@ -57,7 +57,7 @@ public class TestScreen extends Screen implements IConstants {
 		this.mGame.getEngine().setTint(COLOR_NIGHT);
 		
 		// Plot a character
-		this.mGame.getCharacterHandler().makeChar(1, 51, 50, Heading.SOUTH, 1, 13, 6, 4, 6);
+		this.mGame.getCharacterHandler().makeChar(1, 51, 50, Heading.SOUTH, 1, 13, 6, 4, 0);
 		this.mGame.getCharacterHandler().getPlayer().setName("BetaTester");
 		this.mGame.getCharacterHandler().getPlayer().createLight(Color.WHITE, 200.0f, 200.0f);
 		this.mGame.getCharacterHandler().getPlayer().setFocus();
@@ -193,6 +193,7 @@ public class TestScreen extends Screen implements IConstants {
 	@Override
 	public void dispose() {
 		this.mGame.getEngine().dispose();
+		this.mGame.getCharacterHandler().disposeAll();
 	}
 
 	@Override
