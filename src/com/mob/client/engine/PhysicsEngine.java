@@ -54,7 +54,7 @@ public class PhysicsEngine extends Engine implements Constants {
 		// Init box2d world
 		this.mWorld = new World(new Vector2(), true);
 		this.mDebugRenderer = new Box2DDebugRenderer();
-		this.mDebugRenderer.setDrawBodies(true);
+		this.mDebugRenderer.setDrawBodies(false);
 		
 		// RayHandler setup
 		RayHandler.setGammaCorrection(true);
@@ -62,7 +62,6 @@ public class PhysicsEngine extends Engine implements Constants {
 		this.mRayHandler = new RayHandler(this.mWorld);
 		this.mRayHandler.setCulling(true);
 		this.mRayHandler.setBlurNum(5);
-		this.mGame.getCamera().update(true);
 		
 		// LightHandler setup
 		this.setLightHandler(new LightHandler(this.mGame));
@@ -231,6 +230,7 @@ public class PhysicsEngine extends Engine implements Constants {
 		this.mWorld.getBodies(tmpBodies);
 		for(int i = 0; i < tmpBodies.size; i++) {
 			tmpBodies.get(i).setActive(false);
+			this.mWorld.destroyBody(tmpBodies.get(i));
 		}
 	}
 

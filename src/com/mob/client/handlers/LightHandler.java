@@ -39,11 +39,8 @@ public class LightHandler implements Constants {
 	// ===========================================================
 	// Methods
 	// ===========================================================
-	public int createLight(int pX, int pY, Color pColor, float pSize) {
-		return this.createLight(pX, pY, pColor, pSize, 0);
-	}
 
-	public int createLight(int pX, int pY, Color pColor, float pSize, float pSpeed) {
+	public int createLight(int pX, int pY, Color pColor, float pSize) {
 		
 		// Allocate our light on the last index
 		int index = this.mLights.size() + 1;

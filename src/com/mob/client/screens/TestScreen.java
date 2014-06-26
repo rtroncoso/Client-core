@@ -57,9 +57,9 @@ public class TestScreen extends Screen implements Constants {
 		this.mGame.getEngine().setTint(COLOR_NIGHT);
 		
 		// Plot a character
-		this.mGame.getCharacterHandler().makeChar(1, 51, 50, Heading.SOUTH, 1, 13, 6, 4, 0);
+		this.mGame.getCharacterHandler().makeChar(1, 51, 50, Heading.SOUTH, 1, 13, 6, 4, 6);
 		this.mGame.getCharacterHandler().getPlayer().setName("BetaTester");
-		this.mGame.getCharacterHandler().getPlayer().createLight(Color.WHITE, 200.0f, 200.0f);
+		this.mGame.getCharacterHandler().getPlayer().createLight(Color.WHITE, 300.0f);
 		this.mGame.getCharacterHandler().getPlayer().setFocus();
 		
 		// Plot a npc
@@ -76,6 +76,7 @@ public class TestScreen extends Screen implements Constants {
 					break;
 				case(Keys.NUM_1):
 					mGame.getEngine().setTint(COLOR_NIGHT);
+					mGame.getCharacterHandler().getPlayer().unsetFocus();
 					break;
 				case(Keys.NUM_2):
 					mGame.getEngine().setTint(COLOR_DAWN);
@@ -179,6 +180,7 @@ public class TestScreen extends Screen implements Constants {
 			
 			// Render our engine
         	this.mGame.getEngine().update(dt);
+        	
 		this.mGame.getSpriteBatch().end();
 		
 		// Render Box2D Engine

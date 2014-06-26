@@ -40,7 +40,7 @@ public interface Constants {
     
     public static final Color COLOR_DAYLIGHT = new Color(0.5f, 0.5f, 0.5f, 0.2f);
     public static final Color COLOR_DAWN = new Color(0.35f, 0.3f, 0.3f, 0.2f);
-    public static final Color COLOR_NIGHT = new Color(0.2f, 0.2f, 0.2f, 0.2f);
+    public static final Color COLOR_NIGHT = new Color(0.2f, 0.2f, 0.2f, 1.0f);
     
     public static final float ALPHA_TREES = 1.0f;
     public static final float ALPHA_LIGHTS = 0.4f;

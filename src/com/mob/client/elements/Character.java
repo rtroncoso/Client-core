@@ -366,6 +366,9 @@ public class Character extends CharacterSprite implements Constants {
 		this.setUserPos(this.mUserPosX, this.mUserPosY);
 	}
 	
+	/**
+	 * Focuses camera to player position and snaps it to the map borders
+	 */
 	public void focusCamera() {
 		
 		// Vars
@@ -386,7 +389,7 @@ public class Character extends CharacterSprite implements Constants {
 		else
 			newPosY = this.mY;
 		
-		//Update position
+		//Update camera
 		this.mGame.getCamera().position.set(newPosX, newPosY, 0);
 		this.mGame.getSpriteBatch().setProjectionMatrix(this.mGame.getCamera().combined);
 		this.mGame.getCamera().update();
@@ -408,8 +411,8 @@ public class Character extends CharacterSprite implements Constants {
 		this.move(Heading.EAST);
 	}
 	
-	public void createLight(Color pColor, float pSize, float pSpeed) {
-		this.mLightIndex = this.mGame.getEngine().getLightHandler().createLight(this.mUserPosY, this.mUserPosX, pColor, pSize, pSpeed);
+	public void createLight(Color pColor, float pSize) {
+		this.mLightIndex = this.mGame.getEngine().getLightHandler().createLight(this.mUserPosY, this.mUserPosX, pColor, pSize);
 	}
 	
 	public void updateLight(float pX, float pY) {

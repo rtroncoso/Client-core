@@ -9,6 +9,7 @@ package com.mob.client.elements;
 import com.badlogic.gdx.graphics.Color;
 import com.mob.client.Game;
 import com.mob.client.sprites.TileSprite;
+import com.mob.client.textures.BundledTexture;
 
 public class Tile extends TileSprite {
 
@@ -51,11 +52,6 @@ public class Tile extends TileSprite {
 			if(this.getGrhIndex(1) == 0) this.mHasWater = true;
 		}
 		
-		// Create static bodys for layer 3
-		if(this.getGrhIndex(2) > 0) {
-			this.createBody(TILE_PIXEL_WIDTH, TILE_PIXEL_HEIGHT);
-		}
-		
 		// Null light
 		this.mLightIndex = 0;
 	}
@@ -70,7 +66,11 @@ public class Tile extends TileSprite {
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
+		if(this.mGraphic != null) {
+			for(BundledTexture t : this.mGraphic) {
+				if(t != null) t.dispose();
+			}
+		}
 		
 	}
 
@@ -164,6 +164,12 @@ public class Tile extends TileSprite {
 	 */
 	public void setBlocked(boolean mBlocked) {
 		this.mBlocked = mBlocked;
+		
+		// Create static bodys for blocked tiles
+		if(this.isBlocked()) {
+			this.createBody(TILE_PIXEL_WIDTH, TILE_PIXEL_HEIGHT);
+		}
+				
 	}
 
 	/**
